@@ -1,0 +1,42 @@
+{
+  "tabs": {
+    "calculator": "Калькулятор",
+    "predictor": "Болжам",
+    "analytics": "Аналитика"
+  },
+  "calculator": {
+    "title": "Баға калькуляторы",
+    "fo_label": "ҚБ бағалары (Қалыптастырушы бағалау)",
+    "sor_label": "БЖБ бағалары (Бөлім бойынша жиынтық бағалау)",
+    "sor_score": "Ұпай",
+    "sor_max": "Макс",
+    "add_sor": "+ БЖБ қосу",
+    "soch_label": "ТЖБ бағасы (Тоқсандық жиынтық бағалау)",
+    "weights_label": "Салмақтар (қосымша баптау)",
+    "total_percent": "Жалпы пайыз",
+    "grade": "Баға",
+    "to_next_grade": "Келесі бағаға дейін",
+    "reset": "Барлығын қалпына келтіру"
+  },
+  "predictor": {
+    "title": "Баға болжамы",
+    "target_grade": "Мақсатты баға",
+    "scenario": "Сценарий",
+    "need_extra_fo": "Сізге 10 ұпайдан тағы {{count}} ҚБ керек",
+    "need_soch_score": "ТЖБ-дан {{max}}-тан {{score}} ұпай жинау керек",
+    "safety_net": "Төменгі шек (Safety net)",
+    "minimum_to_avoid_3": "3 алмау үшін минимум"
+  },
+  "analytics": {
+    "title": "Статистика және трендтер",
+    "mean": "Орташа",
+    "median": "Медиана",
+    "std_dev": "Ауытқу",
+    "volatility": "Құбылмалылық",
+    "trend": "Тренд",
+    "low_volatility": "Төмен",
+    "high_volatility": "Жоғары",
+    "progress": "Прогресс",
+    "regress": "Регресс"
+  }
+}

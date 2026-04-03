@@ -1,0 +1,42 @@
+{
+  "tabs": {
+    "calculator": "Калькулятор",
+    "predictor": "Прогноз",
+    "analytics": "Аналитика"
+  },
+  "calculator": {
+    "title": "Калькулятор оценок",
+    "fo_label": "Оценки ФО (Формативное оценивание)",
+    "sor_label": "Оценки СОР (Суммативное оценивание за раздел)",
+    "sor_score": "Балл",
+    "sor_max": "Макс",
+    "add_sor": "+ Добавить СОР",
+    "soch_label": "Оценка СОЧ (Суммативное оценивание за четверть)",
+    "weights_label": "Веса (дополнительная настройка)",
+    "total_percent": "Итоговый процент",
+    "grade": "Оценка",
+    "to_next_grade": "До следующей оценки",
+    "reset": "Сбросить всё"
+  },
+  "predictor": {
+    "title": "Прогноз оценок",
+    "target_grade": "Целевая оценка",
+    "scenario": "Сценарий",
+    "need_extra_fo": "Вам нужно еще {{count}} ФО по 10 баллов",
+    "need_soch_score": "Нужно набрать {{score}} из {{max}} за СОЧ",
+    "safety_net": "Нижний порог (Safety net)",
+    "minimum_to_avoid_3": "Минимум, чтобы не получить 3"
+  },
+  "analytics": {
+    "title": "Аналитика и тренды",
+    "mean": "Среднее",
+    "median": "Медиана",
+    "std_dev": "Отклонение",
+    "volatility": "Волатильность",
+    "trend": "Тренд",
+    "low_volatility": "Низкая",
+    "high_volatility": "Высокая",
+    "progress": "Прогресс",
+    "regress": "Регресс"
+  }
+}
