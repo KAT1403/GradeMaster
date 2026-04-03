@@ -1,0 +1,95 @@
+.header {
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 60px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #1e293b;
+  letter-spacing: -0.5px;
+}
+
+.tabBar {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #0f172a;
+    background-color: #f1f5f9;
+  }
+
+  &.active {
+    color: #ffffff;
+    background-color: #3b82f6;
+  }
+}
+
+.langBtn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo {
+    display: none;
+  }
+  .container {
+    justify-content: space-between;
+  }
+  .tabBar {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .tab {
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .langBtn {
+    margin-left: 12px;
+  }
+}

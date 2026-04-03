@@ -12,11 +12,13 @@ const resources = {
   }
 };
 
+const savedLanguage = localStorage.getItem('gradeMasterLang') || 'ru';
+
 i18n
   .use(initReactI18next) 
   .init({
     resources,
-    lng: 'ru', 
+    lng: savedLanguage, 
     fallbackLng: 'ru', 
     interpolation: {
       escapeValue: false 
