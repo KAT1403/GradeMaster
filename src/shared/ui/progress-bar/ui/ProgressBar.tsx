@@ -13,7 +13,6 @@ export const ProgressBar = ({ percent, label, color = '#3b82f6' }: ProgressBarPr
     <div className={styles.wrapper}>
       <div className={styles.info}>
         {label && <span className={styles.label}>{label}</span>}
-        <span className={styles.value}>{clampedPercent.toFixed(1)}%</span>
       </div>
       <div className={styles.track}>
         <div 

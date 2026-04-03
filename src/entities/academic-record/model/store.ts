@@ -18,18 +18,19 @@ export interface AcademicRecordState {
   soch: SOCH | null;
   addFO: (fo: number) => void;
   removeFO: (index: number) => void;
-  addSOR: (sor: Omit<SOR, "id">) => void;
+  setFOS: (fos: number[]) => void;
   updateSOR: (id: string, sor: Omit<SOR, "id">) => void;
-  removeSOR: (id: string) => void;
   setSOCH: (soch: SOCH | null) => void;
   resetAll: () => void;
 }
+
+const initialSors = () => Array.from({ length: 4 }, () => ({ id: crypto.randomUUID(), score: 0, max: 0 }));
 
 export const useAcademicRecordStore = create<AcademicRecordState>()(
   persist(
     (set) => ({
       fos: [],
-      sors: [],
+      sors: initialSors(),
       soch: null,
 
       addFO: (fo) => set((state) => ({ fos: [...state.fos, fo] })),
@@ -39,10 +40,7 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
           fos: state.fos.filter((_, i) => i !== index),
         })),
 
-      addSOR: (sor) =>
-        set((state) => ({
-          sors: [...state.sors, { ...sor, id: crypto.randomUUID() }],
-        })),
+      setFOS: (newFos) => set({ fos: newFos }),
 
       updateSOR: (id, newSor) =>
         set((state) => ({
@@ -51,14 +49,9 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
           ),
         })),
 
-      removeSOR: (id) =>
-        set((state) => ({
-          sors: state.sors.filter((sor) => sor.id !== id),
-        })),
-
       setSOCH: (soch) => set({ soch }),
 
-      resetAll: () => set({ fos: [], sors: [], soch: null }),
+      resetAll: () => set({ fos: [], sors: initialSors(), soch: null }),
     }),
     {
       name: "academic-record-storage",
