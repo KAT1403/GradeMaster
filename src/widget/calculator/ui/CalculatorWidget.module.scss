@@ -104,7 +104,7 @@
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 6px;
-  height: 86px; /* Жестко резервируем место ровно на 2 строки плашек */
+  height: 86px; 
   overflow-y: auto;
   align-items: center;
   background: #f8fafc;
@@ -286,10 +286,49 @@
 }
 
 @media (max-width: 480px) {
+  .wrapper {
+    gap: 16px;
+  }
+  .resultHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .gradeBadge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  .resultCard {
+    position: relative;
+  }
   .percentDisplay {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
+  }
+  .sorList {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
   .sorRow {
-    padding: 10px;
+    padding: 12px;
+  }
+  .inputsWrapper {
+    gap: 8px;
+  }
+  .numInput input {
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+  .foChips {
+    height: auto;
+    min-height: 86px;
+    max-height: 140px;
+  }
+  .chip {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  .sectionCard {
+    padding: 12px;
   }
 }
