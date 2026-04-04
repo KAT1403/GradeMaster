@@ -1,0 +1,53 @@
+.emptyState {
+  text-align: center;
+  color: #94a3b8;
+  padding: 60px 20px;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #64748b;
+  margin: 0;
+}
+
+.emptyDescription {
+  font-size: 1rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  max-width: 300px;
+  margin: 0;
+}
+
+.emptyButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

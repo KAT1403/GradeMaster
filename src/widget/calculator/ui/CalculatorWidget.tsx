@@ -13,7 +13,7 @@ import {
 import { Card } from "../../../shared/ui/card";
 import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
 import { Input } from "../../../shared/ui/input/ui/Input";
-import { ProgressBar } from "../../../shared/ui/progress-bar";
+import { ProgressBar } from "../../../shared/ui/ProgressBar";
 import styles from "./CalculatorWidget.module.scss";
 
 export const CalculatorWidget = () => {
@@ -98,8 +98,8 @@ export const CalculatorWidget = () => {
 
         <div className={styles.progressSection}>
           <ProgressBar
-            percent={currentPercent}
-            color={currentGrade > 0 ? currentGradeColors.solid : "#cbd5e1"}
+            value={currentPercent}
+            variant={currentGrade > 0 ? "high" : "low"}
           />
           {currentGrade > 0 ? (
             nextGradeInfo.nextGrade ? (

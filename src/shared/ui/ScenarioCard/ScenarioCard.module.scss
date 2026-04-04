@@ -1,0 +1,36 @@
+.scenarioCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.scenarioHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+  
+  .title {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}
+
+.content {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+}
