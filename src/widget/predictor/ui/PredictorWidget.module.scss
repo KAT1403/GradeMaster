@@ -4,3 +4,37 @@
   gap: 16px;
   width: 100%;
 }
+
+.probHigh {
+  background: rgba(75, 154, 37, 0.2);
+  color: #4b9a25;
+  border: 1px solid rgba(75, 154, 37, 0.4);
+}
+
+.probAbsolute {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+}
+
+.probMedium {
+  background: rgba(255, 143, 0, 0.2);
+  color: #ff8f00;
+  border: 1px solid rgba(255, 143, 0, 0.4);
+}
+
+
+.probLow {
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+}
+
+.probImpossible {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  text-decoration: line-through;
+}
+

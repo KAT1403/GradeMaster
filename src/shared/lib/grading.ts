@@ -6,19 +6,21 @@ export interface CalculateParams {
 }
 
 export const getGradeFromPercent = (percent: number): 2 | 3 | 4 | 5 => {
-  if (percent >= 85) return 5;
-  if (percent >= 65) return 4;
-  if (percent >= 40) return 3;
+  const rounded = Math.round(percent);
+  if (rounded >= 85) return 5;
+  if (rounded >= 65) return 4;
+  if (rounded >= 40) return 3;
   return 2;
 };
 
 export const getNextGradeInfo = (percent: number) => {
-  if (percent >= 85) return { nextGrade: null, remaining: 0, target: 100 };
-  if (percent >= 65)
-    return { nextGrade: 5, remaining: 85 - percent, target: 85 };
-  if (percent >= 40)
-    return { nextGrade: 4, remaining: 65 - percent, target: 65 };
-  return { nextGrade: 3, remaining: 40 - percent, target: 40 };
+  const rounded = Math.round(percent);
+  if (rounded >= 85) return { nextGrade: null, remaining: 0, target: 100 };
+  if (rounded >= 65)
+    return { nextGrade: 5, remaining: 84.5 - percent, target: 84.5 };
+  if (rounded >= 40)
+    return { nextGrade: 4, remaining: 64.5 - percent, target: 64.5 };
+  return { nextGrade: 3, remaining: 39.5 - percent, target: 39.5 };
 };
 
 export const calculateTotalPercent = ({

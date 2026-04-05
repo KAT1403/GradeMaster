@@ -4,7 +4,7 @@ interface ProgressBarProps {
   value: number;
   max?: number;
   className?: string;
-  variant?: "high" | "medium" | "low";
+  variant?: "high" | "medium" | "low" | "impossible" | "absolute";
 }
 
 export const ProgressBar = ({
@@ -17,12 +17,16 @@ export const ProgressBar = ({
 
   const getVariantClass = () => {
     switch (variant) {
+      case "absolute":
+        return styles.absolute;
       case "high":
         return styles.high;
       case "medium":
         return styles.medium;
       case "low":
         return styles.low;
+      case "impossible":
+        return styles.impossible;
       default:
         return styles.medium;
     }

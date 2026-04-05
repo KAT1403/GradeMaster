@@ -84,7 +84,17 @@ export const AnalyticsSection = ({
           title={t("predictor.probability.title")}
         >
           <p className={styles.content}>
-            {t("predictor.probability.based_on")}
+            {t("predictor.probability.based_on")}:{" "}
+            <strong>
+              {predictions.probability.range[0] ===
+              predictions.probability.range[1]
+                ? `${predictions.probability.range[0]}%`
+                : `${predictions.probability.range[0]}% – ${predictions.probability.range[1]}%`}
+            </strong>
+            <br />
+            <small style={{ opacity: 0.6, fontSize: "0.75rem" }}>
+              {t("predictor.probability.monte_carlo_note")}
+            </small>
           </p>
 
           <ProgressBar
@@ -96,7 +106,7 @@ export const AnalyticsSection = ({
           <span
             className={`${styles.statusBadge} ${getProbabilityClass(predictions.probability.level)}`}
           >
-            {predictions.probability.score}%
+            {t(`predictor.probability_${predictions.probability.level}`)}
           </span>
         </ScenarioCard>
       </div>

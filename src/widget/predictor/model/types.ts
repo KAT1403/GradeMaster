@@ -27,7 +27,8 @@ export interface PredictorState {
     };
     probability: {
       score: number;
-      level: "high" | "medium" | "low";
+      range: [number, number];
+      level: "high" | "medium" | "low" | "impossible";
     };
   };
   hasSoch: boolean;

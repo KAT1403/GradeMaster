@@ -1,13 +1,19 @@
-import styles from '../../../widget/predictor/ui/PredictorWidget.module.scss';
+import styles from "../../../widget/predictor/ui/PredictorWidget.module.scss";
 
-export const getProbabilityClass = (level: 'high' | 'medium' | 'low'): string => {
+export const getProbabilityClass = (
+  level: "high" | "medium" | "low" | "impossible" | "absolute",
+): string => {
   switch (level) {
-    case 'high':
+    case "absolute":
+      return styles.probAbsolute;
+    case "high":
       return styles.probHigh;
-    case 'medium':
+    case "medium":
       return styles.probMedium;
-    case 'low':
+    case "low":
       return styles.probLow;
+    case "impossible":
+      return styles.probImpossible;
     default:
       return styles.probLow;
   }

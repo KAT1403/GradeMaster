@@ -14,15 +14,24 @@
   left: 0;
   top: 0;
 
+  &.absolute {
+    background: #ffc107;
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+  }
+
   &.high {
-    background: #4B9A25;
+    background: #4b9a25;
   }
 
   &.medium {
-    background: #FF8F00;
+    background: #ff8f00;
   }
 
   &.low {
     background: #aa2834;
+  }
+
+  &.impossible {
+    background: #64748b;
   }
 }

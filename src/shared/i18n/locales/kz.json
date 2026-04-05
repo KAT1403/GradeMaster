@@ -34,6 +34,7 @@
     "probability_high": "Жоғары",
     "probability_medium": "Орташа",
     "probability_low": "Төмен",
+    "probability_impossible": "Мүмкін емес",
     "probability_desc": "Сіздің үлгеріміңізге негізделген (орташа ҚБ: {{avg}})",
     "empty": {
       "title": "Бағалар жоқ",
@@ -73,7 +74,8 @@
     },
     "probability": {
       "title": "Ықтималдық",
-      "based_on": "Оқу үлгеріміне негізделген"
+      "based_on": "Сәттілік ықтималдығы",
+      "monte_carlo_note": "Эвристикалық болжау әдісі"
     }
   },
   "analytics": {

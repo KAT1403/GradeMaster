@@ -16,8 +16,8 @@
     "total_percent": "Итоговый процент",
     "grade": "Оценка",
     "to_next_grade": "До следующей оценки",
-    "max_points_reached": "Максимальный балл! 🎉",
-    "grade_5_reached": "Оценка 5 достигнута! 🚀",
+    "max_points_reached": "Максимальный балл",
+    "grade_5_reached": "Оценка 5 достигнута",
     "add_at_least_one": "Добавьте хотя бы одну оценку",
     "no_grades": "Нет оценок",
     "reset": "Сбросить всё",
@@ -34,6 +34,7 @@
     "probability_high": "Высокая",
     "probability_medium": "Средняя",
     "probability_low": "Низкая",
+    "probability_impossible": "Невозможно",
     "probability_desc": "Основано на вашей успеваемости (средний ФО: {{avg}})",
     "empty": {
       "title": "Нет оценок",
@@ -46,7 +47,7 @@
       "analytics": "Аналитика"
     },
     "scenarios": {
-      "already_achieved": "Оценка УЖЕ выходит!",
+      "already_achieved": "Цель достигнута!",
       "already_achieved_with_soch": "Вы уже достигли оценки {{grade}}!",
       "zero_soch_enough": "У вас уже накоплено столько баллов, что даже 0 за СОЧ оставит вам оценку {{grade}}.",
       "through_soch": "Через СОЧ",
@@ -72,8 +73,9 @@
       "none": "Ни одной! Если вы сейчас получите \"{{score}}\", оценка упадет ниже {{target}}."
     },
     "probability": {
-      "title": "Успех",
-      "based_on": "Основываясь на успеваемости"
+      "title": "Вероятность успеха",
+      "based_on": "Вероятность успеха",
+      "monte_carlo_note": "Метод эвристического прогнозирования"
     }
   },
   "analytics": {
