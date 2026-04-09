@@ -33,7 +33,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: background-color 0.4s ease;
 }
 
@@ -65,8 +65,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .progressText {
@@ -149,7 +155,7 @@
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.2s;
   user-select: none;
 
@@ -158,12 +164,12 @@
     border-color: #fca5a5;
     color: #ef4444;
     transform: translateY(-1px);
-    
+
     .chipRemove {
       color: #ef4444;
     }
   }
-  
+
   &:active {
     transform: translateY(0);
   }
@@ -183,7 +189,7 @@
   padding: 6px;
   color: #3b82f6;
   font-weight: 700;
-  
+
   &:focus {
     background: #fff;
     border: 1px solid #3b82f6;

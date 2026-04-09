@@ -30,24 +30,20 @@ export const SafetyNetSection = ({
         <ul className={styles.content}>
           {showAvoid3 && (
             <li>
-              {avoid3Impossible ? (
-                t("predictor.safety_net.avoid_3_impossible")
-              ) : (
-                t("predictor.safety_net.avoid_3", {
-                  percent: predictions.safetyNet.avoid3SochPct,
-                })
-              )}
+              {avoid3Impossible
+                ? t("predictor.safety_net.avoid_3_impossible")
+                : t("predictor.safety_net.avoid_3", {
+                    percent: predictions.safetyNet.avoid3SochPct,
+                  })}
             </li>
           )}
           {showAvoid2 && (
             <li>
-              {avoid2Impossible ? (
-                t("predictor.safety_net.avoid_2_impossible")
-              ) : (
-                t("predictor.safety_net.avoid_2", {
-                  percent: predictions.safetyNet.avoid2SochPct,
-                })
-              )}
+              {avoid2Impossible
+                ? t("predictor.safety_net.avoid_2_impossible")
+                : t("predictor.safety_net.avoid_2", {
+                    percent: predictions.safetyNet.avoid2SochPct,
+                  })}
             </li>
           )}
         </ul>
