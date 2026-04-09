@@ -167,17 +167,17 @@ export const analyzePrediction = (
         0,
         Math.round((currentCapital / targetPercent) * 10 - 3),
       );
-      const stabilityBonus = currentTotal >= targetPercent + 10
-        ? 15
-        : currentTotal >= targetPercent + 7
-        ? 10
-        : currentTotal >= targetPercent + 5
-        ? 7
-        : 0;
+      const stabilityBonus =
+        currentTotal >= targetPercent + 10
+          ? 15
+          : currentTotal >= targetPercent + 7
+            ? 10
+            : currentTotal >= targetPercent + 5
+              ? 7
+              : 0;
       score = Math.min(99, score + progressBonus + stabilityBonus);
     }
   }
-
 
   const probScore = Math.min(99, Math.round(score));
   const range: [number, number] = [
