@@ -5,6 +5,18 @@
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .container {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 8px;
+  }
+}
+
 .probHigh {
   background: rgba(75, 154, 37, 0.2);
   color: #4b9a25;

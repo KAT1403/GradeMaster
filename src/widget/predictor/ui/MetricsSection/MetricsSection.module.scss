@@ -53,6 +53,18 @@
   margin: 0;
 }
 
+@media (max-width: 768px) {
+  .content {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 8px;
+  }
+}
+
 .progressBar {
   margin-top: 8px;
 }

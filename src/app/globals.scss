@@ -88,13 +88,13 @@ video {
   outline: none;
 }
 body {
-  background: #ffffff;
+  background: #fbfcff;
   min-height: 100vh;
   min-height: 100vh;
   min-height: 100vh;
   margin: 0;
   font-family: "Lato", sans-serif;
-  color: black;
+  color: #0f172a;
 }
 article,
 aside,
@@ -186,8 +186,22 @@ input:focus::-webkit-input-placeholder {
   display: block;
   position: relative;
   overflow: hidden;
-  width: 1400px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto 0 auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout {
+    padding: 0 8px;
+  }
 }
 header,
 main,

@@ -19,6 +19,12 @@
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
 .logo {
   font-weight: 700;
   font-size: 1.25rem;

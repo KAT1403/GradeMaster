@@ -16,6 +16,8 @@ export const SafetyNetSection = ({
 
   const showAvoid3 = targetGrade === 5;
   const showAvoid2 = targetGrade === 4 || targetGrade === 5;
+  const avoid3Impossible = predictions.safetyNet.avoid3SochPct > 100;
+  const avoid2Impossible = predictions.safetyNet.avoid2SochPct > 100;
 
   return (
     <div className={styles.container}>
@@ -28,16 +30,24 @@ export const SafetyNetSection = ({
         <ul className={styles.content}>
           {showAvoid3 && (
             <li>
-              {t("predictor.safety_net.avoid_3", {
-                percent: predictions.safetyNet.avoid3SochPct,
-              })}
+              {avoid3Impossible ? (
+                t("predictor.safety_net.avoid_3_impossible")
+              ) : (
+                t("predictor.safety_net.avoid_3", {
+                  percent: predictions.safetyNet.avoid3SochPct,
+                })
+              )}
             </li>
           )}
           {showAvoid2 && (
             <li>
-              {t("predictor.safety_net.avoid_2", {
-                percent: predictions.safetyNet.avoid2SochPct,
-              })}
+              {avoid2Impossible ? (
+                t("predictor.safety_net.avoid_2_impossible")
+              ) : (
+                t("predictor.safety_net.avoid_2", {
+                  percent: predictions.safetyNet.avoid2SochPct,
+                })
+              )}
             </li>
           )}
         </ul>

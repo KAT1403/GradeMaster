@@ -9,6 +9,18 @@
   border: 1px solid #f1f5f9;
 }
 
+@media (max-width: 768px) {
+  .scenarioCard {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scenarioCard {
+    padding: 12px;
+  }
+}
+
 .scenarioHeader {
   display: flex;
   align-items: center;

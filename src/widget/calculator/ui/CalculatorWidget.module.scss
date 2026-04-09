@@ -45,6 +45,18 @@
   letter-spacing: -1.5px;
 }
 
+@media (max-width: 768px) {
+  .percentDisplay {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .percentDisplay {
+    font-size: 2rem;
+  }
+}
+
 .progressSection {
   display: flex;
   flex-direction: column;
@@ -104,7 +116,8 @@
   flex-wrap: wrap;
   align-content: flex-start;
   gap: 6px;
-  height: 86px; 
+  min-height: 72px;
+  max-height: 86px;
   overflow-y: auto;
   align-items: center;
   background: #f8fafc;
@@ -285,6 +298,12 @@
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sorList {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 480px) {
   .wrapper {
     gap: 16px;
@@ -320,9 +339,8 @@
     font-size: 0.95rem;
   }
   .foChips {
-    height: auto;
-    min-height: 86px;
-    max-height: 140px;
+    min-height: 70px;
+    max-height: 96px;
   }
   .chip {
     padding: 6px 10px;

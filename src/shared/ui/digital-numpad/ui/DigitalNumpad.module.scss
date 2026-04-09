@@ -7,21 +7,21 @@
 }
 
 .keyButton {
-  background: #f0f4f8;
-  border: none;
-  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
   padding: 10px 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #333;
+  color: #1f2937;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 
   &:hover {
     background: #e2e8f0;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
   &:active {
@@ -39,5 +39,15 @@
     padding: 8px 0;
     font-size: 0.95rem;
     border-radius: 6px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid {
+    gap: 5px;
+  }
+  .keyButton {
+    padding: 9px 0;
+    font-size: 0.98rem;
   }
 }

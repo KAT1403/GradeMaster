@@ -21,3 +21,15 @@
   margin: 0;
   padding-left: 28px;
 }
+
+@media (max-width: 768px) {
+  .content {
+    padding-left: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding-left: 20px;
+  }
+}
