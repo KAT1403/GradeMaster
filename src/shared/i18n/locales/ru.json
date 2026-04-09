@@ -44,7 +44,7 @@
     "sections": {
       "how_to_reach": "Как достичь цели",
       "safety_net": "Пороги выживания (Safety Net)",
-      "analytics": "Аналитика"
+      "metrics": "Показатели"
     },
     "scenarios": {
       "already_achieved": "Цель достигнута!",

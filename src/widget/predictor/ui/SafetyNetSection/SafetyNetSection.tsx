@@ -7,10 +7,15 @@ import styles from "./SafetyNetSection.module.scss";
 export const SafetyNetSection = ({
   predictions,
   hasSoch,
+  targetGrade,
 }: SafetyNetSectionProps) => {
   const { t } = useTranslation();
 
   if (hasSoch) return null;
+  if (targetGrade === 3) return null;
+
+  const showAvoid3 = targetGrade === 5;
+  const showAvoid2 = targetGrade === 4 || targetGrade === 5;
 
   return (
     <div className={styles.container}>
@@ -21,16 +26,20 @@ export const SafetyNetSection = ({
         title={t("predictor.safety_net.title")}
       >
         <ul className={styles.content}>
-          <li>
-            {t("predictor.safety_net.avoid_3", {
-              percent: predictions.safetyNet.avoid3SochPct,
-            })}
-          </li>
-          <li>
-            {t("predictor.safety_net.avoid_2", {
-              percent: predictions.safetyNet.avoid2SochPct,
-            })}
-          </li>
+          {showAvoid3 && (
+            <li>
+              {t("predictor.safety_net.avoid_3", {
+                percent: predictions.safetyNet.avoid3SochPct,
+              })}
+            </li>
+          )}
+          {showAvoid2 && (
+            <li>
+              {t("predictor.safety_net.avoid_2", {
+                percent: predictions.safetyNet.avoid2SochPct,
+              })}
+            </li>
+          )}
         </ul>
       </ScenarioCard>
     </div>

@@ -6,7 +6,7 @@ import { usePredictorLogic } from "../lib";
 import { TargetSelector } from "./TargetSelector";
 import { ScenariosSection } from "./ScenariosSection";
 import { SafetyNetSection } from "./SafetyNetSection";
-import { AnalyticsSection } from "./AnalyticsSection";
+import { MetricsSection } from "./MetricsSection";
 import styles from "./PredictorWidget.module.scss";
 
 export const PredictorWidget = () => {
@@ -42,9 +42,10 @@ export const PredictorWidget = () => {
       />
       <SafetyNetSection
         predictions={predictorLogic.predictions}
+        targetGrade={targetGrade}
         hasSoch={predictorLogic.hasSoch}
       />
-      <AnalyticsSection
+      <MetricsSection
         predictions={predictorLogic.predictions}
         targetGrade={targetGrade}
         badScoreMode={badScoreMode}

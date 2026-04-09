@@ -55,9 +55,10 @@ export interface ScenarioSectionProps {
 export interface SafetyNetSectionProps {
   predictions: PredictorState["predictions"];
   hasSoch: boolean;
+  targetGrade: 3 | 4 | 5;
 }
 
-export interface AnalyticsSectionProps {
+export interface MetricsSectionProps {
   predictions: PredictorState["predictions"];
   targetGrade: 3 | 4 | 5;
   badScoreMode: number;

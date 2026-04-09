@@ -3,10 +3,10 @@ import { ScenarioCard } from "../../../../shared/ui/ScenarioCard";
 import { ProgressBar } from "../../../../shared/ui/ProgressBar";
 import { getProbabilityClass } from "../../../../shared/lib/predictor/getProbabilityClass";
 import { SCENARIOS, GOOD_SCORE_THRESHOLD } from "../../model/constants";
-import type { AnalyticsSectionProps } from "../../model/types";
-import styles from "./AnalyticsSection.module.scss";
+import type { MetricsSectionProps } from "../../model/types";
+import styles from "./MetricsSection.module.scss";
 
-export const AnalyticsSection = ({
+export const MetricsSection = ({
   predictions,
   targetGrade,
   badScoreMode,
@@ -14,7 +14,7 @@ export const AnalyticsSection = ({
   isAlreadyBelowTarget,
   currentPercent,
   willImprove,
-}: AnalyticsSectionProps) => {
+}: MetricsSectionProps) => {
   const { t } = useTranslation();
 
   const getErrorMarginText = () => {
@@ -53,7 +53,7 @@ export const AnalyticsSection = ({
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>{t("predictor.sections.analytics")}</h2>
+      <h2 className={styles.heading}>{t("predictor.sections.metrics")}</h2>
 
       <div className={styles.grid}>
         <ScenarioCard

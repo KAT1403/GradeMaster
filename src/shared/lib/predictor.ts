@@ -118,50 +118,64 @@ export const analyzePrediction = (
     }
   }
 
-  // [ЭВРИСТИЧЕСКИЙ РАСЧЕТ ВЕРОЯТНОСТИ "УСИЛИЙ"]
-  
+  // [ЭВРИСТИЧЕСКИЙ РАСЧЁТ ВЕРОЯТНОСТИ "УСИЛИЙ"]
   let score = 0;
   const currentTotal = calculateTotalPercent(params);
   const isGoalReached = currentTotal >= targetPercent;
 
   if (isGoalReached && params.soch && params.soch.max > 0) {
-    // Если СОЧ сдан и оценка уже на месте - это успех (99%)
     score = 100;
   } else if (!isSochPossible && !isFoPossible) {
     score = 0;
   } else {
-    // 1. Оцениваем шансы по СОЧ/СОР
     let sochScore = 0;
     if (params.soch && params.soch.max > 0) {
-      const sochRel = params.soch.score / params.soch.max;
-      sochScore = sochRel * 100;
+      sochScore = (params.soch.score / params.soch.max) * 100;
     } else {
-      if (requiredSochPercent <= 40) sochScore = 95;
-      else if (requiredSochPercent <= 60) sochScore = 80;
-      else if (requiredSochPercent <= 80) sochScore = 50;
-      else if (requiredSochPercent <= 90) sochScore = 20; 
-      else sochScore = 10; 
+      if (requiredSochPercent <= 20) sochScore = 100;
+      else if (requiredSochPercent <= 40) sochScore = 90;
+      else if (requiredSochPercent <= 60) sochScore = 75;
+      else if (requiredSochPercent <= 80) sochScore = 65;
+      else if (requiredSochPercent <= 90) sochScore = 45;
+      else if (requiredSochPercent <= 95) sochScore = 25;
+      else sochScore = 10;
     }
 
-    // 2. Оцениваем шансы по ФО
     let foScore = 0;
     if (isFoPossible) {
       if (needed10s === 0) {
-        foScore = 100; 
+        foScore = Math.min(100, 50 + (currentCapital / targetPercent) * 50);
+      } else if (needed10s <= 2) {
+        foScore = 90;
+      } else if (needed10s <= 4) {
+        foScore = 80;
+      } else if (needed10s <= 6) {
+        foScore = 65;
+      } else if (needed10s <= 10) {
+        foScore = 45;
       } else {
-        const effortRatio =  needed10s / (fos.length || 1);
-        if (effortRatio <= 0.2) foScore = 95;
-        else if (effortRatio <= 0.5) foScore = 70;
-        else if (effortRatio <= 1) foScore = 35;
-        else if (effortRatio <= 2) foScore = 15;
-        else foScore = 5;
+        foScore = 35;
       }
     } else {
       foScore = 0;
     }
 
-    // 3. Итоговый баланс (СОЧ весит 60%, ФО 40%)
-    score = (sochScore * 0.6) + (foScore * 0.4);
+    score = sochScore * 0.55 + foScore * 0.45;
+
+    if (!params.soch || params.soch.max === 0) {
+      const progressBonus = Math.max(
+        0,
+        Math.round((currentCapital / targetPercent) * 10 - 3),
+      );
+      const stabilityBonus = currentTotal >= targetPercent + 10
+        ? 15
+        : currentTotal >= targetPercent + 7
+        ? 10
+        : currentTotal >= targetPercent + 5
+        ? 7
+        : 0;
+      score = Math.min(99, score + progressBonus + stabilityBonus);
+    }
   }
 
 
