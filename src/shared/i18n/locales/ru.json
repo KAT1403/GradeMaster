@@ -26,7 +26,8 @@
     "no_grades": "Нет оценок",
     "reset": "Сбросить всё",
     "sor_short": "СОР",
-    "soch_short": "СОЧ"
+    "soch_short": "СОЧ",
+    "fo_short": "ФО"
   },
   "predictor": {
     "title": "Прогноз оценок",
@@ -86,14 +87,32 @@
   },
   "analytics": {
     "title": "Аналитика и тренды",
-    "mean": "Среднее",
+    "mean": "Средний балл",
     "median": "Медиана",
     "std_dev": "Отклонение",
     "volatility": "Волатильность",
-    "trend": "Тренд",
-    "low_volatility": "Низкая",
-    "high_volatility": "Высокая",
+    "volatility_desc": "Текущие оценки + симуляция",
+    "trend": "График оценок ФО",
+    "low_volatility": "Стабильно",
+    "high_volatility": "Нестабильно",
     "progress": "Прогресс",
-    "regress": "Регресс"
+    "regress": "Регресс",
+    "stability_title": "Валидность текущих оценок",
+    "stability_desc": "Сравнение среднего ФО и результатов СОР/СОЧ",
+    "trend_text_title": "Тренд",
+    "trend_text": {
+      "progress": "Прогресс",
+      "regress": "Регресс",
+      "stable": "Стабильно"
+    },
+    "trend_desc": "Оценка динамики ФО",
+    "diagnosis_title": "Ваш академический профиль",
+    "charts": {
+      "history": "Оценка",
+      "forecast": "Прогноз",
+      "avg_fo": "Средний ФО",
+      "sor_result": "Результат СОР",
+      "soch_result": "Результат СОЧ"
+    }
   }
 }

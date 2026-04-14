@@ -26,7 +26,8 @@
     "no_grades": "Бағалар жоқ",
     "reset": "Барлығын қалпына келтіру",
     "sor_short": "БЖБ",
-    "soch_short": "ТЖБ"
+    "soch_short": "ТЖБ",
+    "fo_short": "ҚБ"
   },
   "predictor": {
     "title": "Баға болжамы",
@@ -85,15 +86,32 @@
     }
   },
   "analytics": {
-    "title": "Статистика және трендтер",
-    "mean": "Орташа",
+    "title": "Аналитика және трендтер",
+    "mean": "Орташа балл",
     "median": "Медиана",
     "std_dev": "Ауытқу",
-    "volatility": "Құбылмалылық",
-    "trend": "Тренд",
-    "low_volatility": "Төмен",
-    "high_volatility": "Жоғары",
+    "volatility": "Тұрақсыздық",
+    "volatility_desc": "Ағымдағы бағалаулар + симуляция",
+    "trend": "ҚБ бағалау кестесі",
+    "low_volatility": "Тұрақты",
+    "high_volatility": "Тұрақсыз",
     "progress": "Прогресс",
-    "regress": "Регресс"
+    "regress": "Регресс",
+    "stability_title": "Ағымдағы бағалардың валидтілігі",
+    "stability_desc": "Орташа ҚБ пен БЖБ/ТЖБ нәтижелерін салыстыру",
+    "trend_text_title": "Тренд",
+    "trend_text": {
+      "progress": "Прогресс",
+      "regress": "Регресс",
+      "stable": "Тұрақты"
+    },
+    "trend_desc": "ҚБ динамикасын бағалау",
+    "charts": {
+      "history": "Баға",
+      "forecast": "Болжам",
+      "avg_fo": "Орташа ҚБ",
+      "sor_result": "БЖБ нәтижесі",
+      "soch_result": "ТЖБ нәтижесі"
+    }
   }
 }

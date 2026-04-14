@@ -1,16 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export interface SOR {
-  id: string;
-  score: number;
-  max: number;
-}
-
-export interface SOCH {
-  score: number;
-  max: number;
-}
+import type { SOR, SOCH } from "../../../shared/types/academic";
 
 export interface AcademicRecordState {
   fos: number[];
