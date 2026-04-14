@@ -26,7 +26,7 @@
   },
   "predictor": {
     "title": "Баға болжамы",
-    "target_grade": "Мақсатты баға",
+    "target_grade": "Мақсат",
     "scenario": "Сценарий",
     "need_extra_fo": "Сізге 10 ұпайдан тағы {{count}} ҚБ керек",
     "need_soch_score": "ТЖБ-дан {{max}}-тан {{score}} ұпай жинау керек",

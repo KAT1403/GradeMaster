@@ -24,7 +24,10 @@ export const HeaderWidget = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.logo}>GradeMaster</div>
+        <div className={styles.brand}>
+          <div className={styles.logo}>GradeMaster</div>
+          <span className={styles.betaBadge}>BETA</span>
+        </div>
 
         <nav className={styles.tabBar}>
           {tabs.map((tab) => (

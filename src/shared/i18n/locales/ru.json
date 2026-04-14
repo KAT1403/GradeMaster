@@ -26,7 +26,7 @@
   },
   "predictor": {
     "title": "Прогноз оценок",
-    "target_grade": "Целевая оценка",
+    "target_grade": "Цель",
     "scenario": "Сценарий",
     "need_extra_fo": "Вам нужно еще {{count}} ФО по 10 баллов",
     "need_soch_score": "Нужно набрать {{score}} из {{max}} за СОЧ",
