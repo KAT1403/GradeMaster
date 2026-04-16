@@ -11,7 +11,7 @@ Unlike conventional grade calculators, GradeLogic utilizes predictive modeling t
 ## Tech Stack
 
 * **Core:** `React 18`, `TypeScript`
-* **Styling:** `Tailwind CSS`
+* **Styling:** `SCSS Modules`
 * **Visualization:** `Recharts` (Monotone curves for trend analysis)
 * **Infrastructure:** `Vercel` (Deployment & Analytics)
 * **State Management:** `React Context API` & `LocalStorage Persistence`
