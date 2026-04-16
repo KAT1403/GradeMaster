@@ -1,9 +1,10 @@
 .container {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -30,9 +31,9 @@
   min-width: 0;
   padding: 12px;
   border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  background: white;
-  color: #64748b;
+  border: 2px solid var(--border-primary);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
   font-weight: 700;
   font-size: 1.1rem;
   cursor: pointer;
@@ -41,12 +42,13 @@
   word-break: break-word;
 
   &:hover {
-    background: #f8fafc;
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
   }
 
   &.active {
-    border-color: #3b82f6;
-    background: #eff6ff;
-    color: #1d4ed8;
+    border-color: var(--accent-primary);
+    background: var(--accent-secondary);
+    color: var(--accent-primary);
   }
 }

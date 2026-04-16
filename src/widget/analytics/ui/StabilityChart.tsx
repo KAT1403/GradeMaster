@@ -88,10 +88,10 @@ export const StabilityChart = ({ fos, sors, soch }: StabilityChartProps) => {
     <div className={styles.container}>
       <ResponsiveContainer width="100%" height={250} debounce={100}>
         <BarChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-          <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} />
-          <YAxis domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8fafc' }} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
+          <XAxis dataKey="name" stroke="var(--chart-text)" fontSize={10} tickLine={false} axisLine={false} />
+          <YAxis domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} stroke="var(--chart-text)" fontSize={11} tickLine={false} axisLine={false} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'var(--bg-tertiary)' }} />
           <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={24}>
             {chartData.map((entry) => (
               <Cell 

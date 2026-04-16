@@ -15,17 +15,17 @@
 }
 
 .tooltip {
-  background-color: #fff;
+  background-color: var(--bg-secondary);
   padding: 8px 14px;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f5f9;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-primary);
 
   p {
     margin: 0;
     font-weight: 800;
     font-size: 13px;
-    color: #1e293b;
+    color: var(--text-primary);
 
     @media (max-width: 480px) {
       font-size: 11px;

@@ -3,11 +3,14 @@ import { useUIStore } from "../../../app/store/uiStore";
 import type { TabType } from "../../../app/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
+import { Sun, Moon } from "lucide-react";
 
 export const HeaderWidget = () => {
   const { t, i18n } = useTranslation();
   const activeTab = useUIStore((state) => state.activeTab);
+  const theme = useUIStore((state) => state.theme);
   const setActiveTab = useUIStore((state) => state.setActiveTab);
+  const toggleTheme = useUIStore((state) => state.toggleTheme);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -68,9 +71,14 @@ export const HeaderWidget = () => {
           ))}
         </nav>
 
-        <button className={styles.langBtn} onClick={switchLanguage}>
-          {i18n.language.slice(0, 2).toUpperCase()}
-        </button>
+        <div className={styles.actions}>
+          <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
+          <button className={styles.langBtn} onClick={switchLanguage}>
+            {i18n.language.slice(0, 2).toUpperCase()}
+          </button>
+        </div>
       </div>
     </header>
   );

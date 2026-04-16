@@ -7,7 +7,7 @@
 .heading {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 16px 0 8px;
 }
 
@@ -32,25 +32,27 @@
 
 .label {
   font-size: 0.9rem;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .select {
   padding: 4px 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-primary);
   border-radius: 4px;
-  background: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   font-size: 0.9rem;
 }
 
 .content {
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
-  background: #f8fafc;
+  background: var(--bg-tertiary);
   padding: 12px;
   border-radius: 8px;
   margin: 0;
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -76,5 +78,6 @@
   font-size: 0.8rem;
   font-weight: 700;
   margin-top: 8px;
-  color: rgb(136, 133, 133);
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
 }

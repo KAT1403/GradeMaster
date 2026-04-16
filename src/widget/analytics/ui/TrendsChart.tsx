@@ -101,11 +101,11 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
         >
           <ResponsiveContainer width="100%" height={250} debounce={100}>
             <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 10, bottom: 30 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} tickLine={false} axisLine={false} interval="preserveStartEnd" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
+              <XAxis dataKey="name" stroke="var(--chart-text)" fontSize={10} tickLine={false} axisLine={false} interval="preserveStartEnd" />
               <YAxis hide domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} />
               <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2, stroke: '#fff' }} isAnimationActive={!isDragging} />
+              <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2, stroke: 'var(--bg-secondary)' }} isAnimationActive={!isDragging} />
               <Line type="monotone" dataKey="realistic" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} connectNulls isAnimationActive={!isDragging} />
             </ComposedChart>
           </ResponsiveContainer>

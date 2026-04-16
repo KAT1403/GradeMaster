@@ -21,7 +21,7 @@
 .title {
   font-size: 24px;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
   
   @media (max-width: 480px) {
@@ -46,14 +46,15 @@
 
 .chartCard {
   padding: 24px;
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 24px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f1f5f9;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-primary);
   min-height: 380px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: all 0.3s ease;
   
   @media (max-width: 768px) {
     padding: 20px;
@@ -83,8 +84,8 @@
   justify-content: center;
   flex-shrink: 0;
   
-  &.stability { background: #ecfdf5; }
-  &.trend { background: #dbeafe; }
+  &.stability { background: var(--accent-secondary); color: var(--accent-primary); }
+  &.trend { background: var(--accent-secondary); color: var(--accent-primary); }
   
   @media (max-width: 480px) {
     width: 36px;
@@ -96,7 +97,7 @@
 .cardTitle {
   font-size: 16px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
   
   @media (max-width: 480px) {
@@ -106,7 +107,7 @@
 
 .cardSubtitle {
   font-size: 13px;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 4px 0 0 0;
   
   @media (max-width: 480px) {
@@ -136,10 +137,11 @@
 
 .rectCard {
   padding: 20px;
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 20px;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border-primary);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
   
   @media (max-width: 480px) {
     padding: 16px;
@@ -156,7 +158,7 @@
 .rectLabel {
   font-size: 11px;
   font-weight: 700;
-  color: #64748b;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -183,7 +185,7 @@
 
 .rectDesc {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
   
   @media (max-width: 480px) {
@@ -194,7 +196,7 @@
 .volatilityBar {
   width: 100%;
   height: 8px;
-  background: #f1f5f9;
+  background: var(--bg-tertiary);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -209,13 +211,13 @@
   justify-content: space-between;
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .bigValue {
   font-size: 32px;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--text-primary);
   line-height: 1;
   
   @media (max-width: 480px) {
@@ -226,5 +228,5 @@
 .subValue {
   font-size: 13px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text-muted);
 }

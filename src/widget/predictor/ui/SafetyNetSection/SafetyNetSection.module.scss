@@ -7,15 +7,15 @@
 .heading {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 16px 0 8px;
 }
 
 .content {
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.5;
-  background: #f8fafc;
+  background: var(--bg-tertiary);
   padding: 12px;
   border-radius: 8px;
   margin: 0;

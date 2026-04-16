@@ -1,10 +1,11 @@
 .card {
-  background: #ffffff;
+  background: var(--bg-secondary);
   border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border-primary);
   width: 100%;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 @media (max-width: 768px) {

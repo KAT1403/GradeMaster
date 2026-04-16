@@ -18,33 +18,34 @@
 }
 
 .probHigh {
-  background: rgba(75, 154, 37, 0.2);
-  color: #4b9a25;
-  border: 1px solid rgba(75, 154, 37, 0.4);
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .probAbsolute {
-  background: rgba(255, 193, 7, 0.2);
-  color: #ffc107;
-  border: 1px solid rgba(255, 193, 7, 0.5);
-  box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.5);
+  box-shadow: 0 0 15px rgba(234, 179, 8, 0.15);
 }
 
 .probMedium {
-  background: rgba(255, 143, 0, 0.2);
-  color: #ff8f00;
-  border: 1px solid rgba(255, 143, 0, 0.4);
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
 .probLow {
-  background: rgba(255, 107, 107, 0.2);
-  color: #ff6b6b;
-  border: 1px solid rgba(255, 107, 107, 0.4);
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .probImpossible {
-  background: rgba(100, 116, 139, 0.1);
-  color: #64748b;
-  border: 1px solid rgba(100, 116, 139, 0.2);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 1px solid var(--border-primary);
   text-decoration: line-through;
+  opacity: 0.6;
 }
