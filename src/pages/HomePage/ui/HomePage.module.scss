@@ -11,29 +11,13 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 24px 16px;
-}
+  padding: 24px 16px 32px;
 
-@media (max-width: 768px) {
-  .mainContent {
-    padding: 20px 14px;
+  @media (max-width: 768px) {
+    padding: 20px 14px 48px;
   }
-}
 
-@media (max-width: 480px) {
-  .mainContent {
-    padding: 16px 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .mainContent {
-    padding: 16px 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .mainContent {
-    padding: 12px 8px;
+  @media (max-width: 480px) {
+    padding: 16px 12px 32px;
   }
 }
