@@ -1,73 +1,50 @@
-# React + TypeScript + Vite
+# GradeLogic
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Analytical platform for academic forecasting and strategic study planning.**
 
-Currently, two official plugins are available:
+GradeLogic addresses the opacity of the **25/25/50 grading system** (Formative Assessments, Summative Assessments for the Unit, and Summative Assessment for the Term) by providing students with a data-driven roadmap. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Unlike conventional grade calculators, GradeLogic utilizes predictive modeling to determine the precise requirements for target grades. The system operates on a **privacy-first principle**: all data is processed client-side without external server storage.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+* **Core:** `React 18`, `TypeScript`
+* **Styling:** `SCSS Modules`
+* **Visualization:** `Recharts` (Monotone curves for trend analysis)
+* **Infrastructure:** `Vercel` (Deployment & Analytics)
+* **State Management:** `React Context API` & `LocalStorage Persistence`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Key Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* **High-Precision Forecasts:** Reverse-calculation of required scores for Summative Assessments based on current Formative data.
+* **Trend Momentum Analysis:** Evaluation of academic trajectory using weighted moving averages to identify performance acceleration or deceleration.
+* **Performance Gap Analysis:** Correlation check between daily classwork (FA) and exam results (SA) to identify preparation gaps or test-induced stress.
+* **Risk Assessment:** Calculation of a "safety margin" to determine the allowable point loss without affecting the final grade.
+* **Scenario Modeling:** Deterministic modeling of "best-case" and "worst-case" outcomes for the academic term.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Installation
+
+To clone and run the project locally, execute the following commands:
+
+```bash
+# Clone the repository
+git clone https://github.com/KAT1403/GradeMaster.git
+
+# Navigate to the project directory
+cd gradelogic
+
+# Install dependencies
+npm install
+
+# Launch the development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### License
+This project is licensed under the **MIT License**.
