@@ -3,7 +3,8 @@ import { useUIStore } from "../../../app/store/uiStore";
 import type { TabType } from "../../../app/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, History } from "lucide-react";
+import { HistoryDrawer } from "../../../features/history/ui/HistoryDrawer";
 
 export const HeaderWidget = () => {
   const { t, i18n } = useTranslation();
@@ -12,11 +13,15 @@ export const HeaderWidget = () => {
   const setActiveTab = useUIStore((state) => state.setActiveTab);
   const toggleTheme = useUIStore((state) => state.toggleTheme);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+      if (
+        tooltipRef.current &&
+        !tooltipRef.current.contains(event.target as Node)
+      ) {
         setIsTooltipVisible(false);
       }
     };
@@ -42,15 +47,17 @@ export const HeaderWidget = () => {
       <div className={styles.container}>
         <div className={styles.brand}>
           <div className={styles.logo}>GradeMaster</div>
-          <div 
-            className={styles.betaWrapper} 
+          <div
+            className={styles.betaWrapper}
             ref={tooltipRef}
             onMouseEnter={() => setIsTooltipVisible(true)}
             onMouseLeave={() => setIsTooltipVisible(false)}
             onClick={() => setIsTooltipVisible(!isTooltipVisible)}
           >
             <span className={styles.betaBadge}>BETA</span>
-            <div className={`${styles.tooltip} ${isTooltipVisible ? styles.visible : ""}`}>
+            <div
+              className={`${styles.tooltip} ${isTooltipVisible ? styles.visible : ""}`}
+            >
               {t("header.betaTooltip")}
               <a href="#" className={styles.contactLink}>
                 {t("header.writeUs")}
@@ -72,7 +79,18 @@ export const HeaderWidget = () => {
         </nav>
 
         <div className={styles.actions}>
-          <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
+          <button
+            className={styles.themeToggle}
+            onClick={() => setIsHistoryOpen(true)}
+            aria-label="Toggle history"
+          >
+            <History size={20} />
+          </button>
+          <button
+            className={styles.themeToggle}
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
           <button className={styles.langBtn} onClick={switchLanguage}>
@@ -80,6 +98,7 @@ export const HeaderWidget = () => {
           </button>
         </div>
       </div>
+      <HistoryDrawer isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
     </header>
   );
 };

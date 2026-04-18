@@ -288,7 +288,40 @@
   }
 }
 
+.bottomButtons {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.saveBtn {
+  flex: 2;
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #2563eb;
+  }
+
+  &:disabled, &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    border: 1px solid var(--border-secondary);
+  }
+}
+
 .resetBtn {
+  flex: 1;
   background: transparent;
   color: var(--text-muted);
   border: 1px solid var(--border-secondary);
@@ -298,7 +331,6 @@
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s;
-  margin-top: 4px;
 
   &:hover {
     background: var(--bg-tertiary);

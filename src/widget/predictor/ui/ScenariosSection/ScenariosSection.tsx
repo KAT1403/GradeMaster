@@ -14,7 +14,7 @@ export const ScenariosSection = ({
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>{t("predictor.sections.how_to_reach")}</h2>
-      
+
       <div className={styles.gridScenarios}>
         {!hasSoch && (
           <ScenarioCard
@@ -23,7 +23,9 @@ export const ScenariosSection = ({
           >
             <p className={styles.content}>
               {predictions.sochScenario.requiredPercent <= 0
-                ? t("predictor.scenarios.zero_soch_enough", { grade: targetGrade })
+                ? t("predictor.scenarios.zero_soch_enough", {
+                    grade: targetGrade,
+                  })
                 : predictions.sochScenario.isPossible
                   ? t("predictor.scenarios.soch_possible", {
                       grade: targetGrade,
@@ -35,13 +37,14 @@ export const ScenariosSection = ({
             </p>
           </ScenarioCard>
         )}
-        
+
         <ScenarioCard
           icon={SCENARIOS.FO.icon}
           title={t("predictor.scenarios.through_fo")}
         >
           <p className={styles.content}>
-            {predictions.foScenario.isPossible && predictions.foScenario.needed10s > 0
+            {predictions.foScenario.isPossible &&
+            predictions.foScenario.needed10s > 0
               ? t("predictor.scenarios.fo_possible", {
                   grade: targetGrade,
                   count: predictions.foScenario.needed10s,

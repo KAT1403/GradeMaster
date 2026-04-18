@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
 import { Card } from "../../../shared/ui/card";
-import { 
-  TrendingUp, 
-  Activity, 
-  Target, 
+import {
+  TrendingUp,
+  Activity,
+  Target,
   BarChart2,
-  HelpCircle
+  HelpCircle,
 } from "lucide-react";
-import { 
-  calculateStdDev, 
-  calculateVolatility, 
-  calculateTextualTrend
+import {
+  calculateStdDev,
+  calculateVolatility,
+  calculateTextualTrend,
 } from "../../../shared/lib/analytics";
 import type { TrendType } from "../../../shared/lib/analytics";
 import { TrendsChart } from "./TrendsChart";
@@ -46,9 +46,9 @@ export const AnalyticsWidget = () => {
   const stdDev = calculateStdDev(fos);
   const volatility = calculateVolatility(stdDev);
   const trend = calculateTextualTrend(fos);
-  
+
   const getTrendColor = (type: TrendType) => COLORS[type] || COLORS.stable;
-  const getVolatilityColor = (v: number) => 
+  const getVolatilityColor = (v: number) =>
     v > 60 ? COLORS.volHigh : v > 30 ? COLORS.volMed : COLORS.volLow;
 
   const avgFO = (fos.reduce((a, b) => a + b, 0) / fos.length).toFixed(1);
@@ -66,8 +66,12 @@ export const AnalyticsWidget = () => {
               <Target size={20} color={COLORS.progress} />
             </div>
             <div>
-              <h3 className={styles.cardTitle}>{t("analytics.stability_title")}</h3>
-              <p className={styles.cardSubtitle}>{t("analytics.stability_desc")}</p>
+              <h3 className={styles.cardTitle}>
+                {t("analytics.stability_title")}
+              </h3>
+              <p className={styles.cardSubtitle}>
+                {t("analytics.stability_desc")}
+              </p>
             </div>
           </div>
           <StabilityChart fos={fos} sors={sors} soch={soch} />
@@ -80,7 +84,9 @@ export const AnalyticsWidget = () => {
             </div>
             <div>
               <h3 className={styles.cardTitle}>{t("analytics.trend")}</h3>
-              <p className={styles.cardSubtitle}>{t("analytics.volatility_desc")}</p>
+              <p className={styles.cardSubtitle}>
+                {t("analytics.volatility_desc")}
+              </p>
             </div>
           </div>
           <TrendsChart fos={fos} />
@@ -90,50 +96,54 @@ export const AnalyticsWidget = () => {
       <div className={styles.smallGrid}>
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
-             <BarChart2 size={16} color={COLORS.neutral} />
-             <span className={styles.rectLabel}>{t("analytics.trend_text_title")}</span>
+            <BarChart2 size={16} color={COLORS.neutral} />
+            <span className={styles.rectLabel}>
+              {t("analytics.trend_text_title")}
+            </span>
           </div>
           <div className={styles.rectContent}>
-             <span 
-               className={styles.trendBadge} 
-               style={{ backgroundColor: getTrendColor(trend) }}
-             >
-                {t(`analytics.trend_text.${trend}`)}
-             </span>
-             <p className={styles.rectDesc}>{t("analytics.trend_desc")}</p>
+            <span
+              className={styles.trendBadge}
+              style={{ backgroundColor: getTrendColor(trend) }}
+            >
+              {t(`analytics.trend_text.${trend}`)}
+            </span>
+            <p className={styles.rectDesc}>{t("analytics.trend_desc")}</p>
           </div>
         </Card>
 
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
-             <Activity size={16} color={COLORS.neutral} />
-             <span className={styles.rectLabel}>{t("analytics.volatility")}</span>
+            <Activity size={16} color={COLORS.neutral} />
+            <span className={styles.rectLabel}>
+              {t("analytics.volatility")}
+            </span>
           </div>
           <div className={styles.rectContent}>
-             <div className={styles.volatilityBar}>
-                <div 
-                  className={styles.volatilityFill} 
-                  style={{ 
-                    width: `${volatility}%`,
-                    background: getVolatilityColor(volatility)
-                  }} 
-                />
-             </div>
-             <div className={styles.volatilityMeta}>
-                <span>{t("analytics.low_volatility")}</span>
-                <span>{t("analytics.high_volatility")}</span>
-             </div>
+            <div className={styles.volatilityBar}>
+              <div
+                className={styles.volatilityFill}
+                style={{
+                  width: `${volatility}%`,
+                  background: getVolatilityColor(volatility),
+                }}
+              />
+            </div>
+            <div className={styles.volatilityMeta}>
+              <span>{t("analytics.low_volatility")}</span>
+              <span>{t("analytics.high_volatility")}</span>
+            </div>
           </div>
         </Card>
 
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
-             <HelpCircle size={16} color={COLORS.neutral} />
-             <span className={styles.rectLabel}>{t("analytics.mean")}</span>
+            <HelpCircle size={16} color={COLORS.neutral} />
+            <span className={styles.rectLabel}>{t("analytics.mean")}</span>
           </div>
           <div className={styles.rectContent}>
-             <span className={styles.bigValue}>{avgFO}</span>
-             <span className={styles.subValue}>±{stdDev.toFixed(2)}</span>
+            <span className={styles.bigValue}>{avgFO}</span>
+            <span className={styles.subValue}>±{stdDev.toFixed(2)}</span>
           </div>
         </Card>
       </div>

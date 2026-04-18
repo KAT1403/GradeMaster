@@ -1,7 +1,11 @@
 import type { ChangeEvent, KeyboardEvent } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
+import { useHistoryManager } from "../../../features/history/model/store";
+import { SaveModal } from "../../../features/history/ui/SaveModal";
+import { ResetConfirmModal } from "../../../features/history/ui/ResetConfirmModal";
 import {
   calculateTotalPercent,
   getGradeFromPercent,
@@ -14,18 +18,77 @@ import { Card } from "../../../shared/ui/card";
 import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
 import { Input } from "../../../shared/ui/input/ui/Input";
 import { ProgressBar } from "../../../shared/ui/ProgressBar";
-import {
-  calculateIntlGPA,
-} from "../../../shared/lib/converters";
+import { calculateIntlGPA } from "../../../shared/lib/converters";
 import styles from "./CalculatorWidget.module.scss";
-
 
 export const CalculatorWidget = () => {
   const { t } = useTranslation();
-  const { fos, sors, soch, addFO, removeFO, updateSOR, setSOCH, resetAll } =
+  const { fos, sors, soch, activeRecordId, addFO, removeFO, updateSOR, setSOCH, resetAll } =
     useAcademicRecordStore();
+  const { entries } = useHistoryManager();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [resetAfterSave, setResetAfterSave] = useState(false);
+
+  const isFormEmpty = fos.length === 0 && 
+    sors.every((s) => (s.score || 0) === 0 && (s.max || 0) === 0) && 
+    (!soch || ((soch.score || 0) === 0 && (soch.max || 0) === 0));
+
+  let hasUnsavedChanges = false;
+  if (activeRecordId) {
+    const activeEntry = entries.find(e => e.id === activeRecordId);
+    if (activeEntry) {
+      const currentData = { 
+        fos, 
+        sors: sors.map(s => ({ score: s.score || 0, max: s.max || 0 })), 
+        soch: soch ? { score: soch.score || 0, max: soch.max || 0 } : null 
+      };
+      const savedData = {
+        fos: activeEntry.data.fos,
+        sors: activeEntry.data.sors.map(s => ({ score: s.score || 0, max: s.max || 0 })),
+        soch: activeEntry.data.soch ? { score: activeEntry.data.soch.score || 0, max: activeEntry.data.soch.max || 0 } : null
+      };
+      hasUnsavedChanges = JSON.stringify(currentData) !== JSON.stringify(savedData);
+    } else {
+      hasUnsavedChanges = !isFormEmpty;
+    }
+  } else {
+    hasUnsavedChanges = !isFormEmpty;
+  }
+
+  const handleResetClick = () => {
+    if (hasUnsavedChanges) {
+      setIsResetModalOpen(true);
+    } else {
+      resetAll();
+    }
+  };
+
+  const handleConfirmSaveBeforeReset = () => {
+    setIsResetModalOpen(false);
+    setResetAfterSave(true);
+    setIsSaveModalOpen(true);
+  };
+
+  const handleDiscardAndReset = () => {
+    setIsResetModalOpen(false);
+    resetAll();
+  };
+
+  const handleSaveModalClose = () => {
+    setIsSaveModalOpen(false);
+    setResetAfterSave(false);
+  };
+
+  const handleSaveComplete = () => {
+    if (resetAfterSave) {
+      resetAll();
+      setResetAfterSave(false);
+    }
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!wrapperRef.current) return;
@@ -269,9 +332,30 @@ export const CalculatorWidget = () => {
         </Card>
       </div>
 
-      <button className={styles.resetBtn} onClick={resetAll}>
-        {t("calculator.reset")}
-      </button>
+      <div className={styles.bottomButtons}>
+        <button 
+          className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`} 
+          onClick={() => setIsSaveModalOpen(true)}
+          disabled={!hasUnsavedChanges}
+        >
+          {t("history.save_btn")}
+        </button>
+        <button className={styles.resetBtn} onClick={handleResetClick}>
+          {t("calculator.reset")}
+        </button>
+      </div>
+
+      <SaveModal 
+        isOpen={isSaveModalOpen} 
+        onClose={handleSaveModalClose} 
+        onSaveComplete={handleSaveComplete} 
+      />
+      <ResetConfirmModal 
+        isOpen={isResetModalOpen} 
+        onConfirmSave={handleConfirmSaveBeforeReset} 
+        onConfirmDiscard={handleDiscardAndReset} 
+        onCancel={() => setIsResetModalOpen(false)} 
+      />
     </div>
   );
 };

@@ -1,10 +1,10 @@
-import { HeaderWidget } from '../../../widget/header';
-import { CalculatorWidget } from '../../../widget/calculator';
-import { useUIStore } from '../../../app/store/uiStore';
-import { PredictorWidget } from '../../../widget/predictor';
-import { AnalyticsWidget } from '../../../widget/analytics';
-import { FooterWidget } from '../../../widget/footer';
-import styles from './HomePage.module.scss';
+import { HeaderWidget } from "../../../widget/header";
+import { CalculatorWidget } from "../../../widget/calculator";
+import { useUIStore } from "../../../app/store/uiStore";
+import { PredictorWidget } from "../../../widget/predictor";
+import { AnalyticsWidget } from "../../../widget/analytics";
+import { FooterWidget } from "../../../widget/footer";
+import styles from "./HomePage.module.scss";
 
 export default function HomePage() {
   const activeTab = useUIStore((state) => state.activeTab);
@@ -13,9 +13,9 @@ export default function HomePage() {
     <div className={styles.container}>
       <HeaderWidget />
       <main className={styles.mainContent}>
-        {activeTab === 'calculator' && <CalculatorWidget />}
-        {activeTab === 'predictor' && <PredictorWidget />}
-        {activeTab === 'analytics' && <AnalyticsWidget />}
+        {activeTab === "calculator" && <CalculatorWidget />}
+        {activeTab === "predictor" && <PredictorWidget />}
+        {activeTab === "analytics" && <AnalyticsWidget />}
       </main>
       <FooterWidget />
     </div>
