@@ -11,13 +11,13 @@
 }
 
 .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  height: 60px;
+  padding: 0 24px;
+  height: 72px;
   position: relative;
   overflow: visible;
 }
@@ -118,7 +118,14 @@
   color: var(--accent-primary);
   text-decoration: none;
   font-weight: 600;
-  margin-top: 4px; border-bottom: 1px dashed rgba(37, 99, 235, 0.4);
+  margin-top: 4px;
+  border: none;
+  border-bottom: 1px dashed rgba(37, 99, 235, 0.4);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
   transition: all 0.2s;
 
   &:hover {
@@ -128,19 +135,22 @@
 
 .tabBar {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .tab {
   background: transparent;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 18px;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 10px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover {
     color: var(--text-primary);
@@ -150,13 +160,38 @@
   &.active {
     color: #ffffff;
     background-color: #3b82f6;
+
+    .tabIcon {
+      color: #ffffff;
+    }
+  }
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.tabLabel {
+  display: inline-block;
+}
+
+@media (max-width: 500px) {
+  .tabLabel {
+    display: none;
+  }
+  .tab {
+    padding: 8px;
+    justify-content: center;
   }
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .themeToggle {
@@ -198,43 +233,62 @@
   .container {
     height: auto;
     flex-direction: column;
-    padding: 16px;
-    gap: 20px;
+    padding: 12px;
+    gap: 16px;
   }
 
   .brand {
     width: 100%;
     justify-content: flex-start;
-    min-height: 36px;
+    min-height: 32px;
   }
 
   .logo {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .tabBar {
     width: 100%;
-    justify-content: flex-start;
-    overflow-x: auto;
-    gap: 6px;
-    padding-bottom: 2px;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    justify-content: space-between;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    overflow: hidden;
   }
 
   .tab {
     flex: 1;
-    text-align: center;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    white-space: nowrap;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 4px;
+    font-size: 0.75rem;
+    border-radius: 8px;
+
+    .tabIcon svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .actions {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 12px;
+    right: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .tabLabel {
+    display: none;
+  }
+  
+  .tab {
+    padding: 10px 0;
+    
+    .tabIcon svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

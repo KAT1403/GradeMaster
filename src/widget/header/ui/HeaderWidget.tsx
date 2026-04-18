@@ -3,7 +3,7 @@ import { useUIStore } from "../../../app/store/uiStore";
 import type { TabType } from "../../../app/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
-import { Sun, Moon, History } from "lucide-react";
+import { Sun, Moon, History, Calculator, LineChart, BarChart3, Info } from "lucide-react";
 import { HistoryDrawer } from "../../../features/history/ui/HistoryDrawer";
 
 export const HeaderWidget = () => {
@@ -36,10 +36,11 @@ export const HeaderWidget = () => {
     localStorage.setItem("gradeMasterLang", nextLang);
   };
 
-  const tabs: { id: TabType; label: string }[] = [
-    { id: "calculator", label: t("tabs.calculator") },
-    { id: "predictor", label: t("tabs.predictor") },
-    { id: "analytics", label: t("tabs.analytics") },
+  const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
+    { id: "calculator", label: t("tabs.calculator"), icon: <Calculator size={18} /> },
+    { id: "predictor", label: t("tabs.predictor"), icon: <LineChart size={18} /> },
+    { id: "analytics", label: t("tabs.analytics"), icon: <BarChart3 size={18} /> },
+    { id: "info", label: t("tabs.info"), icon: <Info size={18} /> },
   ];
 
   return (
@@ -59,9 +60,16 @@ export const HeaderWidget = () => {
               className={`${styles.tooltip} ${isTooltipVisible ? styles.visible : ""}`}
             >
               {t("header.betaTooltip")}
-              <a href="#" className={styles.contactLink}>
+              <button 
+                className={styles.contactLink}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveTab("info");
+                  setIsTooltipVisible(false);
+                }}
+              >
                 {t("header.writeUs")}
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -73,7 +81,8 @@ export const HeaderWidget = () => {
               className={`${styles.tab} ${activeTab === tab.id ? styles.active : ""}`}
               onClick={() => setActiveTab(tab.id)}
             >
-              {tab.label}
+              <span className={styles.tabIcon}>{tab.icon}</span>
+              <span className={styles.tabLabel}>{tab.label}</span>
             </button>
           ))}
         </nav>

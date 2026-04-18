@@ -3,6 +3,7 @@ import { CalculatorWidget } from "../../../widget/calculator";
 import { useUIStore } from "../../../app/store/uiStore";
 import { PredictorWidget } from "../../../widget/predictor";
 import { AnalyticsWidget } from "../../../widget/analytics";
+import { InfoWidget } from "../../../widget/info";
 import { FooterWidget } from "../../../widget/footer";
 import styles from "./HomePage.module.scss";
 
@@ -16,6 +17,7 @@ export default function HomePage() {
         {activeTab === "calculator" && <CalculatorWidget />}
         {activeTab === "predictor" && <PredictorWidget />}
         {activeTab === "analytics" && <AnalyticsWidget />}
+        {activeTab === "info" && <InfoWidget />}
       </main>
       <FooterWidget />
     </div>

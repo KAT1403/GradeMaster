@@ -6,7 +6,7 @@ export const FooterWidget: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={`${styles.item} ${styles.copyright}`}>
-          © Kim Alexey (KAT1403) All rights reserved.
+          © 2026 GradeMaster. All rights reserved.
         </div>
 
         <div className={`${styles.item} ${styles.license}`}>

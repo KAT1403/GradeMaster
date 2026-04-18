@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type TabType = "calculator" | "predictor" | "analytics";
+export type TabType = "calculator" | "predictor" | "analytics" | "info";
 export type ThemeType = "light" | "dark";
 
 interface UIState {
