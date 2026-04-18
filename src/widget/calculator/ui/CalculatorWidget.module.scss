@@ -41,8 +41,19 @@
   font-size: 2.8rem;
   font-weight: 800;
   color: var(--text-primary);
-  margin: 4px 0 16px;
+  margin: 4px 0 8px;
   letter-spacing: -1.5px;
+}
+
+.gpaSimple {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
 }
 
 @media (max-width: 768px) {

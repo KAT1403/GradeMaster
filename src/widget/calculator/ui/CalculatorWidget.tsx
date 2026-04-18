@@ -14,7 +14,11 @@ import { Card } from "../../../shared/ui/card";
 import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
 import { Input } from "../../../shared/ui/input/ui/Input";
 import { ProgressBar } from "../../../shared/ui/ProgressBar";
+import {
+  calculateIntlGPA,
+} from "../../../shared/lib/converters";
 import styles from "./CalculatorWidget.module.scss";
+
 
 export const CalculatorWidget = () => {
   const { t } = useTranslation();
@@ -78,6 +82,8 @@ export const CalculatorWidget = () => {
 
   const currentGradeColors = getGradeColors(currentGrade);
 
+  const intlGPA = calculateIntlGPA(currentPercent);
+
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
       <Card className={styles.resultCard}>
@@ -92,8 +98,13 @@ export const CalculatorWidget = () => {
             {currentGrade || "-"}
           </div>
         </div>
+
         <div className={styles.percentDisplay}>
           {currentPercent.toFixed(1)}%
+        </div>
+
+        <div className={styles.gpaSimple}>
+          {t("calculator.gpa")}: {intlGPA.score.toFixed(2)} ({intlGPA.letter})
         </div>
 
         <div className={styles.progressSection}>
@@ -124,7 +135,7 @@ export const CalculatorWidget = () => {
 
       <Card className={styles.sectionCard}>
         <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>{t("calculator.sor_label")}</h3>
+          <h3 className={styles.sectionTitle}>{t("calculator.sor_title")}</h3>
         </div>
         <div className={styles.sorList}>
           {sors.map((sor, index) => {
@@ -181,7 +192,7 @@ export const CalculatorWidget = () => {
 
       <div className={styles.bottomGrid}>
         <Card className={styles.sectionCard}>
-          <h3 className={styles.sectionTitle}>{t("calculator.fo_label")}</h3>
+          <h3 className={styles.sectionTitle}>{t("calculator.fo_title")}</h3>
           <div className={styles.foChips}>
             {fos.length === 0 && (
               <span className={styles.emptyText}>
@@ -211,7 +222,7 @@ export const CalculatorWidget = () => {
         </Card>
 
         <Card className={styles.sectionCard}>
-          <h3 className={styles.sectionTitle}>{t("calculator.soch_label")}</h3>
+          <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
           <div className={styles.sorRow}>
             {(() => {
               const sochColors = getScoreColor(
