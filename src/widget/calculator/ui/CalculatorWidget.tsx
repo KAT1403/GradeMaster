@@ -122,6 +122,8 @@ export const CalculatorWidget = () => {
       }
     } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
+    } else if (["e", "E", "+", "-"].includes(e.key)) {
+      e.preventDefault();
     }
   };
 
@@ -135,11 +137,37 @@ export const CalculatorWidget = () => {
       : getGradeFromPercent(currentPercent);
   const nextGradeInfo = getNextGradeInfo(currentPercent);
 
-  const handleSochChange = (field: "score" | "max", value: string) => {
-    const num = parseFloat(value);
+  const MAX_POINTS = 100;
+
+  const sanitizeValue = (val: number) => {
+    if (isNaN(val)) return 0;
+    return Math.max(0, Math.min(MAX_POINTS, val));
+  };
+
+  const handleSorChange = (
+    id: string,
+    field: "score" | "max",
+    rawValue: string,
+  ) => {
+    const num = parseFloat(rawValue);
+    const val = sanitizeValue(num);
+    const sor = sors.find((s) => s.id === id);
+    if (!sor) return;
+
+    if (field === "max") {
+      updateSOR(id, { ...sor, max: val });
+    } else {
+      updateSOR(id, { ...sor, score: val });
+    }
+  };
+
+  const handleSochChange = (field: "score" | "max", rawValue: string) => {
+    const num = parseFloat(rawValue);
+    const val = sanitizeValue(num);
+    
     setSOCH({
-      score: field === "score" ? (isNaN(num) ? 0 : num) : soch?.score || 0,
-      max: field === "max" ? (isNaN(num) ? 0 : num) : soch?.max || 0,
+      score: field === "score" ? val : soch?.score || 0,
+      max: field === "max" ? val : soch?.max || 0,
     });
   };
 
@@ -217,35 +245,33 @@ export const CalculatorWidget = () => {
                   {t("calculator.sor_short")} {index + 1}
                 </span>
                 <div className={styles.inputsWrapper}>
-                  <Input
-                    type="number"
-                    placeholder={t("calculator.sor_score")}
-                    value={sor.score || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      updateSOR(sor.id, {
-                        ...sor,
-                        score: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
-                  <span className={styles.divider}>/</span>
-                  <Input
-                    type="number"
-                    placeholder={t("calculator.sor_max")}
-                    value={sor.max || ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      updateSOR(sor.id, {
-                        ...sor,
-                        max: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
+                    <Input
+                      type="number"
+                      min="0"
+                      max={MAX_POINTS}
+                      placeholder={t("calculator.sor_score")}
+                      value={sor.score || ""}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleSorChange(sor.id, "score", e.target.value)
+                      }
+                      onKeyDown={handleKeyDown}
+                      className={styles.numInput}
+                      style={customInputStyle}
+                    />
+                    <span className={styles.divider}>/</span>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={MAX_POINTS}
+                      placeholder={t("calculator.sor_max")}
+                      value={sor.max || ""}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleSorChange(sor.id, "max", e.target.value)
+                      }
+                      onKeyDown={handleKeyDown}
+                      className={styles.numInput}
+                      style={customInputStyle}
+                    />
                 </div>
               </div>
             );
@@ -304,6 +330,8 @@ export const CalculatorWidget = () => {
                 <div className={styles.inputsWrapper}>
                   <Input
                     type="number"
+                    min="0"
+                    max={MAX_POINTS}
                     placeholder={t("calculator.sor_score")}
                     value={soch?.score || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -316,6 +344,8 @@ export const CalculatorWidget = () => {
                   <span className={styles.divider}>/</span>
                   <Input
                     type="number"
+                    min="0"
+                    max={MAX_POINTS}
                     placeholder={t("calculator.sor_max")}
                     value={soch?.max || ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>

@@ -88,6 +88,7 @@ export const SaveModal = ({
               className={styles.input}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              maxLength={50}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSave(false);
               }}
@@ -116,6 +117,7 @@ export const SaveModal = ({
               className={styles.input}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              maxLength={50}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSave(false);
               }}

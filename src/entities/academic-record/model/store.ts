@@ -31,7 +31,11 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
 
       setActiveRecord: (id, title) => set({ activeRecordId: id, activeRecordTitle: title }),
 
-      addFO: (fo) => set((state) => ({ fos: [...state.fos, fo] })),
+      addFO: (fo) =>
+        set((state) => {
+          if (state.fos.length >= 50) return state;
+          return { fos: [...state.fos, fo] };
+        }),
 
       removeFO: (index) =>
         set((state) => ({
