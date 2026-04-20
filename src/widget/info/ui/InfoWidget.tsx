@@ -50,7 +50,7 @@ export const InfoWidget = () => {
     },
     { 
       icon: <img src="/img/WhatsApp.png" alt="WhatsApp" className={styles.socialImg} />, 
-      url: "https://wa.me/87055809850", 
+      url: "https://wa.me/+77055809850", 
       label: "WhatsApp" 
     },
   ];
