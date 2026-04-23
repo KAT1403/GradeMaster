@@ -1,8 +1,8 @@
-# GradeLogic
+# GradeMaster
 
 > **Analytical platform for academic forecasting and strategic study planning.**
 
-GradeLogic addresses the opacity of the **25/25/50 grading system** (Formative Assessments, Summative Assessments for the Unit, and Summative Assessment for the Term) by providing students with a data-driven roadmap. 
+GradeMaster addresses the opacity of the **25/25/50 grading system** (Formative Assessments, Summative Assessments for the Unit, and Summative Assessment for the Term) by providing students with a data-driven roadmap. 
 
 Unlike conventional grade calculators, GradeLogic utilizes predictive modeling to determine the precise requirements for target grades. The system operates on a **privacy-first principle**: all data is processed client-side without external server storage.
 
