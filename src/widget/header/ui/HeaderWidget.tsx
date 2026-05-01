@@ -47,7 +47,7 @@ export const HeaderWidget = () => {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.brand}>
-          <div className={styles.logo}>GradeMaster</div>
+          <h1 className={styles.logo}>GradeMaster</h1>
           <div
             className={styles.betaWrapper}
             ref={tooltipRef}
