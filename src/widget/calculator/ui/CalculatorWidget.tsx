@@ -6,6 +6,7 @@ import { useAcademicRecordStore } from "../../../entities/academic-record/model/
 import { useHistoryManager } from "../../../features/history/model/store";
 import { SaveModal } from "../../../features/history/ui/SaveModal";
 import { ResetConfirmModal } from "../../../features/history/ui/ResetConfirmModal";
+import { SmartPaste } from "../../../features/smart-paste";
 import {
   calculateTotalPercent,
   getGradeFromPercent,
@@ -177,6 +178,7 @@ export const CalculatorWidget = () => {
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
+      <SmartPaste />
       <Card className={styles.resultCard}>
         <div className={styles.resultHeader}>
           <span className={styles.resultTitle}>
