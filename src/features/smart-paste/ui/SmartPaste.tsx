@@ -7,6 +7,7 @@ import styles from './SmartPaste.module.scss';
 export const SmartPaste = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { setFOS, setSORS, setSOCH, resetAll } = useAcademicRecordStore();
@@ -23,8 +24,33 @@ export const SmartPaste = () => {
     
     if (!text) return;
     
+    setInputValue(text);
     parseAndApplyGrades(text);
     setIsOpen(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    const diff = Math.abs(newValue.length - inputValue.length);
+    
+    setInputValue(newValue);
+    
+    if (diff > 4) {
+      parseAndApplyGrades(newValue);
+      setIsOpen(false);
+    }
+  };
+
+  const handleApply = () => {
+    if (!inputValue.trim()) return;
+    parseAndApplyGrades(inputValue);
+    setIsOpen(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleApply();
+    }
   };
 
   const parseAndApplyGrades = (text: string) => {
@@ -84,7 +110,10 @@ export const SmartPaste = () => {
     <>
       <button 
         className={styles.triggerBtn} 
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setInputValue('');
+          setIsOpen(true);
+        }}
       >
         <ClipboardPaste size={20} />
         <span>{t('smart_paste.btn')}</span>
@@ -117,8 +146,18 @@ export const SmartPaste = () => {
                     type="text"
                     className={styles.pasteInput}
                     placeholder={t('smart_paste.placeholder')}
+                    value={inputValue}
+                    onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     onPaste={handlePaste}
                   />
+                  <button 
+                    className={styles.applyBtn} 
+                    onClick={handleApply}
+                    disabled={!inputValue.trim()}
+                  >
+                    {t('smart_paste.apply_btn')}
+                  </button>
                   <div className={styles.demoBox}>
                     <span>{t('smart_paste.example_label')}</span>
                     <div className={styles.demoText}>
