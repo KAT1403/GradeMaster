@@ -24,8 +24,17 @@ import styles from "./CalculatorWidget.module.scss";
 
 export const CalculatorWidget = () => {
   const { t } = useTranslation();
-  const { fos, sors, soch, activeRecordId, addFO, removeFO, updateSOR, setSOCH, resetAll } =
-    useAcademicRecordStore();
+  const {
+    fos,
+    sors,
+    soch,
+    activeRecordId,
+    addFO,
+    removeFO,
+    updateSOR,
+    setSOCH,
+    resetAll,
+  } = useAcademicRecordStore();
   const { entries } = useHistoryManager();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -34,25 +43,35 @@ export const CalculatorWidget = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [resetAfterSave, setResetAfterSave] = useState(false);
 
-  const isFormEmpty = fos.length === 0 && 
-    sors.every((s) => (s.score || 0) === 0 && (s.max || 0) === 0) && 
+  const isFormEmpty =
+    fos.length === 0 &&
+    sors.every((s) => (s.score || 0) === 0 && (s.max || 0) === 0) &&
     (!soch || ((soch.score || 0) === 0 && (soch.max || 0) === 0));
 
   let hasUnsavedChanges = false;
   if (activeRecordId) {
-    const activeEntry = entries.find(e => e.id === activeRecordId);
+    const activeEntry = entries.find((e) => e.id === activeRecordId);
     if (activeEntry) {
-      const currentData = { 
-        fos, 
-        sors: sors.map(s => ({ score: s.score || 0, max: s.max || 0 })), 
-        soch: soch ? { score: soch.score || 0, max: soch.max || 0 } : null 
+      const currentData = {
+        fos,
+        sors: sors.map((s) => ({ score: s.score || 0, max: s.max || 0 })),
+        soch: soch ? { score: soch.score || 0, max: soch.max || 0 } : null,
       };
       const savedData = {
         fos: activeEntry.data.fos,
-        sors: activeEntry.data.sors.map(s => ({ score: s.score || 0, max: s.max || 0 })),
-        soch: activeEntry.data.soch ? { score: activeEntry.data.soch.score || 0, max: activeEntry.data.soch.max || 0 } : null
+        sors: activeEntry.data.sors.map((s) => ({
+          score: s.score || 0,
+          max: s.max || 0,
+        })),
+        soch: activeEntry.data.soch
+          ? {
+              score: activeEntry.data.soch.score || 0,
+              max: activeEntry.data.soch.max || 0,
+            }
+          : null,
       };
-      hasUnsavedChanges = JSON.stringify(currentData) !== JSON.stringify(savedData);
+      hasUnsavedChanges =
+        JSON.stringify(currentData) !== JSON.stringify(savedData);
     } else {
       hasUnsavedChanges = !isFormEmpty;
     }
@@ -165,7 +184,7 @@ export const CalculatorWidget = () => {
   const handleSochChange = (field: "score" | "max", rawValue: string) => {
     const num = parseFloat(rawValue);
     const val = sanitizeValue(num);
-    
+
     setSOCH({
       score: field === "score" ? val : soch?.score || 0,
       max: field === "max" ? val : soch?.max || 0,
@@ -247,33 +266,33 @@ export const CalculatorWidget = () => {
                   {t("calculator.sor_short")} {index + 1}
                 </span>
                 <div className={styles.inputsWrapper}>
-                    <Input
-                      type="number"
-                      min="0"
-                      max={MAX_POINTS}
-                      placeholder={t("calculator.sor_score")}
-                      value={sor.score || ""}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        handleSorChange(sor.id, "score", e.target.value)
-                      }
-                      onKeyDown={handleKeyDown}
-                      className={styles.numInput}
-                      style={customInputStyle}
-                    />
-                    <span className={styles.divider}>/</span>
-                    <Input
-                      type="number"
-                      min="0"
-                      max={MAX_POINTS}
-                      placeholder={t("calculator.sor_max")}
-                      value={sor.max || ""}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                        handleSorChange(sor.id, "max", e.target.value)
-                      }
-                      onKeyDown={handleKeyDown}
-                      className={styles.numInput}
-                      style={customInputStyle}
-                    />
+                  <Input
+                    type="number"
+                    min="0"
+                    max={MAX_POINTS}
+                    placeholder={t("calculator.sor_score")}
+                    value={sor.score || ""}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleSorChange(sor.id, "score", e.target.value)
+                    }
+                    onKeyDown={handleKeyDown}
+                    className={styles.numInput}
+                    style={customInputStyle}
+                  />
+                  <span className={styles.divider}>/</span>
+                  <Input
+                    type="number"
+                    min="0"
+                    max={MAX_POINTS}
+                    placeholder={t("calculator.sor_max")}
+                    value={sor.max || ""}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleSorChange(sor.id, "max", e.target.value)
+                    }
+                    onKeyDown={handleKeyDown}
+                    className={styles.numInput}
+                    style={customInputStyle}
+                  />
                 </div>
               </div>
             );
@@ -365,8 +384,8 @@ export const CalculatorWidget = () => {
       </div>
 
       <div className={styles.bottomButtons}>
-        <button 
-          className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`} 
+        <button
+          className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
           onClick={() => setIsSaveModalOpen(true)}
           disabled={!hasUnsavedChanges}
         >
@@ -377,16 +396,16 @@ export const CalculatorWidget = () => {
         </button>
       </div>
 
-      <SaveModal 
-        isOpen={isSaveModalOpen} 
-        onClose={handleSaveModalClose} 
-        onSaveComplete={handleSaveComplete} 
+      <SaveModal
+        isOpen={isSaveModalOpen}
+        onClose={handleSaveModalClose}
+        onSaveComplete={handleSaveComplete}
       />
-      <ResetConfirmModal 
-        isOpen={isResetModalOpen} 
-        onConfirmSave={handleConfirmSaveBeforeReset} 
-        onConfirmDiscard={handleDiscardAndReset} 
-        onCancel={() => setIsResetModalOpen(false)} 
+      <ResetConfirmModal
+        isOpen={isResetModalOpen}
+        onConfirmSave={handleConfirmSaveBeforeReset}
+        onConfirmDiscard={handleDiscardAndReset}
+        onCancel={() => setIsResetModalOpen(false)}
       />
     </div>
   );

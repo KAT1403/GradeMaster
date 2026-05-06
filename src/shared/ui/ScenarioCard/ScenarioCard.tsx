@@ -2,7 +2,7 @@ import styles from "./ScenarioCard.module.scss";
 
 interface ScenarioCardProps {
   icon: string;
-  title: string;
+  title: React.ReactNode;
   children: React.ReactNode;
   variant?: "default" | "success" | "warning";
   className?: string;

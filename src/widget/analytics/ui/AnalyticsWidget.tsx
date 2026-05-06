@@ -18,6 +18,7 @@ import { TrendsChart } from "./TrendsChart";
 import { StabilityChart } from "./StabilityChart";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { useUIStore } from "../../../app/store/uiStore";
+import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import styles from "./AnalyticsWidget.module.scss";
 
 const COLORS = {
@@ -83,7 +84,10 @@ export const AnalyticsWidget = () => {
               <TrendingUp size={20} color={COLORS.stable} />
             </div>
             <div>
-              <h3 className={styles.cardTitle}>{t("analytics.trend")}</h3>
+              <h3 className={styles.cardTitle} style={{ display: 'flex', alignItems: 'center' }}>
+                {t("analytics.trend")}
+                <InfoTooltip content={t("analytics.trend_tooltip")} />
+              </h3>
               <p className={styles.cardSubtitle}>
                 {t("analytics.volatility_desc")}
               </p>
@@ -115,8 +119,9 @@ export const AnalyticsWidget = () => {
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
             <Activity size={16} color={COLORS.neutral} />
-            <span className={styles.rectLabel}>
+            <span className={styles.rectLabel} style={{ display: 'flex', alignItems: 'center' }}>
               {t("analytics.volatility")}
+              <InfoTooltip content={t("analytics.volatility_tooltip")} />
             </span>
           </div>
           <div className={styles.rectContent}>
@@ -139,7 +144,10 @@ export const AnalyticsWidget = () => {
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
             <HelpCircle size={16} color={COLORS.neutral} />
-            <span className={styles.rectLabel}>{t("analytics.mean")}</span>
+            <span className={styles.rectLabel} style={{ display: 'flex', alignItems: 'center' }}>
+              {t("analytics.mean")}
+              <InfoTooltip content={t("analytics.mean_tooltip")} />
+            </span>
           </div>
           <div className={styles.rectContent}>
             <span className={styles.bigValue}>{avgFO}</span>

@@ -68,6 +68,7 @@ export const InfoWidget = () => {
           <FAQItem question={t("info.faq.q3")} answer={t("info.faq.a3")} />
           <FAQItem question={t("info.faq.q4")} answer={t("info.faq.a4")} />
           <FAQItem question={t("info.faq.q5")} answer={t("info.faq.a5")} />
+          <FAQItem question={t("info.faq.q6")} answer={t("info.faq.a6")} />
         </div>
       </section>
 

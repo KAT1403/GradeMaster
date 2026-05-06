@@ -4,6 +4,7 @@ import { ProgressBar } from "../../../../shared/ui/ProgressBar";
 import { getProbabilityClass } from "../../../../shared/lib/predictor/getProbabilityClass";
 import { SCENARIOS, GOOD_SCORE_THRESHOLD } from "../../model/constants";
 import type { MetricsSectionProps } from "../../model/types";
+import { InfoTooltip } from "../../../../shared/ui/InfoTooltip";
 import styles from "./MetricsSection.module.scss";
 
 export const MetricsSection = ({
@@ -58,7 +59,12 @@ export const MetricsSection = ({
       <div className={styles.grid}>
         <ScenarioCard
           icon={SCENARIOS.ERROR_MARGIN.icon}
-          title={t("predictor.error_margin.title")}
+          title={
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+              {t("predictor.error_margin.title")}
+              <InfoTooltip content={t("predictor.error_margin.tooltip")} />
+            </span>
+          }
         >
           <div className={styles.scoreSelector}>
             <span className={styles.label}>
@@ -81,7 +87,12 @@ export const MetricsSection = ({
         </ScenarioCard>
         <ScenarioCard
           icon={SCENARIOS.PROBABILITY.icon}
-          title={t("predictor.probability.title")}
+          title={
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+              {t("predictor.probability.title")}
+              <InfoTooltip content={t("predictor.probability.tooltip")} />
+            </span>
+          }
         >
           <p className={styles.content}>
             {t("predictor.probability.based_on")}:{" "}
