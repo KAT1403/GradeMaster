@@ -54,19 +54,19 @@ export const CalculatorWidget = () => {
     if (activeEntry) {
       const currentData = {
         fos,
-        sors: sors.map((s) => ({ score: s.score ?? 0, max: s.max ?? 0 })),
-        soch: soch ? { score: soch.score ?? 0, max: soch.max ?? 0 } : null,
+        sors: sors.map((s) => ({ score: s.score, max: s.max })),
+        soch: soch ? { score: soch.score, max: soch.max } : null,
       };
       const savedData = {
         fos: activeEntry.data.fos,
         sors: activeEntry.data.sors.map((s) => ({
-          score: s.score ?? 0,
-          max: s.max ?? 0,
+          score: s.score,
+          max: s.max,
         })),
         soch: activeEntry.data.soch
           ? {
-              score: activeEntry.data.soch.score ?? 0,
-              max: activeEntry.data.soch.max ?? 0,
+              score: activeEntry.data.soch.score,
+              max: activeEntry.data.soch.max,
             }
           : null,
       };
@@ -180,7 +180,7 @@ export const CalculatorWidget = () => {
       }
     } else {
       if (rawValue.length > 1 && rawValue.startsWith("0")) {
-        return; 
+        return;
       }
 
       const num = parseFloat(rawValue);
@@ -210,11 +210,11 @@ export const CalculatorWidget = () => {
       }
     } else {
       if (rawValue.length > 1 && rawValue.startsWith("0")) {
-        return; 
+        return;
       }
 
       const num = parseFloat(rawValue);
-      if (isNaN(num)) return; 
+      if (isNaN(num)) return;
       if (!Number.isInteger(num)) return;
 
       const val = sanitizeValue(num);
@@ -377,11 +377,11 @@ export const CalculatorWidget = () => {
           <div className={styles.sorRow}>
             {(() => {
               const sochColors = getScoreColor(
-                soch?.score ?? 0,
-                soch?.max ?? 0,
+                soch?.score ?? null,
+                soch?.max ?? null,
               );
               const customInputStyle =
-                (soch?.max ?? 0) > 0
+                soch && soch.max !== null && soch.max > 0
                   ? {
                       backgroundColor: sochColors.bg,
                       color: sochColors.text,

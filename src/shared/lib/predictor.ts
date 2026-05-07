@@ -9,6 +9,8 @@ export interface PredictorData {
   sochScenario: {
     requiredPercent: number;
     isPossible: boolean;
+    requiredScore?: number;
+    maxScore?: number;
   };
 
   foScenario: {
@@ -36,6 +38,7 @@ export interface PredictorData {
 export const analyzePrediction = (
   params: CalculateParams,
   targetGrade: 3 | 4 | 5,
+  sochMaxScore: number = 20,
 ): PredictorData => {
   const { fos, sors } = params;
   const targetPercent =
@@ -49,10 +52,10 @@ export const analyzePrediction = (
     currentCapital += (avgFO / 10) * weights.fo * 100;
   }
   if (sors.length > 0) {
-    const validSors = sors.filter((s) => s.max > 0);
+    const validSors = sors.filter((s) => s.max !== null && s.max > 0);
     if (validSors.length > 0) {
       const avgSorPercent =
-        validSors.reduce((sum, s) => sum + s.score / s.max, 0) /
+        validSors.reduce((sum, s) => sum + (s.score ?? 0) / (s.max ?? 1), 0) /
         validSors.length;
       currentCapital += avgSorPercent * weights.sor * 100;
     }
@@ -63,6 +66,7 @@ export const analyzePrediction = (
   let requiredSochPercent = Math.ceil((missingPoints / 50) * 100);
   if (requiredSochPercent < 0) requiredSochPercent = 0;
   const isSochPossible = requiredSochPercent <= 100;
+  const requiredScore = Math.ceil((requiredSochPercent / 100) * sochMaxScore);
   let needed10s = 0;
   let isFoPossible = false;
   const simFos = [...fos];
@@ -123,14 +127,19 @@ export const analyzePrediction = (
   const currentTotal = calculateTotalPercent(params);
   const isGoalReached = currentTotal >= targetPercent;
 
-  if (isGoalReached && params.soch && params.soch.max > 0) {
+  if (
+    isGoalReached &&
+    params.soch &&
+    params.soch.max !== null &&
+    params.soch.max > 0
+  ) {
     score = 100;
   } else if (!isSochPossible && !isFoPossible) {
     score = 0;
   } else {
     let sochScore = 0;
-    if (params.soch && params.soch.max > 0) {
-      sochScore = (params.soch.score / params.soch.max) * 100;
+    if (params.soch && params.soch.max !== null && params.soch.max > 0) {
+      sochScore = ((params.soch.score ?? 0) / params.soch.max) * 100;
     } else {
       if (requiredSochPercent <= 20) sochScore = 100;
       else if (requiredSochPercent <= 40) sochScore = 90;
@@ -199,6 +208,8 @@ export const analyzePrediction = (
     sochScenario: {
       requiredPercent: requiredSochPercent,
       isPossible: isSochPossible,
+      requiredScore,
+      maxScore: sochMaxScore,
     },
     foScenario: { needed10s, isPossible: isFoPossible },
     safetyNet: { avoid2SochPct: avoid2Pct, avoid3SochPct: avoid3Pct },

@@ -14,11 +14,13 @@ export const PredictorWidget = () => {
   const setActiveTab = useUIStore((state) => state.setActiveTab);
   const [targetGrade, setTargetGrade] = useState<3 | 4 | 5>(5);
   const [badScoreMode, setBadScoreMode] = useState<number>(4);
+  const [sochMaxScore, setSochMaxScore] = useState<number>(20);
 
   const predictorLogic = usePredictorLogic({
     state,
     targetGrade,
     badScoreMode,
+    sochMaxScore,
   });
 
   if (predictorLogic.predictions.currentTotalBeforeSoch === 0) {
@@ -39,11 +41,14 @@ export const PredictorWidget = () => {
         predictions={predictorLogic.predictions}
         targetGrade={targetGrade}
         hasSoch={predictorLogic.hasSoch}
+        sochMaxScore={sochMaxScore}
+        onSochMaxScoreChange={setSochMaxScore}
       />
       <SafetyNetSection
         predictions={predictorLogic.predictions}
         targetGrade={targetGrade}
         hasSoch={predictorLogic.hasSoch}
+        sochMaxScore={sochMaxScore}
       />
       <MetricsSection
         predictions={predictorLogic.predictions}

@@ -8,6 +8,7 @@ export const SafetyNetSection = ({
   predictions,
   hasSoch,
   targetGrade,
+  sochMaxScore,
 }: SafetyNetSectionProps) => {
   const { t } = useTranslation();
 
@@ -18,6 +19,13 @@ export const SafetyNetSection = ({
   const showAvoid2 = targetGrade === 4 || targetGrade === 5;
   const avoid3Impossible = predictions.safetyNet.avoid3SochPct > 100;
   const avoid2Impossible = predictions.safetyNet.avoid2SochPct > 100;
+
+  const avoid3Score = Math.ceil(
+    (predictions.safetyNet.avoid3SochPct / 100) * sochMaxScore,
+  );
+  const avoid2Score = Math.ceil(
+    (predictions.safetyNet.avoid2SochPct / 100) * sochMaxScore,
+  );
 
   return (
     <div className={styles.container}>
@@ -32,8 +40,10 @@ export const SafetyNetSection = ({
             <li>
               {avoid3Impossible
                 ? t("predictor.safety_net.avoid_3_impossible")
-                : t("predictor.safety_net.avoid_3", {
+                : t("predictor.safety_net.avoid_3_with_score", {
                     percent: predictions.safetyNet.avoid3SochPct,
+                    score: avoid3Score,
+                    max: sochMaxScore,
                   })}
             </li>
           )}
@@ -41,8 +51,10 @@ export const SafetyNetSection = ({
             <li>
               {avoid2Impossible
                 ? t("predictor.safety_net.avoid_2_impossible")
-                : t("predictor.safety_net.avoid_2", {
+                : t("predictor.safety_net.avoid_2_with_score", {
                     percent: predictions.safetyNet.avoid2SochPct,
+                    score: avoid2Score,
+                    max: sochMaxScore,
                   })}
             </li>
           )}

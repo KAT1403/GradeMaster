@@ -8,10 +8,13 @@ export const usePredictorLogic = ({
   state,
   targetGrade,
   badScoreMode,
+  sochMaxScore,
 }: PredictorLogicProps): PredictorState => {
   return useMemo(() => {
-    const predictions = analyzePrediction(state, targetGrade);
-    const hasSoch = Boolean(state.soch?.score && state.soch.max > 0);
+    const predictions = analyzePrediction(state, targetGrade, sochMaxScore);
+    const hasSoch = Boolean(
+      state.soch?.score && state.soch.max !== null && state.soch.max > 0,
+    );
     const currentPercent = calculateTotalPercent(state);
     const isAlreadyBelowTarget = currentPercent < predictions.targetPercent;
     const willImprove = checkIfScoreImproves(state, badScoreMode);
@@ -23,5 +26,5 @@ export const usePredictorLogic = ({
       isAlreadyBelowTarget,
       willImprove,
     };
-  }, [state, targetGrade, badScoreMode]);
+  }, [state, targetGrade, badScoreMode, sochMaxScore]);
 };

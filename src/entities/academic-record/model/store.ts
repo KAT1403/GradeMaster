@@ -28,11 +28,11 @@ const initialSors = () =>
 export const useAcademicRecordStore = create<AcademicRecordState>()(
   persist(
     (set) => ({
-      activeRecordId: null,
-      activeRecordTitle: null,
-      fos: [],
+      activeRecordId: null as string | null,
+      activeRecordTitle: null as string | null,
+      fos: [] as number[],
       sors: initialSors(),
-      soch: null,
+      soch: null as SOCH | null,
 
       setActiveRecord: (id, title) =>
         set({ activeRecordId: id, activeRecordTitle: title }),
@@ -72,6 +72,22 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     }),
     {
       name: "academic-record-storage",
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.sors = state.sors.map((sor) => ({
+            ...sor,
+            score: sor.score === 0 ? null : sor.score,
+            max: sor.max === 0 ? null : sor.max,
+          }));
+
+          if (state.soch) {
+            state.soch = {
+              score: state.soch.score === 0 ? null : state.soch.score,
+              max: state.soch.max === 0 ? null : state.soch.max,
+            };
+          }
+        }
+      },
     },
   ),
 );

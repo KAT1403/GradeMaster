@@ -4,6 +4,7 @@ export interface PredictorLogicProps {
   state: CalculateParams;
   targetGrade: 3 | 4 | 5;
   badScoreMode: number;
+  sochMaxScore: number;
 }
 
 export interface PredictorState {
@@ -13,6 +14,8 @@ export interface PredictorState {
     sochScenario: {
       requiredPercent: number;
       isPossible: boolean;
+      requiredScore?: number;
+      maxScore?: number;
     };
     foScenario: {
       needed10s: number;
@@ -50,12 +53,15 @@ export interface ScenarioSectionProps {
   predictions: PredictorState["predictions"];
   targetGrade: 3 | 4 | 5;
   hasSoch: boolean;
+  sochMaxScore: number;
+  onSochMaxScoreChange: (value: number) => void;
 }
 
 export interface SafetyNetSectionProps {
   predictions: PredictorState["predictions"];
   hasSoch: boolean;
   targetGrade: 3 | 4 | 5;
+  sochMaxScore: number;
 }
 
 export interface MetricsSectionProps {

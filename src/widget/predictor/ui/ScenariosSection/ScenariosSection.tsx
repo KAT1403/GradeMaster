@@ -8,6 +8,8 @@ export const ScenariosSection = ({
   predictions,
   targetGrade,
   hasSoch,
+  sochMaxScore,
+  onSochMaxScoreChange,
 }: ScenarioSectionProps) => {
   const { t } = useTranslation();
 
@@ -21,19 +23,64 @@ export const ScenariosSection = ({
             icon={SCENARIOS.SOCH.icon}
             title={t("predictor.scenarios.through_soch")}
           >
+            <div className={styles.sochInputContainer}>
+              <label htmlFor="soch-max-score">
+                {t("predictor.scenarios.soch_max_score_label")}:
+              </label>
+              <input
+                id="soch-max-score"
+                type="number"
+                min="0"
+                max="1000"
+                placeholder="20"
+                value={sochMaxScore === 0 ? "" : sochMaxScore}
+                onFocus={(e) => e.target.select()}
+                onKeyDown={(e) => {
+                  // Запрещаем ввод букв, знаков препинания и пробелов
+                  if (e.key.length === 1 && !/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Ограничиваем длину до 3 знаков и только цифры
+                  const cleanValue = value.replace(/[^0-9]/g, "").slice(0, 3);
+
+                  if (cleanValue === "" || cleanValue === undefined) {
+                    onSochMaxScoreChange(0);
+                  } else {
+                    const numValue = Number(cleanValue);
+                    if (!isNaN(numValue) && numValue >= 0 && numValue <= 100) {
+                      onSochMaxScoreChange(numValue);
+                    }
+                  }
+                }}
+                className={styles.sochInput}
+              />
+            </div>
             <p className={styles.content}>
               {predictions.sochScenario.requiredPercent <= 0
                 ? t("predictor.scenarios.zero_soch_enough", {
                     grade: targetGrade,
                   })
-                : predictions.sochScenario.isPossible
-                  ? t("predictor.scenarios.soch_possible", {
+                : predictions.sochScenario.isPossible &&
+                    predictions.sochScenario.requiredScore !== undefined
+                  ? t("predictor.scenarios.soch_score_needed", {
                       grade: targetGrade,
+                      score: predictions.sochScenario.requiredScore,
+                      max: predictions.sochScenario.maxScore || sochMaxScore,
                       percent: predictions.sochScenario.requiredPercent,
                     })
-                  : t("predictor.scenarios.soch_impossible", {
-                      grade: targetGrade,
-                    })}
+                  : predictions.sochScenario.isPossible
+                    ? t("predictor.scenarios.soch_possible", {
+                        grade: targetGrade,
+                        percent: predictions.sochScenario.requiredPercent,
+                      })
+                    : t("predictor.scenarios.soch_impossible", {
+                        grade: targetGrade,
+                        max: predictions.sochScenario.maxScore || sochMaxScore,
+                      })}
             </p>
           </ScenarioCard>
         )}
