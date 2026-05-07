@@ -18,7 +18,12 @@ export interface AcademicRecordState {
   resetAll: () => void;
 }
 
-const initialSors = () => Array.from({ length: 4 }, () => ({ id: crypto.randomUUID(), score: 0, max: 0 }));
+const initialSors = () =>
+  Array.from({ length: 4 }, () => ({
+    id: crypto.randomUUID(),
+    score: null,
+    max: null,
+  }));
 
 export const useAcademicRecordStore = create<AcademicRecordState>()(
   persist(
@@ -29,7 +34,8 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
       sors: initialSors(),
       soch: null,
 
-      setActiveRecord: (id, title) => set({ activeRecordId: id, activeRecordTitle: title }),
+      setActiveRecord: (id, title) =>
+        set({ activeRecordId: id, activeRecordTitle: title }),
 
       addFO: (fo) =>
         set((state) => {
@@ -55,7 +61,14 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
 
       setSOCH: (soch) => set({ soch }),
 
-      resetAll: () => set({ activeRecordId: null, activeRecordTitle: null, fos: [], sors: initialSors(), soch: null }),
+      resetAll: () =>
+        set({
+          activeRecordId: null,
+          activeRecordTitle: null,
+          fos: [],
+          sors: initialSors(),
+          soch: null,
+        }),
     }),
     {
       name: "academic-record-storage",

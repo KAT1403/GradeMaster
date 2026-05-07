@@ -45,8 +45,8 @@ export const CalculatorWidget = () => {
 
   const isFormEmpty =
     fos.length === 0 &&
-    sors.every((s) => (s.score || 0) === 0 && (s.max || 0) === 0) &&
-    (!soch || ((soch.score || 0) === 0 && (soch.max || 0) === 0));
+    sors.every((s) => s.score === null && s.max === null) &&
+    (!soch || (soch.score === null && soch.max === null));
 
   let hasUnsavedChanges = false;
   if (activeRecordId) {
@@ -54,19 +54,19 @@ export const CalculatorWidget = () => {
     if (activeEntry) {
       const currentData = {
         fos,
-        sors: sors.map((s) => ({ score: s.score || 0, max: s.max || 0 })),
-        soch: soch ? { score: soch.score || 0, max: soch.max || 0 } : null,
+        sors: sors.map((s) => ({ score: s.score ?? 0, max: s.max ?? 0 })),
+        soch: soch ? { score: soch.score ?? 0, max: soch.max ?? 0 } : null,
       };
       const savedData = {
         fos: activeEntry.data.fos,
         sors: activeEntry.data.sors.map((s) => ({
-          score: s.score || 0,
-          max: s.max || 0,
+          score: s.score ?? 0,
+          max: s.max ?? 0,
         })),
         soch: activeEntry.data.soch
           ? {
-              score: activeEntry.data.soch.score || 0,
-              max: activeEntry.data.soch.max || 0,
+              score: activeEntry.data.soch.score ?? 0,
+              max: activeEntry.data.soch.max ?? 0,
             }
           : null,
       };
@@ -142,7 +142,7 @@ export const CalculatorWidget = () => {
       }
     } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
-    } else if (["e", "E", "+", "-"].includes(e.key)) {
+    } else if (["e", "E", "+", "-", ".", ","].includes(e.key)) {
       e.preventDefault();
     }
   };
@@ -151,7 +151,7 @@ export const CalculatorWidget = () => {
   const currentGrade =
     currentPercent === 0 &&
     fos.length === 0 &&
-    sors.filter((s) => s.max > 0).length === 0 &&
+    sors.filter((s) => s.max !== null && s.max > 0).length === 0 &&
     !soch?.max
       ? 0
       : getGradeFromPercent(currentPercent);
@@ -169,26 +169,67 @@ export const CalculatorWidget = () => {
     field: "score" | "max",
     rawValue: string,
   ) => {
-    const num = parseFloat(rawValue);
-    const val = sanitizeValue(num);
     const sor = sors.find((s) => s.id === id);
     if (!sor) return;
 
-    if (field === "max") {
-      updateSOR(id, { ...sor, max: val });
+    if (rawValue === "") {
+      if (field === "max") {
+        updateSOR(id, { ...sor, max: null });
+      } else {
+        updateSOR(id, { ...sor, score: null });
+      }
     } else {
-      updateSOR(id, { ...sor, score: val });
+      if (rawValue.length > 1 && rawValue.startsWith("0")) {
+        return; 
+      }
+
+      const num = parseFloat(rawValue);
+      if (isNaN(num)) return;
+      if (!Number.isInteger(num)) return;
+      const val = sanitizeValue(num);
+      if (field === "max") {
+        updateSOR(id, { ...sor, max: val });
+      } else {
+        updateSOR(id, { ...sor, score: val });
+      }
     }
   };
 
   const handleSochChange = (field: "score" | "max", rawValue: string) => {
-    const num = parseFloat(rawValue);
-    const val = sanitizeValue(num);
+    if (rawValue === "") {
+      if (field === "score") {
+        setSOCH({
+          score: null,
+          max: soch?.max ?? null,
+        });
+      } else {
+        setSOCH({
+          score: soch?.score ?? null,
+          max: null,
+        });
+      }
+    } else {
+      if (rawValue.length > 1 && rawValue.startsWith("0")) {
+        return; 
+      }
 
-    setSOCH({
-      score: field === "score" ? val : soch?.score || 0,
-      max: field === "max" ? val : soch?.max || 0,
-    });
+      const num = parseFloat(rawValue);
+      if (isNaN(num)) return; 
+      if (!Number.isInteger(num)) return;
+
+      const val = sanitizeValue(num);
+      if (field === "score") {
+        setSOCH({
+          score: val,
+          max: soch?.max ?? null,
+        });
+      } else {
+        setSOCH({
+          score: soch?.score ?? null,
+          max: val,
+        });
+      }
+    }
   };
 
   const currentGradeColors = getGradeColors(currentGrade);
@@ -253,7 +294,7 @@ export const CalculatorWidget = () => {
           {sors.map((sor, index) => {
             const sorColors = getScoreColor(sor.score, sor.max);
             const customInputStyle =
-              sor.max > 0
+              sor.max !== null && sor.max > 0
                 ? {
                     backgroundColor: sorColors.bg,
                     color: sorColors.text,
@@ -271,7 +312,7 @@ export const CalculatorWidget = () => {
                     min="0"
                     max={MAX_POINTS}
                     placeholder={t("calculator.sor_score")}
-                    value={sor.score || ""}
+                    value={sor.score ?? ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       handleSorChange(sor.id, "score", e.target.value)
                     }
@@ -285,7 +326,7 @@ export const CalculatorWidget = () => {
                     min="0"
                     max={MAX_POINTS}
                     placeholder={t("calculator.sor_max")}
-                    value={sor.max || ""}
+                    value={sor.max ?? ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       handleSorChange(sor.id, "max", e.target.value)
                     }
@@ -336,11 +377,11 @@ export const CalculatorWidget = () => {
           <div className={styles.sorRow}>
             {(() => {
               const sochColors = getScoreColor(
-                soch?.score || 0,
-                soch?.max || 0,
+                soch?.score ?? 0,
+                soch?.max ?? 0,
               );
               const customInputStyle =
-                (soch?.max || 0) > 0
+                (soch?.max ?? 0) > 0
                   ? {
                       backgroundColor: sochColors.bg,
                       color: sochColors.text,
@@ -354,7 +395,7 @@ export const CalculatorWidget = () => {
                     min="0"
                     max={MAX_POINTS}
                     placeholder={t("calculator.sor_score")}
-                    value={soch?.score || ""}
+                    value={soch?.score ?? ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       handleSochChange("score", e.target.value)
                     }
@@ -368,7 +409,7 @@ export const CalculatorWidget = () => {
                     min="0"
                     max={MAX_POINTS}
                     placeholder={t("calculator.sor_max")}
-                    value={soch?.max || ""}
+                    value={soch?.max ?? ""}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       handleSochChange("max", e.target.value)
                     }

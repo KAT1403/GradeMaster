@@ -1,10 +1,10 @@
 export interface SOR {
   id: string;
-  score: number;
-  max: number;
+  score: number | null;
+  max: number | null;
 }
 
 export interface SOCH {
-  score: number;
-  max: number;
+  score: number | null;
+  max: number | null;
 }
