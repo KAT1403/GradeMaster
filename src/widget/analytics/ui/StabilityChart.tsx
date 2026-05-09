@@ -74,15 +74,15 @@ export const StabilityChart = ({ fos, sors, soch }: StabilityChartProps) => {
     ...sors.slice(0, 4).map((sor, i) => ({
       id: `sor-${i}`,
       name: `${t("calculator.sor_short")} ${i + 1}`,
-      value: getVal(sor.score, sor.max),
-      hasData: sor.max > 0,
+      value: getVal(sor.score ?? 0, sor.max ?? 0),
+      hasData: sor.max !== null && sor.max > 0,
       type: "sor" as const,
     })),
     {
       id: "soch",
       name: t("calculator.soch_short") || "СОЧ",
-      value: soch ? getVal(soch.score, soch.max) : 0,
-      hasData: !!(soch && soch.max > 0),
+      value: soch ? getVal(soch.score ?? 0, soch.max ?? 0) : 0,
+      hasData: !!(soch && soch.max !== null && soch.max > 0),
       type: "soch",
     },
   ];
