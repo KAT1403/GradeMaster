@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 import { 
   HelpCircle, 
   ChevronDown,
-  MapPin
+  MapPin,
+  GraduationCap,
+  Award,
+  Users,
+  ShieldCheck,
+  Lock
 } from "lucide-react";
 import { Card } from "../../../shared/ui/card";
 import { useUIStore } from "../../../app/store/uiStore";
@@ -57,13 +62,54 @@ export const InfoWidget = () => {
 
   return (
     <div className={styles.container}>
+      <Card className={styles.heroCard}>
+        <div className={styles.heroHeader}>
+          <div className={styles.heroIconWrapper}>
+            <GraduationCap className={styles.heroIcon} size={28} />
+          </div>
+          <h1 className={styles.heroTitle}>{t("info.about.title")}</h1>
+        </div>
+
+        <div className={styles.projectStatus}>
+          <div className={styles.featuresGrid}>
+            <div className={styles.featureItem}>
+              <Award className={styles.featureIcon} size={20} />
+              <div className={styles.featureContent}>
+                <span className={styles.featureTitle}>{t("info.about.features.official.title")}</span>
+                <span className={styles.featureText}> {t("info.about.features.official.text")}</span>
+              </div>
+            </div>
+            <div className={styles.featureItem}>
+              <Users className={styles.featureIcon} size={20} />
+              <div className={styles.featureContent}>
+                <span className={styles.featureTitle}>{t("info.about.features.scale.title")}</span>
+                <span className={styles.featureText}> {t("info.about.features.scale.text")}</span>
+              </div>
+            </div>
+            <div className={styles.featureItem}>
+              <ShieldCheck className={styles.featureIcon} size={20} />
+              <div className={styles.featureContent}>
+                <span className={styles.featureTitle}>{t("info.about.features.reliability.title")}</span>
+                <span className={styles.featureText}> {t("info.about.features.reliability.text")}</span>
+              </div>
+            </div>
+            <div className={styles.featureItem}>
+              <Lock className={styles.featureIcon} size={20} />
+              <div className={styles.featureContent}>
+                <span className={styles.featureTitle}>{t("info.about.features.privacy.title")}</span>
+                <span className={styles.featureText}> {t("info.about.features.privacy.text")}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <HelpCircle size={24} className={styles.sectionIcon} />
           <h2 className={styles.sectionTitle}>{t("info.faq.title")}</h2>
         </div>
         <div className={styles.faqList}>
-          <FAQItem question={t("info.faq.q1")} answer={t("info.faq.a1")} />
           <FAQItem question={t("info.faq.q2")} answer={t("info.faq.a2")} />
           <FAQItem question={t("info.faq.q3")} answer={t("info.faq.a3")} />
           <FAQItem question={t("info.faq.q4")} answer={t("info.faq.a4")} />

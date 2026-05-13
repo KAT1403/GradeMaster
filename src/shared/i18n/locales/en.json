@@ -1,0 +1,206 @@
+{
+  "tabs": {
+    "calculator": "Calculator",
+    "predictor": "Predictor",
+    "analytics": "Analytics",
+    "info": "Info"
+  },
+  "info": {
+    "title": "Information",
+    "about": {
+      "title": "About GradeMaster",
+      "description": "GradeMaster is your personal study assistant. Instantly calculate results, predict SOCH scores, and analyze your performance to stay one step ahead.",
+      "project_status": "Project Status:",
+      "features": {
+        "official": {
+          "title": "Official:",
+          "text": "successfully implemented and supported by the administration of LLP 'Economic Lyceum'."
+        },
+        "scale": {
+          "title": "Scale:",
+          "text": "over 1000 active users and 1500+ sessions."
+        },
+        "reliability": {
+          "title": "Reliability:",
+          "text": "open source under the MIT license."
+        },
+        "privacy": {
+          "title": "Privacy:",
+          "text": "calculations run locally in your browser."
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q2": "What is GPA?",
+      "a2": "GPA (Grade Point Average) is an international standard for average grades, used for admission to foreign educational institutions (USA, Europe, China, etc.). I added this calculation so you can estimate your chances in advance when planning to study abroad.",
+      "q3": "Where are my grades stored?",
+      "a3": "All your data is stored exclusively locally — in your browser's memory. The application does not send information to any server, ensuring complete privacy of your academic performance.",
+      "q4": "Is the service paid?",
+      "a4": "No, this project was created exclusively for the convenience of students and is non-commercial. The use of all site features will always remain free.",
+      "q5": "How can I contact the author?",
+      "a5": "You can use the 'Contact Information' section below. I try to reply to all messages in Telegram and WhatsApp as soon as possible.",
+      "q6": "Can I calculate the semester grade?",
+      "a6": "Of course! To do this, simply enter all your FA and SA grades for both quarters at once, and leave the SOCH field empty."
+    },
+    "author": {
+      "title": "About the author",
+      "name": "Alexey Kim (KAT1403)",
+      "status": "8 'G' Grade Student, Economic Lyceum, Astana",
+      "bio": "I am the sole author of the project. The project was developed to simplify the process of tracking, calculating, and predicting academic results for students in Kazakhstan."
+    },
+    "contacts": {
+      "title": "Contact Information"
+    },
+    "footer": {
+      "version": "Version v1.2.0"
+    }
+  },
+  "header": {
+    "betaTooltip": "Project in beta mode. If you find a bug — ",
+    "writeUs": "write to us"
+  },
+  "history": {
+    "title": "Calculation History",
+    "save_btn": "Save",
+    "save_modal_title": "Save to History",
+    "save_modal_desc": "Enter a name (e.g., Chemistry)",
+    "subject_name": "Subject Name",
+    "update_btn": "Update",
+    "save_as_new_btn": "Save as New",
+    "reset_modal_title": "Reset Data",
+    "reset_modal_desc": "Save current grades to history before resetting?",
+    "reset_btn_save": "Save",
+    "reset_btn_discard": "Don't Save",
+    "cancel": "Cancel",
+    "empty": "History is empty. Save grades for them to appear here.",
+    "delete_confirm": "Delete this subject from history?"
+  },
+  "calculator": {
+    "title": "Grade Calculator",
+    "fo_title": "FA Grades (Formative Assessment)",
+    "sor_title": "SA Grades (Summative Assessment for unit)",
+    "sor_score": "Score",
+    "sor_max": "Max",
+    "add_sor": "+ Add SA",
+    "soch_title": "SOCH Grade (Summative Assessment for Quarter)",
+    "weights_label": "Weights (Advanced Setting)",
+    "total_percent": "Total Percent",
+    "grade": "Grade",
+    "to_next_grade": "To Next Grade",
+    "max_points_reached": "Maximum Points",
+    "grade_5_reached": "Grade 5 Achieved",
+    "add_at_least_one": "Add at least one grade",
+    "no_grades": "No grades",
+    "reset": "Reset All",
+    "sor_short": "SA",
+    "soch_short": "SOCH",
+    "fo_short": "FA",
+    "gpa": "GPA"
+  },
+  "predictor": {
+    "title": "Grade Predictor",
+    "target_grade": "Target",
+    "scenario": "Scenario",
+    "need_extra_fo": "You need {{count}} more FA grades of 10 points",
+    "need_soch_score": "You need {{score}} out of {{max}} for SOCH",
+    "probability_title": "Success Probability",
+    "probability_high": "High",
+    "probability_medium": "Medium",
+    "probability_low": "Low",
+    "probability_impossible": "Impossible",
+    "probability_desc": "Based on your performance (average FA: {{avg}})",
+    "empty": {
+      "title": "No Grades",
+      "description": "Add at least one grade in the Calculator to make a prediction.",
+      "button": "Go to Calculator"
+    },
+    "sections": {
+      "how_to_reach": "How to Reach Goal",
+      "safety_net": "Safety Net",
+      "metrics": "Metrics"
+    },
+    "scenarios": {
+      "already_achieved": "Goal Achieved!",
+      "zero_soch_enough": "You already have enough points that even 0 for SOCH will keep your grade at {{grade}}.",
+      "through_soch": "Through SOCH",
+      "through_fo": "Through FA",
+      "soch_possible": "To get a {{grade}}, score at least {{percent}}% on the upcoming SOCH.",
+      "soch_score_needed": "To get a {{grade}}, you need to score {{score}} out of {{max}} points ({{percent}}%).",
+      "soch_max_score_label": "Max SOCH Score",
+      "soch_impossible": "Even maximum points for SOCH ({{max}}/{{max}} - 100%) won't be enough for a {{grade}}.",
+      "fo_possible": "To reach a {{grade}} through FA, you need to get {{count}} consecutive '10' grades.",
+      "fo_not_needed": "No extra FA is needed to achieve the goal.",
+      "fo_impossible": "It's mathematically impossible to reach a {{grade}} solely through FA."
+    },
+    "safety_net": {
+      "title": "To Avoid 2 or 3",
+      "avoid_3": "To avoid a 3 for the quarter, score at least {{percent}}% on SOCH.",
+      "avoid_3_with_score": "To avoid a 3 for the quarter, you need to score {{score}} out of {{max}} points ({{percent}}%).",
+      "avoid_3_impossible": "Even 100% on SOCH won't help you avoid a 3.",
+      "avoid_2": "To avoid a 2 for the quarter, score at least {{percent}}% on SOCH.",
+      "avoid_2_with_score": "To avoid a 2 for the quarter, you need to score {{score}} out of {{max}} points ({{percent}}%).",
+      "avoid_2_impossible": "Even 100% on SOCH won't help you avoid a 2."
+    },
+    "error_margin": {
+      "title": "Margin of Error (FA)",
+      "if_score": "If I get a score:",
+      "below_target_good": "You currently have {{current}}%, a '{{score}}' might improve the situation!",
+      "below_target_bad": "You currently have {{current}}%, which is below the target {{target}}. Getting a '{{score}}' will only make it worse.",
+      "improves": "A '{{score}}' will improve your overall score!",
+      "allowed": "You can get a '{{score}}' for FA {{count}} time(s), and you will still maintain your target {{target}}!",
+      "none": "None! If you get a '{{score}}' now, your grade will drop below {{target}}.",
+      "tooltip": "How many bad FA grades you can get without losing your target grade (ignoring the upcoming SOCH)."
+    },
+    "probability": {
+      "title": "Probability of Success",
+      "based_on": "Success Probability",
+      "monte_carlo_note": "Heuristic Prediction Method",
+      "tooltip": "Based on your current performance. Shows how realistic it is to achieve your goal."
+    }
+  },
+  "smart_paste": {
+    "btn": "Smart Paste",
+    "title": "Paste Grades",
+    "instruction": "Copy grades straight from your electronic diary and paste them here. We will fill them in for you.",
+    "placeholder": "Paste copied text...",
+    "example_label": "Example:",
+    "example_text": "10 9 8 13/15 16/20",
+    "mobile_tip": "Tip: On your phone, you can copy text straight from a screenshot.",
+    "apply_btn": "Apply"
+  },
+  "analytics": {
+    "title": "Analytics and Trends",
+    "mean": "Mean Score",
+    "mean_tooltip": "The arithmetic average of your FA grades.",
+    "median": "Median",
+    "std_dev": "Deviation",
+    "volatility": "Volatility",
+    "volatility_tooltip": "The lower the volatility, the more stable your results.",
+    "volatility_desc": "Current grades + simulation",
+    "trend": "FA Grade Trend",
+    "trend_tooltip": "The solid line shows your actual grades, and the dotted line shows the predicted ones.",
+    "low_volatility": "Stable",
+    "high_volatility": "Unstable",
+    "progress": "Progress",
+    "regress": "Regress",
+    "stability_title": "Validity of Current Grades",
+    "stability_tooltip": "How much your FA grades match your SA and SOCH grades. If FA is high but SOCH is low, validity drops.",
+    "stability_desc": "Comparing average FA to SA/SOCH results",
+    "trend_text_title": "Trend",
+    "trend_text": {
+      "progress": "Progress",
+      "regress": "Regress",
+      "stable": "Stable"
+    },
+    "trend_desc": "FA Dynamics Evaluation",
+    "diagnosis_title": "Your Academic Profile",
+    "charts": {
+      "history": "Grade",
+      "forecast": "Forecast",
+      "avg_fo": "Avg FA",
+      "sor_result": "SA Result",
+      "soch_result": "SOCH Result"
+    }
+  }
+}

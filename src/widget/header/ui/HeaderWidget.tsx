@@ -3,7 +3,7 @@ import { useUIStore } from "../../../app/store/uiStore";
 import type { TabType } from "../../../app/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
-import { Sun, Moon, History, Calculator, LineChart, BarChart3, Info } from "lucide-react";
+import { Sun, Moon, History, Calculator, LineChart, BarChart3, Info, Globe, ChevronDown } from "lucide-react";
 import { HistoryDrawer } from "../../../features/history/ui/HistoryDrawer";
 
 export const HeaderWidget = () => {
@@ -12,29 +12,34 @@ export const HeaderWidget = () => {
   const theme = useUIStore((state) => state.theme);
   const setActiveTab = useUIStore((state) => state.setActiveTab);
   const toggleTheme = useUIStore((state) => state.toggleTheme);
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        tooltipRef.current &&
-        !tooltipRef.current.contains(event.target as Node)
+        langMenuRef.current &&
+        !langMenuRef.current.contains(event.target as Node)
       ) {
-        setIsTooltipVisible(false);
+        setIsLangMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const switchLanguage = () => {
-    const currentLang = i18n.language.slice(0, 2).toLowerCase();
-    const nextLang = currentLang === "ru" ? "kz" : "ru";
-    i18n.changeLanguage(nextLang);
-    localStorage.setItem("gradeMasterLang", nextLang);
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("gradeMasterLang", lang);
+    setIsLangMenuOpen(false);
   };
+
+  const languages = [
+    { code: 'ru', label: 'RU' },
+    { code: 'kz', label: 'KZ' },
+    { code: 'en', label: 'EN' }
+  ];
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: "calculator", label: t("tabs.calculator"), icon: <Calculator size={18} /> },
@@ -48,7 +53,7 @@ export const HeaderWidget = () => {
       <div className={styles.container}>
         <div className={styles.brand}>
           <h1 className={styles.logo}>GradeMaster</h1>
-          <div
+          {/* <div
             className={styles.betaWrapper}
             ref={tooltipRef}
             onMouseEnter={() => setIsTooltipVisible(true)}
@@ -71,7 +76,7 @@ export const HeaderWidget = () => {
                 {t("header.writeUs")}
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <nav className={styles.tabBar}>
@@ -102,9 +107,31 @@ export const HeaderWidget = () => {
           >
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
-          <button className={styles.langBtn} onClick={switchLanguage}>
-            {i18n.language.slice(0, 2).toUpperCase()}
-          </button>
+          <div className={styles.langWrapper} ref={langMenuRef}>
+            <button 
+              className={styles.langBtn} 
+              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              aria-label="Select language"
+            >
+              <Globe size={18} />
+              <span>{i18n.language.slice(0, 2).toUpperCase()}</span>
+              <ChevronDown size={14} className={`${styles.chevron} ${isLangMenuOpen ? styles.rotated : ''}`} />
+            </button>
+            
+            {isLangMenuOpen && (
+              <div className={styles.langDropdown}>
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    className={`${styles.langOption} ${i18n.language.slice(0, 2).toLowerCase() === lang.code ? styles.activeLang : ''}`}
+                    onClick={() => changeLanguage(lang.code)}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <HistoryDrawer isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
