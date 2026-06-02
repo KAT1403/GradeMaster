@@ -93,7 +93,8 @@
     "sor_short": "БЖБ",
     "soch_short": "ТЖБ",
     "fo_short": "ФО",
-    "gpa": "GPA"
+    "gpa": "GPA",
+    "score_over_max": "Ұпай максимумнан көп"
   },
   "predictor": {
     "title": "Баға болжамы",

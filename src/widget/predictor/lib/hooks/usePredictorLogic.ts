@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { analyzePrediction } from "../../../../shared/lib/predictor";
-import { calculateTotalPercent } from "../../../../shared/lib/grading";
+import {
+  calculateTotalPercent,
+  isCompleteScore,
+} from "../../../../shared/lib/grading";
 import { checkIfScoreImproves } from "../../../../shared/lib/predictor/checkIfScoreImproves";
 import type { PredictorLogicProps, PredictorState } from "../../model/types";
 
@@ -13,7 +16,8 @@ export const usePredictorLogic = ({
   return useMemo(() => {
     const predictions = analyzePrediction(state, targetGrade, sochMaxScore);
     const hasSoch = Boolean(
-      state.soch?.score && state.soch.max !== null && state.soch.max > 0,
+      state.soch &&
+        isCompleteScore(state.soch.score, state.soch.max),
     );
     const currentPercent = calculateTotalPercent(state);
     const isAlreadyBelowTarget = currentPercent < predictions.targetPercent;

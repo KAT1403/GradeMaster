@@ -14,6 +14,8 @@ import {
   getGradeColors,
   getFoColor,
   getScoreColor,
+  isCompleteScore,
+  isScoreOverMax,
 } from "../../../shared/lib/grading";
 import { Card } from "../../../shared/ui/card";
 import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
@@ -292,9 +294,17 @@ export const CalculatorWidget = () => {
         </div>
         <div className={styles.sorList}>
           {sors.map((sor, index) => {
+            const isInvalidScore = isScoreOverMax(sor.score, sor.max);
+            const isCompleteSor = isCompleteScore(sor.score, sor.max);
             const sorColors = getScoreColor(sor.score, sor.max);
             const customInputStyle =
-              sor.max !== null && sor.max > 0
+              isInvalidScore
+                ? {
+                    backgroundColor: "rgba(239, 68, 68, 0.12)",
+                    color: "#ef4444",
+                    borderColor: "#ef4444",
+                  }
+                : isCompleteSor
                 ? {
                     backgroundColor: sorColors.bg,
                     color: sorColors.text,
@@ -335,6 +345,13 @@ export const CalculatorWidget = () => {
                     style={customInputStyle}
                   />
                 </div>
+                <span
+                  className={`${styles.validationError} ${
+                    !isInvalidScore ? styles.hiddenValidationError : ""
+                  }`}
+                >
+                  {t("calculator.score_over_max")}
+                </span>
               </div>
             );
           })}
@@ -376,12 +393,26 @@ export const CalculatorWidget = () => {
           <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
           <div className={styles.sorRow}>
             {(() => {
+              const isInvalidScore = isScoreOverMax(
+                soch?.score ?? null,
+                soch?.max ?? null,
+              );
+              const isCompleteSoch = isCompleteScore(
+                soch?.score ?? null,
+                soch?.max ?? null,
+              );
               const sochColors = getScoreColor(
                 soch?.score ?? null,
                 soch?.max ?? null,
               );
               const customInputStyle =
-                soch && soch.max !== null && soch.max > 0
+                isInvalidScore
+                  ? {
+                      backgroundColor: "rgba(239, 68, 68, 0.12)",
+                      color: "#ef4444",
+                      borderColor: "#ef4444",
+                    }
+                  : isCompleteSoch
                   ? {
                       backgroundColor: sochColors.bg,
                       color: sochColors.text,
@@ -389,6 +420,7 @@ export const CalculatorWidget = () => {
                     }
                   : {};
               return (
+                <>
                 <div className={styles.inputsWrapper}>
                   <Input
                     type="number"
@@ -418,6 +450,14 @@ export const CalculatorWidget = () => {
                     style={customInputStyle}
                   />
                 </div>
+                <span
+                  className={`${styles.validationError} ${
+                    !isInvalidScore ? styles.hiddenValidationError : ""
+                  }`}
+                >
+                  {t("calculator.score_over_max")}
+                </span>
+                </>
               );
             })()}
           </div>

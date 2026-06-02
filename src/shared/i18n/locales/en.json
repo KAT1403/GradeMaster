@@ -96,7 +96,8 @@
     "sor_short": "SA",
     "soch_short": "SOCH",
     "fo_short": "FA",
-    "gpa": "GPA"
+    "gpa": "GPA",
+    "score_over_max": "Score is greater than max"
   },
   "predictor": {
     "title": "Grade Predictor",

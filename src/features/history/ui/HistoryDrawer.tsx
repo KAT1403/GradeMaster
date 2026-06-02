@@ -20,8 +20,8 @@ export const HistoryDrawer = ({ isOpen, onClose }: HistoryDrawerProps) => {
     setFOS(entry.data.fos);
     const correctedSors = entry.data.sors.map((sor) => ({
       ...sor,
-      score: sor.score === 0 ? null : sor.score,
-      max: sor.max === 0 ? null : sor.max,
+      score: sor.score === 0 && sor.max === 0 ? null : sor.score,
+      max: sor.score === 0 && sor.max === 0 ? null : sor.max,
     }));
     const loadedSors = correctedSors;
     if (loadedSors.length < 4) {
@@ -43,10 +43,9 @@ export const HistoryDrawer = ({ isOpen, onClose }: HistoryDrawerProps) => {
     }
 
     const correctedSoch = entry.data.soch
-      ? {
-          score: entry.data.soch.score === 0 ? null : entry.data.soch.score,
-          max: entry.data.soch.max === 0 ? null : entry.data.soch.max,
-        }
+      ? entry.data.soch.score === 0 && entry.data.soch.max === 0
+        ? { score: null, max: null }
+        : entry.data.soch
       : null;
     setSOCH(correctedSoch);
 

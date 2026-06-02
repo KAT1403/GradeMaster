@@ -16,6 +16,23 @@ export const SaveModal = ({
   onClose,
   onSaveComplete,
 }: SaveModalProps) => {
+  const { activeRecordId, activeRecordTitle } = useAcademicRecordStore();
+
+  if (!isOpen) return null;
+
+  return (
+    <SaveModalContent
+      key={`${activeRecordId ?? "new"}:${activeRecordTitle ?? ""}`}
+      onClose={onClose}
+      onSaveComplete={onSaveComplete}
+    />
+  );
+};
+
+const SaveModalContent = ({
+  onClose,
+  onSaveComplete,
+}: Omit<SaveModalProps, "isOpen">) => {
   const { t } = useTranslation();
   const {
     fos,
@@ -28,16 +45,6 @@ export const SaveModal = ({
   const { saveEntry } = useHistoryManager();
 
   const [title, setTitle] = useState(activeRecordTitle || "");
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    if (isOpen) {
-      setTitle(activeRecordTitle || "");
-    }
-  }
-
-  if (!isOpen) return null;
 
   const handleSave = (asNew: boolean = false) => {
     if (!title.trim()) return;

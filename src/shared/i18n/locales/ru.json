@@ -96,7 +96,8 @@
     "sor_short": "СОР",
     "soch_short": "СОЧ",
     "fo_short": "ФО",
-    "gpa": "GPA"
+    "gpa": "GPA",
+    "score_over_max": "Балл больше максимума"
   },
   "predictor": {
     "title": "Прогноз оценок",

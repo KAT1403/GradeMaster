@@ -97,7 +97,7 @@ export const SmartPaste = () => {
           max: parsedSors[i].max 
         };
       }
-      return { id: crypto.randomUUID(), score: 0, max: 0 };
+      return { id: crypto.randomUUID(), score: null, max: null };
     });
     setSORS(newSorsArray);
     

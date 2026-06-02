@@ -1,4 +1,5 @@
 import type { SOR } from "../types/academic";
+import { isCompleteScore } from "./grading";
 
 export const calculateStdDev = (numbers: number[]): number => {
   if (numbers.length === 0) return 0;
@@ -47,7 +48,7 @@ export const predictFutureGrades = (history: number[], steps: number = 5) => {
 };
 
 export const calculateCorrelationScore = (fos: number[], sors: SOR[]) => {
-  const validSors = sors.filter((s) => s.max !== null && s.max > 0);
+  const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
   if (fos.length === 0 || validSors.length === 0) return 0;
 
   const avgFO = fos.reduce((a, b) => a + b, 0) / fos.length / 10;

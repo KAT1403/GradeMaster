@@ -22,7 +22,17 @@ interface TrendItem {
   realistic?: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipPayload {
+  payload: TrendItem;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   const item = payload?.[0]?.payload;
   if (!active || !item) return null;
   const val = item.value !== undefined ? item.value : item.realistic;

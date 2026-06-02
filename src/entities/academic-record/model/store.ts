@@ -76,14 +76,14 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
         if (state) {
           state.sors = state.sors.map((sor) => ({
             ...sor,
-            score: sor.score === 0 ? null : sor.score,
-            max: sor.max === 0 ? null : sor.max,
+            score: sor.score === 0 && sor.max === 0 ? null : sor.score,
+            max: sor.score === 0 && sor.max === 0 ? null : sor.max,
           }));
 
-          if (state.soch) {
+          if (state.soch?.score === 0 && state.soch.max === 0) {
             state.soch = {
-              score: state.soch.score === 0 ? null : state.soch.score,
-              max: state.soch.max === 0 ? null : state.soch.max,
+              score: null,
+              max: null,
             };
           }
         }

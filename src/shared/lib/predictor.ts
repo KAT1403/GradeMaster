@@ -1,4 +1,8 @@
-import { calculateTotalPercent, type CalculateParams } from "./grading";
+import {
+  calculateTotalPercent,
+  isCompleteScore,
+  type CalculateParams,
+} from "./grading";
 
 export interface PredictorData {
   targetGrade: 3 | 4 | 5;
@@ -52,12 +56,15 @@ export const analyzePrediction = (
     currentCapital += (avgFO / 10) * weights.fo * 100;
   }
   if (sors.length > 0) {
-    const validSors = sors.filter((s) => s.max !== null && s.max > 0);
+    const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
     if (validSors.length > 0) {
-      const avgSorPercent =
-        validSors.reduce((sum, s) => sum + (s.score ?? 0) / (s.max ?? 1), 0) /
-        validSors.length;
-      currentCapital += avgSorPercent * weights.sor * 100;
+      const totalSorScore = validSors.reduce(
+        (sum, s) => sum + (s.score ?? 0),
+        0,
+      );
+      const totalSorMax = validSors.reduce((sum, s) => sum + (s.max ?? 0), 0);
+      const sorPercent = totalSorScore / totalSorMax;
+      currentCapital += sorPercent * weights.sor * 100;
     }
   }
 

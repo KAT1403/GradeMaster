@@ -5,6 +5,17 @@ export interface CalculateParams {
   weights?: { fo: number; sor: number; soch: number };
 }
 
+export const isScoreOverMax = (
+  score: number | null,
+  max: number | null,
+): boolean => score !== null && max !== null && max > 0 && score > max;
+
+export const isCompleteScore = (
+  score: number | null,
+  max: number | null,
+): boolean =>
+  score !== null && max !== null && max > 0 && !isScoreOverMax(score, max);
+
 export const getGradeFromPercent = (percent: number): 2 | 3 | 4 | 5 => {
   const rounded = Math.round(percent);
   if (rounded >= 85) return 5;
@@ -39,7 +50,7 @@ export const calculateTotalPercent = ({
   }
 
   if (sors.length > 0) {
-    const validSors = sors.filter((s) => s.max !== null && s.max > 0);
+    const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
     if (validSors.length > 0) {
       const totalSorScore = validSors.reduce(
         (sum, s) => sum + (s.score ?? 0),
@@ -52,8 +63,13 @@ export const calculateTotalPercent = ({
     }
   }
 
-  if (soch && soch.max !== null && soch.max > 0) {
-    const sochPercent = (soch.score ?? 0) / soch.max;
+  if (
+    soch &&
+    isCompleteScore(soch.score, soch.max)
+  ) {
+    const sochScore = soch.score!;
+    const sochMax = soch.max!;
+    const sochPercent = sochScore / sochMax;
     total += Math.round(sochPercent * weights.soch * 100 * 10) / 10;
     activeWeightsTotal += weights.soch;
   }
@@ -103,7 +119,7 @@ export const getFoColor = (num: number) => {
 };
 
 export const getScoreColor = (score: number | null, max: number | null) => {
-  if (!max || max <= 0) return getGradeColors(0);
-  const percent = ((score ?? 0) / max) * 100;
+  if (!isCompleteScore(score, max)) return getGradeColors(0);
+  const percent = (score! / max!) * 100;
   return getGradeColors(getGradeFromPercent(percent));
 };
