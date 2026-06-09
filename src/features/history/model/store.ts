@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { SOR, SOCH } from "../../../shared/types/academic";
+import {
+  normalizeFos,
+  normalizeSors,
+  normalizeSoch,
+  normalizeTimestamp,
+} from "../../../shared/lib/storageMigrations";
 
 export interface HistoryEntryData {
   fos: number[];
@@ -26,7 +32,50 @@ export interface HistoryState {
   cleanupExpired: () => void;
 }
 
-const EXPIRATION_TIME = 90 * 24 * 60 * 60 * 1000; // 90 days in milliseconds
+const EXPIRATION_TIME = 90 * 24 * 60 * 60 * 1000; 
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const normalizeHistoryEntry = (value: unknown): HistoryEntry | null => {
+  if (!isRecord(value) || !isRecord(value.data)) return null;
+
+  const id =
+    typeof value.id === "string" && value.id ? value.id : crypto.randomUUID();
+  const title =
+    typeof value.title === "string" && value.title ? value.title : "Untitled";
+  const finalPercent =
+    typeof value.finalPercent === "number" && Number.isFinite(value.finalPercent)
+      ? value.finalPercent
+      : 0;
+
+  return {
+    id,
+    title,
+    lastModified: normalizeTimestamp(value.lastModified),
+    data: {
+      fos: normalizeFos(value.data.fos),
+      sors: normalizeSors(value.data.sors),
+      soch: normalizeSoch(value.data.soch),
+    },
+    isPinned: value.isPinned === true,
+    finalPercent,
+  };
+};
+
+const migrateHistoryState = (persistedState: unknown): Partial<HistoryState> => {
+  if (!isRecord(persistedState) || !Array.isArray(persistedState.entries)) {
+    return {};
+  }
+
+  const now = Date.now();
+  const entries = persistedState.entries
+    .map(normalizeHistoryEntry)
+    .filter((entry): entry is HistoryEntry => entry !== null)
+    .filter((entry) => entry.isPinned || now - entry.lastModified < EXPIRATION_TIME);
+
+  return { entries };
+};
 
 export const useHistoryManager = create<HistoryState>()(
   persist(
@@ -76,6 +125,12 @@ export const useHistoryManager = create<HistoryState>()(
     }),
     {
       name: "grademaster-history",
+      version: 2,
+      migrate: migrateHistoryState,
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...migrateHistoryState(persistedState),
+      }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.cleanupExpired();

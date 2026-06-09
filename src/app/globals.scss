@@ -127,7 +127,9 @@ body {
   margin: 0;
   font-family: "Lato", sans-serif;
   color: var(--text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 article,
 aside,

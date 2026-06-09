@@ -63,10 +63,7 @@ export const calculateTotalPercent = ({
     }
   }
 
-  if (
-    soch &&
-    isCompleteScore(soch.score, soch.max)
-  ) {
+  if (soch && isCompleteScore(soch.score, soch.max)) {
     const sochScore = soch.score!;
     const sochMax = soch.max!;
     const sochPercent = sochScore / sochMax;

@@ -1,6 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { SOR, SOCH } from "../../../shared/types/academic";
+import {
+  createEmptySor,
+  normalizeFos,
+  normalizeSors,
+  normalizeSoch,
+  normalizeTextOrNull,
+} from "../../../shared/lib/storageMigrations";
 
 export interface AcademicRecordState {
   activeRecordId: string | null;
@@ -18,12 +25,25 @@ export interface AcademicRecordState {
   resetAll: () => void;
 }
 
-const initialSors = () =>
-  Array.from({ length: 4 }, () => ({
-    id: crypto.randomUUID(),
-    score: null,
-    max: null,
-  }));
+const initialSors = () => Array.from({ length: 4 }, createEmptySor);
+
+const migrateAcademicRecordState = (
+  persistedState: unknown,
+): Partial<AcademicRecordState> => {
+  if (typeof persistedState !== "object" || persistedState === null) {
+    return {};
+  }
+
+  const state = persistedState as Partial<AcademicRecordState>;
+
+  return {
+    activeRecordId: normalizeTextOrNull(state.activeRecordId),
+    activeRecordTitle: normalizeTextOrNull(state.activeRecordTitle),
+    fos: normalizeFos(state.fos),
+    sors: normalizeSors(state.sors),
+    soch: normalizeSoch(state.soch),
+  };
+};
 
 export const useAcademicRecordStore = create<AcademicRecordState>()(
   persist(
@@ -72,22 +92,12 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     }),
     {
       name: "academic-record-storage",
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.sors = state.sors.map((sor) => ({
-            ...sor,
-            score: sor.score === 0 && sor.max === 0 ? null : sor.score,
-            max: sor.score === 0 && sor.max === 0 ? null : sor.max,
-          }));
-
-          if (state.soch?.score === 0 && state.soch.max === 0) {
-            state.soch = {
-              score: null,
-              max: null,
-            };
-          }
-        }
-      },
+      version: 2,
+      migrate: migrateAcademicRecordState,
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...migrateAcademicRecordState(persistedState),
+      }),
     },
   ),
 );
