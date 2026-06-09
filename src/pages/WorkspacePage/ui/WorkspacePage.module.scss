@@ -1,0 +1,14 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: calc(100vh - 100px);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px 4px;
+    min-height: calc(100vh - 140px);
+  }
+}

@@ -3,7 +3,7 @@ import { useUIStore } from "../../../app/store/uiStore";
 import type { TabType } from "../../../app/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
-import { Sun, Moon, History, Calculator, LineChart, BarChart3, Info, Globe, ChevronDown } from "lucide-react";
+import { Sun, Moon, History, Calculator, BookOpen, User, Settings, Globe, ChevronDown } from "lucide-react";
 import { HistoryDrawer } from "../../../features/history/ui/HistoryDrawer";
 
 export const HeaderWidget = () => {
@@ -42,10 +42,10 @@ export const HeaderWidget = () => {
   ];
 
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
-    { id: "calculator", label: t("tabs.calculator"), icon: <Calculator size={18} /> },
-    { id: "predictor", label: t("tabs.predictor"), icon: <LineChart size={18} /> },
-    { id: "analytics", label: t("tabs.analytics"), icon: <BarChart3 size={18} /> },
-    { id: "info", label: t("tabs.info"), icon: <Info size={18} /> },
+    { id: "workspace", label: t("tabs.workspace"), icon: <Calculator size={18} /> },
+    { id: "subjects", label: t("tabs.subjects"), icon: <BookOpen size={18} /> },
+    { id: "profile", label: t("tabs.profile"), icon: <User size={18} /> },
+    { id: "settings", label: t("tabs.settings"), icon: <Settings size={18} /> },
   ];
 
   return (
@@ -69,7 +69,7 @@ export const HeaderWidget = () => {
                 className={styles.contactLink}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveTab("info");
+                  setActiveTab("settings");
                   setIsTooltipVisible(false);
                 }}
               >

@@ -18,9 +18,9 @@ export const ScenarioCard = ({
   const getCardStyle = () => {
     switch (variant) {
       case "success":
-        return { borderColor: "#4B9A25", backgroundColor: "#f0fdf4" };
+        return { borderColor: "#3b8f21", backgroundColor: "#f0fdf4" };
       case "warning":
-        return { borderColor: "#FF8F00", backgroundColor: "#fffbeb" };
+        return { borderColor: "#ff8e12", backgroundColor: "#fffbeb" };
       default:
         return {};
     }

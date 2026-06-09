@@ -1,0 +1,273 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.header {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIcon {
+  color: var(--accent-primary);
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.bentoCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 30px rgba(47, 96, 255, 0.15);
+    
+    .arrowIcon {
+      transform: translateX(4px);
+      color: var(--accent-primary);
+    }
+  }
+}
+
+.pinnedCard {
+  border-left: 3px solid var(--accent-primary);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.systemBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-secondary);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pinBtn, .deleteBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    color: var(--accent-primary);
+  }
+
+  &.pinned {
+    color: var(--accent-primary);
+  }
+}
+
+.deleteBtn:hover {
+  background: rgba(244, 63, 94, 0.12);
+  color: var(--color-danger);
+}
+
+.cardMain {
+  cursor: pointer;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.subjectName {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.gradeDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gradeLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.gradeValue {
+  font-size: 1.25rem;
+  font-weight: 750;
+  padding: 5px 8px;
+  border-radius: 16px;
+}
+
+.successGrade {
+  color: #ffffff;
+  background: #3b8f21;
+}
+
+.warningGrade {
+  color: #ffffff;
+  background: #ff8e12;
+}
+
+.dangerGrade {
+  color: #ffffff;
+  background: #d13142;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-primary);
+  padding-top: 12px;
+}
+
+.loadBtn {
+  background: var(--accent-secondary);
+  color: var(--accent-primary);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--accent-primary);
+    color: #ffffff;
+  }
+}
+
+.arrowIcon {
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.emptyCard {
+  background: var(--bg-secondary);
+  border: 1.5px dashed var(--border-primary);
+  border-radius: 16px;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  margin-top: 24px;
+}
+
+.emptyIcon {
+  color: var(--text-muted);
+}
+
+.addFirstBtn, .addBtnHeader {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.addBtnHeader {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px 8px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .bentoGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

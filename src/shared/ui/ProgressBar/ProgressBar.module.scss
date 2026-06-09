@@ -20,15 +20,15 @@
   }
 
   &.high {
-    background: #4b9a25;
+    background: var(--color-success);
   }
 
   &.medium {
-    background: #ff8f00;
+    background: var(--color-warning);
   }
 
   &.low {
-    background: #aa2834;
+    background: var(--color-danger);
   }
 
   &.impossible {

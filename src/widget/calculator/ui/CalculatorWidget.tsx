@@ -1,7 +1,6 @@
 import type { ChangeEvent, KeyboardEvent } from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
 import { useHistoryManager } from "../../../features/history/model/store";
 import { SaveModal } from "../../../features/history/ui/SaveModal";
@@ -22,6 +21,9 @@ import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
 import { Input } from "../../../shared/ui/input/ui/Input";
 import { ProgressBar } from "../../../shared/ui/ProgressBar";
 import { calculateIntlGPA } from "../../../shared/lib/converters";
+import { PredictorWidget } from "../../predictor";
+import { AnalyticsWidget } from "../../analytics";
+import { CloudOff, HelpCircle, Save, RotateCcw } from "lucide-react";
 import styles from "./CalculatorWidget.module.scss";
 
 export const CalculatorWidget = () => {
@@ -31,6 +33,7 @@ export const CalculatorWidget = () => {
     sors,
     soch,
     activeRecordId,
+    activeRecordTitle,
     addFO,
     removeFO,
     updateSOR,
@@ -44,6 +47,17 @@ export const CalculatorWidget = () => {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [resetAfterSave, setResetAfterSave] = useState(false);
+
+  // Overhaul states
+  const [selectedSystem, setSelectedSystem] = useState("25/25/50");
+  const [subTab, setSubTab] = useState<"input" | "predictor" | "analytics">("input");
+
+  const systems = [
+    { id: "25/25/50", label: t("workspace.system_school") },
+    { id: "final", label: t("workspace.system_final") },
+    { id: "gpa", label: t("workspace.system_gpa") },
+    { id: "kundelik", label: t("workspace.system_kundelik") }
+  ];
 
   const isFormEmpty =
     fos.length === 0 &&
@@ -235,12 +249,39 @@ export const CalculatorWidget = () => {
   };
 
   const currentGradeColors = getGradeColors(currentGrade);
-
   const intlGPA = calculateIntlGPA(currentPercent);
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      <SmartPaste />
+      {/* Brand Header */}
+      <div className={styles.brandHeader}>
+        <div className={styles.brandTitle}>
+          <span className={styles.brandMain}>GradeMaster</span>
+          <span className={styles.brandSeparator}>//</span>
+          <span className={styles.brandSub}>
+            {activeRecordTitle ? activeRecordTitle : t("workspace.subtitle")}
+          </span>
+        </div>
+        <div className={styles.syncStatus}>
+          <CloudOff size={14} className={styles.syncIcon} />
+          <span>{t("workspace.status")}</span>
+        </div>
+      </div>
+
+      {/* System Selector */}
+      <div className={styles.systemSelector}>
+        {systems.map((sys) => (
+          <button
+            key={sys.id}
+            className={`${styles.systemTab} ${selectedSystem === sys.id ? styles.active : ""}`}
+            onClick={() => setSelectedSystem(sys.id)}
+          >
+            {sys.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Result Card */}
       <Card className={styles.resultCard}>
         <div className={styles.resultHeader}>
           <span className={styles.resultTitle}>
@@ -288,194 +329,252 @@ export const CalculatorWidget = () => {
         </div>
       </Card>
 
-      <Card className={styles.sectionCard}>
-        <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>{t("calculator.sor_title")}</h3>
-        </div>
-        <div className={styles.sorList}>
-          {sors.map((sor, index) => {
-            const isInvalidScore = isScoreOverMax(sor.score, sor.max);
-            const isCompleteSor = isCompleteScore(sor.score, sor.max);
-            const sorColors = getScoreColor(sor.score, sor.max);
-            const customInputStyle =
-              isInvalidScore
-                ? {
-                    backgroundColor: "rgba(239, 68, 68, 0.12)",
-                    color: "#ef4444",
-                    borderColor: "#ef4444",
-                  }
-                : isCompleteSor
-                ? {
-                    backgroundColor: sorColors.bg,
-                    color: sorColors.text,
-                    borderColor: sorColors.border,
-                  }
-                : {};
-            return (
-              <div key={sor.id} className={styles.sorRow}>
-                <span className={styles.sorIndex}>
-                  {t("calculator.sor_short")} {index + 1}
-                </span>
-                <div className={styles.inputsWrapper}>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={MAX_POINTS}
-                    placeholder={t("calculator.sor_score")}
-                    value={sor.score ?? ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSorChange(sor.id, "score", e.target.value)
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
-                  <span className={styles.divider}>/</span>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={MAX_POINTS}
-                    placeholder={t("calculator.sor_max")}
-                    value={sor.max ?? ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSorChange(sor.id, "max", e.target.value)
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
-                </div>
-                <span
-                  className={`${styles.validationError} ${
-                    !isInvalidScore ? styles.hiddenValidationError : ""
-                  }`}
-                >
-                  {t("calculator.score_over_max")}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      <div className={styles.bottomGrid}>
-        <Card className={styles.sectionCard}>
-          <h3 className={styles.sectionTitle}>{t("calculator.fo_title")}</h3>
-          <div className={styles.foChips}>
-            {fos.length === 0 && (
-              <span className={styles.emptyText}>
-                {t("calculator.no_grades")}
-              </span>
-            )}
-            {fos.map((fo, index) => {
-              const foColors = getFoColor(fo);
-              return (
-                <div
-                  key={index}
-                  className={styles.chip}
-                  onClick={() => removeFO(index)}
-                  style={{
-                    backgroundColor: foColors.bg,
-                    color: foColors.text,
-                    borderColor: foColors.border,
-                  }}
-                >
-                  {fo}
-                  <span className={styles.chipRemove}>&times;</span>
-                </div>
-              );
-            })}
-          </div>
-          <DigitalNumpad onNumberClick={addFO} />
-        </Card>
-
-        <Card className={styles.sectionCard}>
-          <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
-          <div className={styles.sorRow}>
-            {(() => {
-              const isInvalidScore = isScoreOverMax(
-                soch?.score ?? null,
-                soch?.max ?? null,
-              );
-              const isCompleteSoch = isCompleteScore(
-                soch?.score ?? null,
-                soch?.max ?? null,
-              );
-              const sochColors = getScoreColor(
-                soch?.score ?? null,
-                soch?.max ?? null,
-              );
-              const customInputStyle =
-                isInvalidScore
-                  ? {
-                      backgroundColor: "rgba(239, 68, 68, 0.12)",
-                      color: "#ef4444",
-                      borderColor: "#ef4444",
-                    }
-                  : isCompleteSoch
-                  ? {
-                      backgroundColor: sochColors.bg,
-                      color: sochColors.text,
-                      borderColor: sochColors.border,
-                    }
-                  : {};
-              return (
-                <>
-                <div className={styles.inputsWrapper}>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={MAX_POINTS}
-                    placeholder={t("calculator.sor_score")}
-                    value={soch?.score ?? ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSochChange("score", e.target.value)
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
-                  <span className={styles.divider}>/</span>
-                  <Input
-                    type="number"
-                    min="0"
-                    max={MAX_POINTS}
-                    placeholder={t("calculator.sor_max")}
-                    value={soch?.max ?? ""}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSochChange("max", e.target.value)
-                    }
-                    onKeyDown={handleKeyDown}
-                    className={styles.numInput}
-                    style={customInputStyle}
-                  />
-                </div>
-                <span
-                  className={`${styles.validationError} ${
-                    !isInvalidScore ? styles.hiddenValidationError : ""
-                  }`}
-                >
-                  {t("calculator.score_over_max")}
-                </span>
-                </>
-              );
-            })()}
-          </div>
-        </Card>
-      </div>
-
-      <div className={styles.bottomButtons}>
+      {/* Sub-Tabs Selector */}
+      <div className={styles.subTabsContainer}>
         <button
-          className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
-          onClick={() => setIsSaveModalOpen(true)}
-          disabled={!hasUnsavedChanges}
+          className={`${styles.subTab} ${subTab === "input" ? styles.active : ""}`}
+          onClick={() => setSubTab("input")}
         >
-          {t("history.save_btn")}
+          {t("workspace.tab_grades")}
         </button>
-        <button className={styles.resetBtn} onClick={handleResetClick}>
-          {t("calculator.reset")}
+        <button
+          className={`${styles.subTab} ${subTab === "predictor" ? styles.active : ""}`}
+          onClick={() => setSubTab("predictor")}
+        >
+          {t("workspace.tab_predictor")}
+        </button>
+        <button
+          className={`${styles.subTab} ${subTab === "analytics" ? styles.active : ""}`}
+          onClick={() => setSubTab("analytics")}
+        >
+          {t("workspace.tab_analytics")}
         </button>
       </div>
+
+      {subTab === "input" && (
+        <div className={styles.inputTabContent}>
+          <SmartPaste />
+
+          <div className={styles.inputsGrid}>
+            <Card className={styles.sectionCard}>
+              <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>{t("calculator.sor_title")}</h3>
+              </div>
+              <div className={styles.sorList}>
+                {sors.map((sor, index) => {
+                  const isInvalidScore = isScoreOverMax(sor.score, sor.max);
+                  const isCompleteSor = isCompleteScore(sor.score, sor.max);
+                  const sorColors = getScoreColor(sor.score, sor.max);
+                  const customInputStyle =
+                    isInvalidScore
+                      ? {
+                          backgroundColor: "rgba(239, 68, 68, 0.12)",
+                          color: "#ef4444",
+                          borderColor: "#ef4444",
+                        }
+                      : isCompleteSor
+                      ? {
+                          backgroundColor: sorColors.bg,
+                          color: sorColors.text,
+                          borderColor: sorColors.border,
+                        }
+                      : {};
+                  return (
+                    <div key={sor.id} className={styles.sorRow}>
+                      <span className={styles.sorIndex}>
+                        {t("calculator.sor_short")} {index + 1}
+                      </span>
+                      <div className={styles.inputsWrapper}>
+                        <Input
+                          type="number"
+                          min="0"
+                          max={MAX_POINTS}
+                          placeholder={t("calculator.sor_score")}
+                          value={sor.score ?? ""}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            handleSorChange(sor.id, "score", e.target.value)
+                          }
+                          onKeyDown={handleKeyDown}
+                          className={styles.numInput}
+                          style={customInputStyle}
+                        />
+                        <span className={styles.divider}>/</span>
+                        <Input
+                          type="number"
+                          min="0"
+                          max={MAX_POINTS}
+                          placeholder={t("calculator.sor_max")}
+                          value={sor.max ?? ""}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                            handleSorChange(sor.id, "max", e.target.value)
+                          }
+                          onKeyDown={handleKeyDown}
+                          className={styles.numInput}
+                          style={customInputStyle}
+                        />
+                      </div>
+                      <span
+                        className={`${styles.validationError} ${
+                          !isInvalidScore ? styles.hiddenValidationError : ""
+                        }`}
+                      >
+                        {t("calculator.score_over_max")}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+
+            <div className={styles.bottomInputsRow}>
+              <Card className={styles.sectionCard}>
+                <h3 className={styles.sectionTitle}>{t("calculator.fo_title")}</h3>
+                <div className={styles.foChips}>
+                  {fos.length === 0 && (
+                    <span className={styles.emptyText}>
+                      {t("calculator.no_grades")}
+                    </span>
+                  )}
+                  {fos.map((fo, index) => {
+                    const foColors = getFoColor(fo);
+                    return (
+                      <div
+                        key={index}
+                        className={styles.chip}
+                        onClick={() => removeFO(index)}
+                        style={{
+                          backgroundColor: foColors.bg,
+                          color: foColors.text,
+                          borderColor: foColors.border,
+                        }}
+                      >
+                        {fo}
+                        <span className={styles.chipRemove}>&times;</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <DigitalNumpad onNumberClick={addFO} />
+              </Card>
+
+              <Card className={styles.sectionCard}>
+                <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
+                <div className={styles.sochRowContainer}>
+                  {(() => {
+                    const isInvalidScore = isScoreOverMax(
+                      soch?.score ?? null,
+                      soch?.max ?? null,
+                    );
+                    const isCompleteSoch = isCompleteScore(
+                      soch?.score ?? null,
+                      soch?.max ?? null,
+                    );
+                    const sochColors = getScoreColor(
+                      soch?.score ?? null,
+                      soch?.max ?? null,
+                    );
+                    const customInputStyle =
+                      isInvalidScore
+                        ? {
+                            backgroundColor: "rgba(239, 68, 68, 0.12)",
+                            color: "#ef4444",
+                            borderColor: "#ef4444",
+                          }
+                        : isCompleteSoch
+                        ? {
+                            backgroundColor: sochColors.bg,
+                            color: sochColors.text,
+                            borderColor: sochColors.border,
+                          }
+                        : {};
+                    return (
+                      <div className={styles.sochInputs}>
+                        <div className={styles.inputsWrapper}>
+                          <Input
+                            type="number"
+                            min="0"
+                            max={MAX_POINTS}
+                            placeholder={t("calculator.sor_score")}
+                            value={soch?.score ?? ""}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              handleSochChange("score", e.target.value)
+                            }
+                            onKeyDown={handleKeyDown}
+                            className={styles.numInput}
+                            style={customInputStyle}
+                          />
+                          <span className={styles.divider}>/</span>
+                          <Input
+                            type="number"
+                            min="0"
+                            max={MAX_POINTS}
+                            placeholder={t("calculator.sor_max")}
+                            value={soch?.max ?? ""}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              handleSochChange("max", e.target.value)
+                            }
+                            onKeyDown={handleKeyDown}
+                            className={styles.numInput}
+                            style={customInputStyle}
+                          />
+                        </div>
+                        <span
+                          className={`${styles.validationError} ${
+                            !isInvalidScore ? styles.hiddenValidationError : ""
+                          }`}
+                        >
+                          {t("calculator.score_over_max")}
+                        </span>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </Card>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className={styles.bottomButtons}>
+            <button
+              className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
+              onClick={() => setIsSaveModalOpen(true)}
+              disabled={!hasUnsavedChanges}
+            >
+              <Save size={16} />
+              <span>{t("history.save_btn")}</span>
+            </button>
+            <button className={styles.resetBtn} onClick={handleResetClick}>
+              <RotateCcw size={16} />
+              <span>{t("calculator.reset")}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {subTab === "predictor" && (
+        <div className={styles.predictorTabContent}>
+          <PredictorWidget />
+          
+          {/* Mathematical Explanation */}
+          <Card className={styles.explanationCard}>
+            <div className={styles.explanationHeader}>
+              <HelpCircle size={18} className={styles.explanationIcon} />
+              <h3 className={styles.explanationTitle}>
+                {t("workspace.explanation_title")}
+              </h3>
+            </div>
+            <p className={styles.explanationBody}>
+              {t("workspace.explanation_body")}
+            </p>
+          </Card>
+        </div>
+      )}
+
+      {subTab === "analytics" && (
+        <div className={styles.analyticsTabContent}>
+          <AnalyticsWidget />
+        </div>
+      )}
 
       <SaveModal
         isOpen={isSaveModalOpen}

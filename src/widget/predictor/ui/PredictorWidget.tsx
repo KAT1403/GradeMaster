@@ -26,7 +26,7 @@ export const PredictorWidget = () => {
   if (predictorLogic.predictions.currentTotalBeforeSoch === 0) {
     return (
       <div className={styles.container}>
-        <EmptyState onNavigate={() => setActiveTab("calculator")} />
+        <EmptyState onNavigate={() => setActiveTab("workspace")} />
       </div>
     );
   }

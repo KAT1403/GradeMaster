@@ -1,9 +1,9 @@
 {
   "tabs": {
-    "calculator": "Calculator",
-    "predictor": "Predictor",
-    "analytics": "Analytics",
-    "info": "Info"
+    "workspace": "Calculator",
+    "subjects": "Subjects",
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "info": {
     "title": "Information",
@@ -203,5 +203,51 @@
       "sor_result": "SA Result",
       "soch_result": "SOCH Result"
     }
+  },
+  "workspace": {
+    "status": "Local Mode",
+    "subtitle": "Smart Calculator",
+    "tab_grades": "Grade Input",
+    "tab_predictor": "Forecast",
+    "tab_analytics": "Analytics",
+    "system_school": "School 25/25/50",
+    "system_final": "Final Grade",
+    "system_gpa": "GPA 4.0",
+    "system_kundelik": "Kundelik",
+    "explanation_title": "How does the (25/25/50) formula work?",
+    "explanation_body": "The final term grade is calculated based on three components with corresponding weights:\n\n1. FA (Formative Assessment) - weights 25%\n2. SA (Summative Assessment for unit) - weights 25%\n3. SOCH (Summative Assessment for term) - weights 50%\n\nFormula:\nResult (%) = (Avg FA / 10) * 25 + (Sum SA / Sum Max SA) * 25 + (SOCH / Max SOCH) * 50\n\nThe resulting percentage is rounded and converted to the standard grade: 2, 3, 4, or 5."
+  },
+  "subjects": {
+    "title": "Academic Subjects",
+    "empty": "The subjects list is empty. Add grades in the calculator and save the subject to history to make it appear here.",
+    "load_grades": "Load into Calculator",
+    "add_subject": "Add Subject",
+    "pinned": "Pinned",
+    "all": "All Subjects",
+    "average": "Average score"
+  },
+  "profile": {
+    "title": "Personal Area",
+    "guest": "User: Guest",
+    "sync_title": "Synchronize your grades",
+    "sync_desc": "Create a cloud account to avoid losing data when changing devices.",
+    "sync_btn": "Log in / Create account",
+    "friends": "Friends",
+    "achievements": "Achievements",
+    "soon": "Coming soon in v2.1",
+    "modal_title": "Supabase Sync",
+    "modal_desc": "Login and cloud backups will be available in the next release with Supabase database integration.",
+    "modal_close": "Understood"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme_label": "Theme",
+    "theme_dark": "Dark Theme",
+    "theme_light": "Light Theme",
+    "lang_label": "Language",
+    "danger_label": "Danger Zone",
+    "wipe_btn": "Wipe local database",
+    "wipe_confirm": "Are you sure? All saved subjects and grades will be permanently deleted.",
+    "version": "GradeMaster 2.0"
   }
 }

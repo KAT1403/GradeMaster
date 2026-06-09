@@ -4,11 +4,100 @@
   gap: 12px;
   width: 100%;
 }
+.brandHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 0 4px;
+}
 
+.brandTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.brandMain {
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brandSeparator {
+  color: var(--accent-primary);
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.brandSub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.syncStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.syncIcon {
+  color: var(--text-muted);
+}
+
+/* System Selector */
+.systemSelector {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.systemTab {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-primary);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background: var(--accent-secondary);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+}
 .resultCard {
   background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   border: 1px solid var(--border-primary);
   box-shadow: var(--card-shadow);
+  padding: 14px 18px;
+  border-radius: 12px;
 }
 
 .resultHeader {
@@ -18,85 +107,131 @@
 }
 
 .resultTitle {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
 .gradeBadge {
   color: #fff;
-  font-weight: 800;
-  font-size: 1.25rem;
-  width: 36px;
-  height: 36px;
+  font-weight: 850;
+  font-size: 1.2rem;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: background-color 0.4s ease;
 }
 
 .percentDisplay {
-  font-size: 2.8rem;
-  font-weight: 800;
+  font-size: 2.3rem;
+  font-weight: 850;
   color: var(--text-primary);
-  margin: 4px 0 8px;
-  letter-spacing: -1.5px;
+  margin: 2px 0 4px;
+  letter-spacing: -1px;
 }
 
 .gpaSimple {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: var(--accent-primary);
+  margin-bottom: 12px;
+  background: var(--accent-secondary);
+  padding: 4px 8px;
   border-radius: 6px;
   width: fit-content;
-}
-
-@media (max-width: 768px) {
-  .percentDisplay {
-    font-size: 2.4rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .percentDisplay {
-    font-size: 2rem;
-  }
+  border: 1px solid rgba(47, 96, 255, 0.1);
 }
 
 .progressSection {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  gap: 6px;
 }
 
 .progressText {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  font-weight: 500;
+  font-weight: 600;
   text-align: right;
+}
+
+/* Sub-Tabs Selector */
+.subTabsContainer {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1.5px solid var(--border-primary);
+  margin-bottom: 6px;
+}
+
+.subTab {
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+  }
+}
+.inputTabContent, .predictorTabContent, .analyticsTabContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.inputsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bottomInputsRow {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 12px;
+}
+
+.sochRowContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.sochInputs {
+  background: var(--bg-tertiary);
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
 }
 
 .sectionCard {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 14px;
 }
 
 .sectionHeader {
@@ -106,27 +241,11 @@
 }
 
 .sectionTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.addBtn {
-  background: var(--accent-secondary);
-  color: var(--accent-primary);
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-weight: 600;
   font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: var(--accent-hover);
-    color: #fff;
-  }
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .foChips {
@@ -140,8 +259,8 @@
   align-items: center;
   background: var(--bg-tertiary);
   padding: 8px;
-  border-radius: 10px;
-  border: 1px dashed var(--border-secondary);
+  border-radius: 8px;
+  border: 1.5px solid var(--border-primary);
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -156,69 +275,52 @@
 }
 
 .chip {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-primary);
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 4px 8px;
-  border-radius: 6px;
+  border: 1.5px solid var(--border-secondary);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 6px 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   user-select: none;
 
   &:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-    color: #ef4444;
+    background: rgba(244, 63, 94, 0.12) !important;
+    border-color: var(--color-danger) !important;
+    color: var(--color-danger) !important;
     transform: translateY(-1px);
 
     .chipRemove {
-      color: #ef4444;
+      color: var(--color-danger) !important;
     }
-  }
-
-  &:active {
-    transform: translateY(0);
   }
 }
 
 .chipRemove {
-  color: #94a3b8;
-  font-size: 1.2rem;
+  color: currentColor;
+  opacity: 0.8;
+  font-size: 1.25rem;
   line-height: 1;
-}
+  transition: opacity 0.2s ease;
 
-.chipInput {
-  background: var(--bg-tertiary);
-  border: 1px dashed var(--border-secondary);
-  width: 50px;
-  text-align: center;
-  padding: 6px;
-  color: var(--accent-primary);
-  font-weight: 700;
-
-  &:focus {
-    background: var(--bg-secondary);
-    border: 1px solid var(--accent-primary);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  &:hover {
+    opacity: 1;
   }
 }
 
 .emptyText {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .sorList {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 
 .sorRow {
@@ -226,55 +328,46 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--bg-tertiary);
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .inputsWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
-}
-
-.bottomGrid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 12px;
 }
 
 .sorIndex {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-align: center;
-  width: 100%;
 }
 
 .numInput {
   flex: 1;
   input {
     text-align: center;
-    font-weight: 600;
-    padding: 6px;
   }
 }
 
 .divider {
-  color: #94a3b8;
-  font-weight: 400;
-  font-size: 1.2rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .validationError {
-  color: #ef4444;
-  font-size: 0.75rem;
+  color: var(--color-danger);
+  font-size: 0.68rem;
   font-weight: 600;
-  line-height: 1.2;
-  min-height: 0.9rem;
+  line-height: 1.1;
+  min-height: 0.8rem;
   text-align: center;
 }
 
@@ -282,54 +375,41 @@
   visibility: hidden;
 }
 
-.removeBtn {
-  background: #fee2e2;
-  color: #ef4444;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #fecaca;
-  }
-}
-
 .bottomButtons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   margin-top: 4px;
 }
 
 .saveBtn {
   flex: 2;
-  background: #3b82f6;
+  background: var(--accent-primary);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: #2563eb;
+    background: var(--accent-hover);
+    transform: translateY(-1px);
   }
 
   &:disabled, &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background: var(--bg-tertiary);
+    background: var(--bg-secondary);
     color: var(--text-muted);
-    border: 1px solid var(--border-secondary);
+    border: 1.5px solid var(--border-primary);
+    transform: none;
   }
 }
 
@@ -337,79 +417,86 @@
   flex: 1;
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid var(--border-secondary);
-  border-radius: 10px;
+  border: 1.5px solid var(--border-primary);
+  border-radius: 8px;
   padding: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
 
   &:hover {
     background: var(--bg-tertiary);
-    color: #ef4444;
-    border-color: #fca5a5;
+    color: var(--color-danger);
+    border-color: rgba(244, 63, 94, 0.4);
   }
 }
+.explanationCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 16px;
+}
 
+.explanationHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.explanationIcon {
+  color: var(--text-muted);
+}
+
+.explanationTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.explanationBody {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: pre-line;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @media (max-width: 768px) {
   .sorList {
     grid-template-columns: repeat(2, 1fr);
   }
-  .bottomGrid {
+  .bottomInputsRow {
     grid-template-columns: 1fr;
   }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .sorList {
-    grid-template-columns: repeat(3, 1fr);
+  .sochRowContainer {
+    min-height: auto;
   }
 }
 
 @media (max-width: 480px) {
-  .wrapper {
-    gap: 16px;
-  }
-  .resultHeader {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .gradeBadge {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-  }
-  .resultCard {
-    position: relative;
-  }
-  .percentDisplay {
-    font-size: 2.4rem;
-  }
   .sorList {
     grid-template-columns: 1fr;
-    gap: 10px;
   }
-  .sorRow {
-    padding: 12px;
-  }
-  .inputsWrapper {
-    gap: 8px;
-  }
-  .numInput input {
-    padding: 8px;
-    font-size: 0.95rem;
-  }
-  .foChips {
-    min-height: 70px;
-    max-height: 96px;
-  }
-  .chip {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
-  .sectionCard {
-    padding: 12px;
+  .brandHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 }

@@ -80,24 +80,24 @@ export const getGradeColors = (grade: number) => {
     case 5:
     case 4:
       return {
-        bg: "#4B9A25",
+        bg: "#3b8f21",
         text: "#ffffff",
-        border: "#4B9A25",
-        solid: "#4B9A25",
+        border: "#3b8f21",
+        solid: "#3b8f21",
       };
     case 3:
       return {
-        bg: "#FF8F00",
+        bg: "#ff8e12",
         text: "#ffffff",
-        border: "#FF8F00",
-        solid: "#FF8F00",
+        border: "#ff8e12",
+        solid: "#ff8e12",
       };
     case 2:
       return {
-        bg: "#aa2834",
+        bg: "#d13142",
         text: "#ffffff",
-        border: "#aa2834",
-        solid: "#aa2834",
+        border: "#d13142",
+        solid: "#d13142",
       };
     default:
       return {

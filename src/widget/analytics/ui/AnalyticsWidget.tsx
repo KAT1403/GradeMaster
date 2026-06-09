@@ -39,7 +39,7 @@ export const AnalyticsWidget = () => {
   if (fos.length === 0) {
     return (
       <div className={styles.container}>
-        <EmptyState onNavigate={() => setActiveTab("calculator")} />
+        <EmptyState onNavigate={() => setActiveTab("workspace")} />
       </div>
     );
   }
