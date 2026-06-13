@@ -22,13 +22,13 @@ import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import styles from "./AnalyticsWidget.module.scss";
 
 const COLORS = {
-  progress: "#10b981",
-  regress: "#ef4444",
-  stable: "#3b82f6",
+  progress: "#3b8f21",
+  regress: "#d13142",
+  stable: "var(--accent-primary)",
   neutral: "#64748b",
-  volLow: "#10b981",
-  volMed: "#f59e0b",
-  volHigh: "#ef4444",
+  volLow: "#3b8f21",
+  volMed: "#ff8e12",
+  volHigh: "#d13142",
 };
 
 export const AnalyticsWidget = () => {

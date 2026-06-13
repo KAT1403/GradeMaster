@@ -32,6 +32,12 @@ export const CalculatorWidget = () => {
     fos,
     sors,
     soch,
+    selectedSystem,
+    setSelectedSystem,
+    yearlyGrade,
+    examGrade,
+    setYearlyGrade,
+    setExamGrade,
     activeRecordId,
     activeRecordTitle,
     addFO,
@@ -49,20 +55,27 @@ export const CalculatorWidget = () => {
   const [resetAfterSave, setResetAfterSave] = useState(false);
 
   // Overhaul states
-  const [selectedSystem, setSelectedSystem] = useState("25/25/50");
   const [subTab, setSubTab] = useState<"input" | "predictor" | "analytics">("input");
 
   const systems = [
-    { id: "25/25/50", label: t("workspace.system_school") },
-    { id: "final", label: t("workspace.system_final") },
+    { id: "bilim_class", label: "BilimClass" },
+    { id: "kundelik", label: t("workspace.system_kundelik") },
     { id: "gpa", label: t("workspace.system_gpa") },
-    { id: "kundelik", label: t("workspace.system_kundelik") }
+    { id: "final", label: t("workspace.system_final") }
   ];
 
-  const isFormEmpty =
-    fos.length === 0 &&
-    sors.every((s) => s.score === null && s.max === null) &&
-    (!soch || (soch.score === null && soch.max === null));
+  const handleSystemChange = (sysId: "bilim_class" | "kundelik" | "gpa" | "final") => {
+    setSelectedSystem(sysId);
+    if (sysId === "final") {
+      setSubTab("input");
+    }
+  };
+
+  const isFormEmpty = selectedSystem === "final"
+    ? yearlyGrade === null && examGrade === null
+    : fos.length === 0 &&
+      sors.every((s) => s.score === null && s.max === null) &&
+      (!soch || (soch.score === null && soch.max === null));
 
   let hasUnsavedChanges = false;
   if (activeRecordId) {
@@ -72,6 +85,9 @@ export const CalculatorWidget = () => {
         fos,
         sors: sors.map((s) => ({ score: s.score, max: s.max })),
         soch: soch ? { score: soch.score, max: soch.max } : null,
+        selectedSystem,
+        yearlyGrade,
+        examGrade,
       };
       const savedData = {
         fos: activeEntry.data.fos,
@@ -85,6 +101,9 @@ export const CalculatorWidget = () => {
               max: activeEntry.data.soch.max,
             }
           : null,
+        selectedSystem: activeEntry.data.selectedSystem || "bilim_class",
+        yearlyGrade: activeEntry.data.yearlyGrade !== undefined ? activeEntry.data.yearlyGrade : null,
+        examGrade: activeEntry.data.examGrade !== undefined ? activeEntry.data.examGrade : null,
       };
       hasUnsavedChanges =
         JSON.stringify(currentData) !== JSON.stringify(savedData);
@@ -163,14 +182,22 @@ export const CalculatorWidget = () => {
     }
   };
 
-  const currentPercent = calculateTotalPercent({ fos, sors, soch });
-  const currentGrade =
-    currentPercent === 0 &&
-    fos.length === 0 &&
-    sors.filter((s) => s.max !== null && s.max > 0).length === 0 &&
-    !soch?.max
-      ? 0
-      : getGradeFromPercent(currentPercent);
+  const finalGradeScore = yearlyGrade !== null
+    ? (examGrade !== null ? yearlyGrade * 0.7 + examGrade * 0.3 : yearlyGrade)
+    : 0;
+
+  const currentPercent = selectedSystem === "final"
+    ? finalGradeScore * 20
+    : calculateTotalPercent({ fos, sors, soch }, selectedSystem);
+
+  const currentGrade = selectedSystem === "final"
+    ? (yearlyGrade !== null ? Math.round(finalGradeScore) : 0)
+    : (currentPercent === 0 &&
+       fos.length === 0 &&
+       sors.filter((s) => s.max !== null && s.max > 0).length === 0 &&
+       !soch?.max
+         ? 0
+         : getGradeFromPercent(currentPercent));
   const nextGradeInfo = getNextGradeInfo(currentPercent);
 
   const MAX_POINTS = 100;
@@ -274,7 +301,7 @@ export const CalculatorWidget = () => {
           <button
             key={sys.id}
             className={`${styles.systemTab} ${selectedSystem === sys.id ? styles.active : ""}`}
-            onClick={() => setSelectedSystem(sys.id)}
+            onClick={() => handleSystemChange(sys.id as any)}
           >
             {sys.label}
           </button>
@@ -285,253 +312,323 @@ export const CalculatorWidget = () => {
       <Card className={styles.resultCard}>
         <div className={styles.resultHeader}>
           <span className={styles.resultTitle}>
-            {t("calculator.total_percent")}
+            {selectedSystem === "gpa"
+              ? "GPA Оценка"
+              : selectedSystem === "final"
+              ? "Итоговая оценка"
+              : t("calculator.total_percent")}
           </span>
           <div
             className={styles.gradeBadge}
             style={{ backgroundColor: currentGradeColors.solid }}
           >
-            {currentGrade || "-"}
+            {selectedSystem === "gpa"
+              ? (currentPercent > 0 ? intlGPA.letter : "-")
+              : (currentGrade || "-")}
           </div>
         </div>
 
         <div className={styles.percentDisplay}>
-          {currentPercent.toFixed(1)}%
+          {selectedSystem === "gpa"
+            ? `${intlGPA.score.toFixed(2)}`
+            : selectedSystem === "final"
+            ? yearlyGrade !== null ? `${finalGradeScore.toFixed(2)}` : "0.00"
+            : `${currentPercent.toFixed(selectedSystem === "kundelik" ? 2 : 1)}%`}
         </div>
 
         <div className={styles.gpaSimple}>
-          {t("calculator.gpa")}: {intlGPA.score.toFixed(2)} ({intlGPA.letter})
+          {selectedSystem === "gpa"
+            ? `Процент: ${currentPercent.toFixed(1)}%`
+            : selectedSystem === "final"
+            ? `Годовая: ${yearlyGrade || "-"} | Экзамен: ${examGrade || "-"}`
+            : `${t("calculator.gpa")}: ${intlGPA.score.toFixed(2)} (${intlGPA.letter})`}
         </div>
 
-        <div className={styles.progressSection}>
-          <ProgressBar
-            value={currentPercent}
-            variant={currentGrade > 0 ? "high" : "low"}
-          />
-          {currentGrade > 0 ? (
-            nextGradeInfo.nextGrade ? (
-              <span className={styles.progressText}>
-                {t("calculator.to_next_grade")} {nextGradeInfo.nextGrade}:{" "}
-                {nextGradeInfo.remaining.toFixed(1)}%
-              </span>
+        {selectedSystem !== "final" && (
+          <div className={styles.progressSection}>
+            <ProgressBar
+              value={currentPercent}
+              variant={currentGrade > 0 ? "high" : "low"}
+            />
+            {currentGrade > 0 ? (
+              nextGradeInfo.nextGrade ? (
+                <span className={styles.progressText}>
+                  {t("calculator.to_next_grade")} {nextGradeInfo.nextGrade}:{" "}
+                  {nextGradeInfo.remaining.toFixed(1)}%
+                </span>
+              ) : (
+                <span className={styles.progressText}>
+                  {currentPercent >= 100
+                    ? t("calculator.max_points_reached")
+                    : t("calculator.grade_5_reached")}
+                </span>
+              )
             ) : (
               <span className={styles.progressText}>
-                {currentPercent >= 100
-                  ? t("calculator.max_points_reached")
-                  : t("calculator.grade_5_reached")}
+                {t("calculator.add_at_least_one")}
               </span>
-            )
-          ) : (
-            <span className={styles.progressText}>
-              {t("calculator.add_at_least_one")}
-            </span>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </Card>
 
       {/* Sub-Tabs Selector */}
-      <div className={styles.subTabsContainer}>
-        <button
-          className={`${styles.subTab} ${subTab === "input" ? styles.active : ""}`}
-          onClick={() => setSubTab("input")}
-        >
-          {t("workspace.tab_grades")}
-        </button>
-        <button
-          className={`${styles.subTab} ${subTab === "predictor" ? styles.active : ""}`}
-          onClick={() => setSubTab("predictor")}
-        >
-          {t("workspace.tab_predictor")}
-        </button>
-        <button
-          className={`${styles.subTab} ${subTab === "analytics" ? styles.active : ""}`}
-          onClick={() => setSubTab("analytics")}
-        >
-          {t("workspace.tab_analytics")}
-        </button>
-      </div>
+      {selectedSystem !== "final" && (
+        <div className={styles.subTabsContainer}>
+          <button
+            className={`${styles.subTab} ${subTab === "input" ? styles.active : ""}`}
+            onClick={() => setSubTab("input")}
+          >
+            {t("workspace.tab_grades")}
+          </button>
+          <button
+            className={`${styles.subTab} ${subTab === "predictor" ? styles.active : ""}`}
+            onClick={() => setSubTab("predictor")}
+          >
+            {t("workspace.tab_predictor")}
+          </button>
+          <button
+            className={`${styles.subTab} ${subTab === "analytics" ? styles.active : ""}`}
+            onClick={() => setSubTab("analytics")}
+          >
+            {t("workspace.tab_analytics")}
+          </button>
+        </div>
+      )}
 
       {subTab === "input" && (
         <div className={styles.inputTabContent}>
-          <SmartPaste />
-
-          <div className={styles.inputsGrid}>
-            <Card className={styles.sectionCard}>
-              <div className={styles.sectionHeader}>
-                <h3 className={styles.sectionTitle}>{t("calculator.sor_title")}</h3>
-              </div>
-              <div className={styles.sorList}>
-                {sors.map((sor, index) => {
-                  const isInvalidScore = isScoreOverMax(sor.score, sor.max);
-                  const isCompleteSor = isCompleteScore(sor.score, sor.max);
-                  const sorColors = getScoreColor(sor.score, sor.max);
-                  const customInputStyle =
-                    isInvalidScore
-                      ? {
-                          backgroundColor: "rgba(239, 68, 68, 0.12)",
-                          color: "#ef4444",
-                          borderColor: "#ef4444",
-                        }
-                      : isCompleteSor
-                      ? {
-                          backgroundColor: sorColors.bg,
-                          color: sorColors.text,
-                          borderColor: sorColors.border,
-                        }
-                      : {};
-                  return (
-                    <div key={sor.id} className={styles.sorRow}>
-                      <span className={styles.sorIndex}>
-                        {t("calculator.sor_short")} {index + 1}
-                      </span>
-                      <div className={styles.inputsWrapper}>
-                        <Input
-                          type="number"
-                          min="0"
-                          max={MAX_POINTS}
-                          placeholder={t("calculator.sor_score")}
-                          value={sor.score ?? ""}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            handleSorChange(sor.id, "score", e.target.value)
-                          }
-                          onKeyDown={handleKeyDown}
-                          className={styles.numInput}
-                          style={customInputStyle}
-                        />
-                        <span className={styles.divider}>/</span>
-                        <Input
-                          type="number"
-                          min="0"
-                          max={MAX_POINTS}
-                          placeholder={t("calculator.sor_max")}
-                          value={sor.max ?? ""}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            handleSorChange(sor.id, "max", e.target.value)
-                          }
-                          onKeyDown={handleKeyDown}
-                          className={styles.numInput}
-                          style={customInputStyle}
-                        />
-                      </div>
-                      <span
-                        className={`${styles.validationError} ${
-                          !isInvalidScore ? styles.hiddenValidationError : ""
-                        }`}
-                      >
-                        {t("calculator.score_over_max")}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-
-            <div className={styles.bottomInputsRow}>
+          {selectedSystem === "final" ? (
+            <div className={styles.finalGradesContainer}>
               <Card className={styles.sectionCard}>
-                <h3 className={styles.sectionTitle}>{t("calculator.fo_title")}</h3>
-                <div className={styles.foChips}>
-                  {fos.length === 0 && (
-                    <span className={styles.emptyText}>
-                      {t("calculator.no_grades")}
-                    </span>
-                  )}
-                  {fos.map((fo, index) => {
-                    const foColors = getFoColor(fo);
+                <h3 className={styles.sectionTitle}>Годовая оценка</h3>
+                <div className={styles.finalGradeSelector}>
+                  {[2, 3, 4, 5].map((grade) => {
+                    const active = yearlyGrade === grade;
+                    const colors = getGradeColors(grade);
                     return (
-                      <div
-                        key={index}
-                        className={styles.chip}
-                        onClick={() => removeFO(index)}
-                        style={{
-                          backgroundColor: foColors.bg,
-                          color: foColors.text,
-                          borderColor: foColors.border,
-                        }}
+                      <button
+                        key={grade}
+                        className={`${styles.finalGradeBtn} ${active ? styles.active : ""}`}
+                        style={active ? { backgroundColor: colors.solid, borderColor: colors.solid, color: "#ffffff" } : {}}
+                        onClick={() => setYearlyGrade(grade)}
                       >
-                        {fo}
-                        <span className={styles.chipRemove}>&times;</span>
-                      </div>
+                        {grade}
+                      </button>
                     );
                   })}
                 </div>
-                <DigitalNumpad onNumberClick={addFO} />
               </Card>
 
               <Card className={styles.sectionCard}>
-                <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
-                <div className={styles.sochRowContainer}>
-                  {(() => {
-                    const isInvalidScore = isScoreOverMax(
-                      soch?.score ?? null,
-                      soch?.max ?? null,
-                    );
-                    const isCompleteSoch = isCompleteScore(
-                      soch?.score ?? null,
-                      soch?.max ?? null,
-                    );
-                    const sochColors = getScoreColor(
-                      soch?.score ?? null,
-                      soch?.max ?? null,
-                    );
-                    const customInputStyle =
-                      isInvalidScore
-                        ? {
-                            backgroundColor: "rgba(239, 68, 68, 0.12)",
-                            color: "#ef4444",
-                            borderColor: "#ef4444",
-                          }
-                        : isCompleteSoch
-                        ? {
-                            backgroundColor: sochColors.bg,
-                            color: sochColors.text,
-                            borderColor: sochColors.border,
-                          }
-                        : {};
+                <h3 className={styles.sectionTitle}>Оценка за экзамен (необязательно)</h3>
+                <div className={styles.finalGradeSelector}>
+                  {[2, 3, 4, 5].map((grade) => {
+                    const active = examGrade === grade;
+                    const colors = getGradeColors(grade);
                     return (
-                      <div className={styles.sochInputs}>
-                        <div className={styles.inputsWrapper}>
-                          <Input
-                            type="number"
-                            min="0"
-                            max={MAX_POINTS}
-                            placeholder={t("calculator.sor_score")}
-                            value={soch?.score ?? ""}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                              handleSochChange("score", e.target.value)
-                            }
-                            onKeyDown={handleKeyDown}
-                            className={styles.numInput}
-                            style={customInputStyle}
-                          />
-                          <span className={styles.divider}>/</span>
-                          <Input
-                            type="number"
-                            min="0"
-                            max={MAX_POINTS}
-                            placeholder={t("calculator.sor_max")}
-                            value={soch?.max ?? ""}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                              handleSochChange("max", e.target.value)
-                            }
-                            onKeyDown={handleKeyDown}
-                            className={styles.numInput}
-                            style={customInputStyle}
-                          />
-                        </div>
-                        <span
-                          className={`${styles.validationError} ${
-                            !isInvalidScore ? styles.hiddenValidationError : ""
-                          }`}
-                        >
-                          {t("calculator.score_over_max")}
-                        </span>
-                      </div>
+                      <button
+                        key={grade}
+                        className={`${styles.finalGradeBtn} ${active ? styles.active : ""}`}
+                        style={active ? { backgroundColor: colors.solid, borderColor: colors.solid, color: "#ffffff" } : {}}
+                        onClick={() => setExamGrade(grade)}
+                      >
+                        {grade}
+                      </button>
                     );
-                  })()}
+                  })}
+                  <button
+                    className={`${styles.finalGradeBtn} ${styles.clearBtn} ${examGrade === null ? styles.activeClear : ""}`}
+                    onClick={() => setExamGrade(null)}
+                  >
+                    Без экзамена
+                  </button>
                 </div>
               </Card>
             </div>
-          </div>
+          ) : (
+            <>
+              <SmartPaste />
+
+              <div className={styles.inputsGrid}>
+                <Card className={styles.sectionCard}>
+                  <div className={styles.sectionHeader}>
+                    <h3 className={styles.sectionTitle}>{t("calculator.sor_title")}</h3>
+                  </div>
+                  <div className={styles.sorList}>
+                    {sors.map((sor, index) => {
+                      const isInvalidScore = isScoreOverMax(sor.score, sor.max);
+                      const isCompleteSor = isCompleteScore(sor.score, sor.max);
+                      const sorColors = getScoreColor(sor.score, sor.max);
+                      const customInputStyle =
+                        isInvalidScore
+                          ? {
+                              backgroundColor: "rgba(239, 68, 68, 0.12)",
+                              color: "#ef4444",
+                              borderColor: "#ef4444",
+                            }
+                          : isCompleteSor
+                          ? {
+                              backgroundColor: sorColors.bg,
+                              color: sorColors.text,
+                              borderColor: sorColors.border,
+                            }
+                          : {};
+                      return (
+                        <div key={sor.id} className={styles.sorRow}>
+                          <span className={styles.sorIndex}>
+                            {t("calculator.sor_short")} {index + 1}
+                          </span>
+                          <div className={styles.inputsWrapper}>
+                            <Input
+                              type="number"
+                              min="0"
+                              max={MAX_POINTS}
+                              placeholder={t("calculator.sor_score")}
+                              value={sor.score ?? ""}
+                              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                handleSorChange(sor.id, "score", e.target.value)
+                              }
+                              onKeyDown={handleKeyDown}
+                              className={styles.numInput}
+                              style={customInputStyle}
+                            />
+                            <span className={styles.divider}>/</span>
+                            <Input
+                              type="number"
+                              min="0"
+                              max={MAX_POINTS}
+                              placeholder={t("calculator.sor_max")}
+                              value={sor.max ?? ""}
+                              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                handleSorChange(sor.id, "max", e.target.value)
+                              }
+                              onKeyDown={handleKeyDown}
+                              className={styles.numInput}
+                              style={customInputStyle}
+                            />
+                          </div>
+                          <span
+                            className={`${styles.validationError} ${
+                              !isInvalidScore ? styles.hiddenValidationError : ""
+                            }`}
+                          >
+                            {t("calculator.score_over_max")}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+
+                <div className={styles.bottomInputsRow}>
+                  <Card className={styles.sectionCard}>
+                    <h3 className={styles.sectionTitle}>{t("calculator.fo_title")}</h3>
+                    <div className={styles.foChips}>
+                      {fos.length === 0 && (
+                        <span className={styles.emptyText}>
+                          {t("calculator.no_grades")}
+                        </span>
+                      )}
+                      {fos.map((fo, index) => {
+                        const foColors = getFoColor(fo);
+                        return (
+                          <div
+                            key={index}
+                            className={styles.chip}
+                            onClick={() => removeFO(index)}
+                            style={{
+                              backgroundColor: foColors.bg,
+                              color: foColors.text,
+                              borderColor: foColors.border,
+                            }}
+                          >
+                            {fo}
+                            <span className={styles.chipRemove}>&times;</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <DigitalNumpad onNumberClick={addFO} />
+                  </Card>
+
+                  <Card className={styles.sectionCard}>
+                    <h3 className={styles.sectionTitle}>{t("calculator.soch_title")}</h3>
+                    <div className={styles.sochRowContainer}>
+                      {(() => {
+                        const isInvalidScore = isScoreOverMax(
+                          soch?.score ?? null,
+                          soch?.max ?? null,
+                        );
+                        const isCompleteSoch = isCompleteScore(
+                          soch?.score ?? null,
+                          soch?.max ?? null,
+                        );
+                        const sochColors = getScoreColor(
+                          soch?.score ?? null,
+                          soch?.max ?? null,
+                        );
+                        const customInputStyle =
+                          isInvalidScore
+                            ? {
+                                backgroundColor: "rgba(239, 68, 68, 0.12)",
+                                color: "#ef4444",
+                                borderColor: "#ef4444",
+                              }
+                            : isCompleteSoch
+                            ? {
+                                backgroundColor: sochColors.bg,
+                                color: sochColors.text,
+                                borderColor: sochColors.border,
+                              }
+                            : {};
+                        return (
+                          <div className={styles.sochInputs}>
+                            <div className={styles.inputsWrapper}>
+                              <Input
+                                type="number"
+                                min="0"
+                                max={MAX_POINTS}
+                                placeholder={t("calculator.sor_score")}
+                                value={soch?.score ?? ""}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                  handleSochChange("score", e.target.value)
+                                }
+                                onKeyDown={handleKeyDown}
+                                className={styles.numInput}
+                                style={customInputStyle}
+                              />
+                              <span className={styles.divider}>/</span>
+                              <Input
+                                type="number"
+                                min="0"
+                                max={MAX_POINTS}
+                                placeholder={t("calculator.sor_max")}
+                                value={soch?.max ?? ""}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                  handleSochChange("max", e.target.value)
+                                }
+                                onKeyDown={handleKeyDown}
+                                className={styles.numInput}
+                                style={customInputStyle}
+                              />
+                            </div>
+                            <span
+                              className={`${styles.validationError} ${
+                                !isInvalidScore ? styles.hiddenValidationError : ""
+                              }`}
+                            >
+                              {t("calculator.score_over_max")}
+                            </span>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Action Buttons */}
           <div className={styles.bottomButtons}>

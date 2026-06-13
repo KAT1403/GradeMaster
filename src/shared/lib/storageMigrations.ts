@@ -70,3 +70,26 @@ export const normalizeTextOrNull = (value: unknown): string | null =>
 
 export const normalizeTimestamp = (value: unknown): number =>
   typeof value === "number" && Number.isFinite(value) ? value : Date.now();
+
+export const normalizeSystem = (
+  value: unknown,
+): "bilim_class" | "kundelik" | "final" | "gpa" => {
+  if (
+    value === "bilim_class" ||
+    value === "kundelik" ||
+    value === "final" ||
+    value === "gpa"
+  ) {
+    return value;
+  }
+  if (value === "25/25/50") {
+    return "bilim_class";
+  }
+  return "bilim_class";
+};
+
+export const normalizeGradeValue = (value: unknown): number | null => {
+  const num = toNumberOrNull(value);
+  if (num === null) return null;
+  return num >= 2 && num <= 5 ? num : null;
+};

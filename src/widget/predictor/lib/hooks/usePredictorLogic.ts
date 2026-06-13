@@ -14,12 +14,13 @@ export const usePredictorLogic = ({
   sochMaxScore,
 }: PredictorLogicProps): PredictorState => {
   return useMemo(() => {
-    const predictions = analyzePrediction(state, targetGrade, sochMaxScore);
+    const system = state.selectedSystem === "kundelik" ? "kundelik" : state.selectedSystem === "gpa" ? "gpa" : "bilim_class";
+    const predictions = analyzePrediction(state, targetGrade, sochMaxScore, system);
     const hasSoch = Boolean(
       state.soch &&
         isCompleteScore(state.soch.score, state.soch.max),
     );
-    const currentPercent = calculateTotalPercent(state);
+    const currentPercent = calculateTotalPercent(state, system);
     const isAlreadyBelowTarget = currentPercent < predictions.targetPercent;
     const willImprove = checkIfScoreImproves(state, badScoreMode);
 

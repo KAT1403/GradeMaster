@@ -37,9 +37,9 @@ interface CustomTooltipProps {
 }
 
 const COLORS = {
-  fo: "#3b82f6",
-  sor: "#10b981",
-  soch: "#8b5cf6",
+  fo: "var(--accent-primary)",
+  sor: "#3b8f21",
+  soch: "#ff8e12",
   empty: "transparent",
 };
 

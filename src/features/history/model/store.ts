@@ -6,9 +6,14 @@ import {
   normalizeSors,
   normalizeSoch,
   normalizeTimestamp,
+  normalizeSystem,
+  normalizeGradeValue,
 } from "../../../shared/lib/storageMigrations";
 
 export interface HistoryEntryData {
+  selectedSystem?: "bilim_class" | "kundelik" | "final" | "gpa";
+  yearlyGrade?: number | null;
+  examGrade?: number | null;
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
@@ -54,6 +59,9 @@ const normalizeHistoryEntry = (value: unknown): HistoryEntry | null => {
     title,
     lastModified: normalizeTimestamp(value.lastModified),
     data: {
+      selectedSystem: normalizeSystem(value.data.selectedSystem),
+      yearlyGrade: normalizeGradeValue(value.data.yearlyGrade),
+      examGrade: normalizeGradeValue(value.data.examGrade),
       fos: normalizeFos(value.data.fos),
       sors: normalizeSors(value.data.sors),
       soch: normalizeSoch(value.data.soch),

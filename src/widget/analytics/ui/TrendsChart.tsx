@@ -143,11 +143,11 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="#3b82f6"
+                stroke="var(--accent-primary)"
                 strokeWidth={3}
                 dot={{
                   r: 4,
-                  fill: "#3b82f6",
+                  fill: "var(--accent-primary)",
                   strokeWidth: 2,
                   stroke: "var(--bg-secondary)",
                 }}
@@ -156,7 +156,7 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
               <Line
                 type="monotone"
                 dataKey="realistic"
-                stroke="#3b82f6"
+                stroke="var(--accent-primary)"
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={false}

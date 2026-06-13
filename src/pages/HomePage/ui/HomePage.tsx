@@ -49,7 +49,7 @@ export default function HomePage() {
         </nav>
       </aside>
       <div className={styles.mainWrapper}>
-        <main className={styles.mainContent}>
+        <main className={styles.mainContent} key={activeTab}>
           {activeTab === "workspace" && <WorkspacePage />}
           {activeTab === "subjects" && <SubjectsPage />}
           {activeTab === "profile" && <ProfilePage />}

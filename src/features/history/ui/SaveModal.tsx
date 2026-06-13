@@ -38,6 +38,9 @@ const SaveModalContent = ({
     fos,
     sors,
     soch,
+    selectedSystem,
+    yearlyGrade,
+    examGrade,
     activeRecordId,
     activeRecordTitle,
     setActiveRecord,
@@ -48,8 +51,25 @@ const SaveModalContent = ({
 
   const handleSave = (asNew: boolean = false) => {
     if (!title.trim()) return;
-    const finalPercent = calculateTotalPercent({ fos, sors, soch });
-    const data = { fos, sors, soch };
+    
+    let finalPercent = 0;
+    if (selectedSystem === "final") {
+      const finalGrade = examGrade !== null
+        ? (yearlyGrade ?? 0) * 0.7 + examGrade * 0.3
+        : (yearlyGrade ?? 0);
+      finalPercent = finalGrade * 20;
+    } else {
+      finalPercent = calculateTotalPercent({ fos, sors, soch }, selectedSystem);
+    }
+
+    const data = {
+      fos,
+      sors,
+      soch,
+      selectedSystem,
+      yearlyGrade,
+      examGrade,
+    };
 
     let idToSave = Date.now().toString();
 

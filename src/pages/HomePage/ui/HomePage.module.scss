@@ -34,7 +34,8 @@
   color: var(--text-primary);
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
-  -webkit-background-clip: text;
+  -webkit-background-clip: text; 
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -96,6 +97,18 @@
   flex: 1;
   width: 100%;
   padding-bottom: 40px;
+  animation: pageFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .bottomNav {
   display: none;

@@ -7,15 +7,23 @@ import {
   normalizeSors,
   normalizeSoch,
   normalizeTextOrNull,
+  normalizeSystem,
+  normalizeGradeValue,
 } from "../../../shared/lib/storageMigrations";
 
 export interface AcademicRecordState {
   activeRecordId: string | null;
   activeRecordTitle: string | null;
+  selectedSystem: "bilim_class" | "kundelik" | "final" | "gpa";
+  yearlyGrade: number | null;
+  examGrade: number | null;
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
   setActiveRecord: (id: string | null, title: string | null) => void;
+  setSelectedSystem: (system: "bilim_class" | "kundelik" | "final" | "gpa") => void;
+  setYearlyGrade: (grade: number | null) => void;
+  setExamGrade: (grade: number | null) => void;
   addFO: (fo: number) => void;
   removeFO: (index: number) => void;
   setFOS: (fos: number[]) => void;
@@ -39,6 +47,9 @@ const migrateAcademicRecordState = (
   return {
     activeRecordId: normalizeTextOrNull(state.activeRecordId),
     activeRecordTitle: normalizeTextOrNull(state.activeRecordTitle),
+    selectedSystem: normalizeSystem(state.selectedSystem),
+    yearlyGrade: normalizeGradeValue(state.yearlyGrade),
+    examGrade: normalizeGradeValue(state.examGrade),
     fos: normalizeFos(state.fos),
     sors: normalizeSors(state.sors),
     soch: normalizeSoch(state.soch),
@@ -50,12 +61,19 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     (set) => ({
       activeRecordId: null as string | null,
       activeRecordTitle: null as string | null,
+      selectedSystem: "bilim_class" as "bilim_class" | "kundelik" | "final" | "gpa",
+      yearlyGrade: null as number | null,
+      examGrade: null as number | null,
       fos: [] as number[],
       sors: initialSors(),
       soch: null as SOCH | null,
 
       setActiveRecord: (id, title) =>
-        set({ activeRecordId: id, activeRecordTitle: title }),
+          set({ activeRecordId: id, activeRecordTitle: title }),
+
+      setSelectedSystem: (selectedSystem) => set({ selectedSystem }),
+      setYearlyGrade: (yearlyGrade) => set({ yearlyGrade }),
+      setExamGrade: (examGrade) => set({ examGrade }),
 
       addFO: (fo) =>
         set((state) => {
@@ -85,14 +103,17 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
         set({
           activeRecordId: null,
           activeRecordTitle: null,
+          selectedSystem: "bilim_class",
+          yearlyGrade: null,
+          examGrade: null,
           fos: [],
           sors: initialSors(),
           soch: null,
         }),
     }),
     {
-      name: "academic-record-storage",
-      version: 2,
+      name: "academic-record-storage-v3", // upgraded version storage key to prevent collision
+      version: 3,
       migrate: migrateAcademicRecordState,
       merge: (persistedState, currentState) => ({
         ...currentState,

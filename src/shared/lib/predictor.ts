@@ -43,6 +43,7 @@ export const analyzePrediction = (
   params: CalculateParams,
   targetGrade: 3 | 4 | 5,
   sochMaxScore: number = 20,
+  system: "bilim_class" | "kundelik" | "gpa" = "bilim_class",
 ): PredictorData => {
   const { fos, sors } = params;
   const targetPercent =
@@ -51,11 +52,19 @@ export const analyzePrediction = (
   let currentCapital = 0;
   const weights = { fo: 0.25, sor: 0.25, soch: 0.5 };
 
-  if (fos.length > 0) {
-    const avgFO = fos.reduce((sum, val) => sum + val, 0) / fos.length;
-    currentCapital += (avgFO / 10) * weights.fo * 100;
-  }
-  if (sors.length > 0) {
+  if (system === "kundelik") {
+    const foRatio = fos.length > 0 ? fos.reduce((sum, val) => sum + val, 0) / (fos.length * 10) : null;
+    const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
+    const sorRatio = validSors.length > 0 ? (validSors.reduce((sum, s) => sum + (s.score ?? 0), 0) / validSors.reduce((sum, s) => sum + (s.max ?? 0), 0)) : null;
+
+    const foContrib = foRatio !== null ? Math.round(foRatio * weights.fo * 10000) / 100 : 0;
+    const sorContrib = sorRatio !== null ? Math.round(sorRatio * weights.sor * 10000) / 100 : 0;
+    currentCapital = foContrib + sorContrib;
+  } else {
+    if (fos.length > 0) {
+      const avgFO = fos.reduce((sum, val) => sum + val, 0) / fos.length;
+      currentCapital += (avgFO / 10) * weights.fo * 100;
+    }
     const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
     if (validSors.length > 0) {
       const totalSorScore = validSors.reduce(
@@ -77,13 +86,13 @@ export const analyzePrediction = (
   let needed10s = 0;
   let isFoPossible = false;
   const simFos = [...fos];
-  if (calculateTotalPercent(params) >= targetPercent) {
+  if (calculateTotalPercent(params, system) >= targetPercent) {
     isFoPossible = true;
     needed10s = 0;
   } else {
     for (let i = 1; i <= 50; i++) {
       simFos.push(10);
-      const testScore = calculateTotalPercent({ ...params, fos: simFos });
+      const testScore = calculateTotalPercent({ ...params, fos: simFos }, system);
       if (testScore >= targetPercent) {
         needed10s = i;
         isFoPossible = true;
@@ -100,11 +109,11 @@ export const analyzePrediction = (
   if (avoid3Pct < 0) avoid3Pct = 0;
   let allowed1s = 0;
   const allowedBadCounts: Record<number, number> = {};
-  if (calculateTotalPercent(params) >= targetPercent) {
+  if (calculateTotalPercent(params, system) >= targetPercent) {
     const errFos = [...fos];
     for (let i = 1; i <= 30; i++) {
       errFos.push(1);
-      const testScore = calculateTotalPercent({ ...params, fos: errFos });
+      const testScore = calculateTotalPercent({ ...params, fos: errFos }, system);
       if (testScore < targetPercent) {
         break;
       }
@@ -115,7 +124,7 @@ export const analyzePrediction = (
       const testFos = [...fos];
       for (let i = 1; i <= 30; i++) {
         testFos.push(badScore);
-        const testScore = calculateTotalPercent({ ...params, fos: testFos });
+        const testScore = calculateTotalPercent({ ...params, fos: testFos }, system);
         if (testScore < targetPercent) {
           break;
         }
@@ -131,7 +140,7 @@ export const analyzePrediction = (
 
   // [ЭВРИСТИЧЕСКИЙ РАСЧЁТ ВЕРОЯТНОСТИ "УСИЛИЙ"]
   let score = 0;
-  const currentTotal = calculateTotalPercent(params);
+  const currentTotal = calculateTotalPercent(params, system);
   const isGoalReached = currentTotal >= targetPercent;
 
   if (
