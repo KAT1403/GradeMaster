@@ -11,7 +11,7 @@ import {
   Lock
 } from "lucide-react";
 import { Card } from "../../../shared/ui/card";
-import { useUIStore } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
 import styles from "./InfoWidget.module.scss";
 
 interface FAQItemProps {

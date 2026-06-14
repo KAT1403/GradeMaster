@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ScenarioCard } from "../../../../shared/ui/ScenarioCard";
 import { ProgressBar } from "../../../../shared/ui/ProgressBar";
-import { getProbabilityClass } from "../../../../shared/lib/predictor/getProbabilityClass";
 import { SCENARIOS, GOOD_SCORE_THRESHOLD } from "../../model/constants";
 import type { MetricsSectionProps } from "../../model/types";
 import { InfoTooltip } from "../../../../shared/ui/InfoTooltip";
@@ -17,6 +16,25 @@ export const MetricsSection = ({
   willImprove,
 }: MetricsSectionProps) => {
   const { t } = useTranslation();
+
+  const getProbabilityClass = (
+    level: "high" | "medium" | "low" | "impossible" | "absolute"
+  ): string => {
+    switch (level) {
+      case "absolute":
+        return styles.probAbsolute;
+      case "high":
+        return styles.probHigh;
+      case "medium":
+        return styles.probMedium;
+      case "low":
+        return styles.probLow;
+      case "impossible":
+        return styles.probImpossible;
+      default:
+        return styles.probLow;
+    }
+  };
 
   const getErrorMarginText = () => {
     if (isAlreadyBelowTarget) {

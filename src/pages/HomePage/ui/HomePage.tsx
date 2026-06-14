@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useUIStore } from "../../../app/store/uiStore";
-import type { TabType } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
+import type { TabType } from "../../../shared/store/uiStore";
 import { WorkspacePage } from "../../WorkspacePage";
 import { SubjectsPage } from "../../SubjectsPage";
 import { ProfilePage } from "../../ProfilePage";

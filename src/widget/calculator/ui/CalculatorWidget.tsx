@@ -53,8 +53,6 @@ export const CalculatorWidget = () => {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [resetAfterSave, setResetAfterSave] = useState(false);
-
-  // Overhaul states
   const [subTab, setSubTab] = useState<"input" | "predictor" | "analytics">("input");
 
   const systems = [
@@ -62,7 +60,7 @@ export const CalculatorWidget = () => {
     { id: "kundelik", label: t("workspace.system_kundelik") },
     { id: "gpa", label: t("workspace.system_gpa") },
     { id: "final", label: t("workspace.system_final") }
-  ];
+  ] as const;
 
   const handleSystemChange = (sysId: "bilim_class" | "kundelik" | "gpa" | "final") => {
     setSelectedSystem(sysId);
@@ -280,7 +278,6 @@ export const CalculatorWidget = () => {
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
-      {/* Brand Header */}
       <div className={styles.brandHeader}>
         <div className={styles.brandTitle}>
           <span className={styles.brandMain}>GradeMaster</span>
@@ -294,21 +291,17 @@ export const CalculatorWidget = () => {
           <span>{t("workspace.status")}</span>
         </div>
       </div>
-
-      {/* System Selector */}
       <div className={styles.systemSelector}>
         {systems.map((sys) => (
           <button
             key={sys.id}
             className={`${styles.systemTab} ${selectedSystem === sys.id ? styles.active : ""}`}
-            onClick={() => handleSystemChange(sys.id as any)}
+            onClick={() => handleSystemChange(sys.id)}
           >
             {sys.label}
           </button>
         ))}
       </div>
-
-      {/* Result Card */}
       <Card className={styles.resultCard}>
         <div className={styles.resultHeader}>
           <span className={styles.resultTitle}>
@@ -371,8 +364,6 @@ export const CalculatorWidget = () => {
           </div>
         )}
       </Card>
-
-      {/* Sub-Tabs Selector */}
       {selectedSystem !== "final" && (
         <div className={styles.subTabsContainer}>
           <button
@@ -629,8 +620,6 @@ export const CalculatorWidget = () => {
               </div>
             </>
           )}
-
-          {/* Action Buttons */}
           <div className={styles.bottomButtons}>
             <button
               className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
@@ -651,8 +640,6 @@ export const CalculatorWidget = () => {
       {subTab === "predictor" && (
         <div className={styles.predictorTabContent}>
           <PredictorWidget />
-          
-          {/* Mathematical Explanation */}
           <Card className={styles.explanationCard}>
             <div className={styles.explanationHeader}>
               <HelpCircle size={18} className={styles.explanationIcon} />

@@ -36,15 +36,12 @@ export const ScenariosSection = ({
                 value={sochMaxScore === 0 ? "" : sochMaxScore}
                 onFocus={(e) => e.target.select()}
                 onKeyDown={(e) => {
-                  // Запрещаем ввод букв, знаков препинания и пробелов
                   if (e.key.length === 1 && !/[0-9]/.test(e.key)) {
                     e.preventDefault();
                   }
                 }}
                 onChange={(e) => {
                   const value = e.target.value;
-
-                  // Ограничиваем длину до 3 знаков и только цифры
                   const cleanValue = value.replace(/[^0-9]/g, "").slice(0, 3);
 
                   if (cleanValue === "" || cleanValue === undefined) {

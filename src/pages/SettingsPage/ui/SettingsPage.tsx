@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useUIStore } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
 import { useHistoryManager } from "../../../features/history/model/store";
 import { Card } from "../../../shared/ui/card";

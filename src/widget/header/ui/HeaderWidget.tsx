@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useUIStore } from "../../../app/store/uiStore";
-import type { TabType } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
+import type { TabType } from "../../../shared/store/uiStore";
 import styles from "./HeaderWidget.module.scss";
 import { useState, useRef, useEffect } from "react";
 import { Sun, Moon, History, Calculator, BookOpen, User, Settings, Globe, ChevronDown } from "lucide-react";
@@ -53,30 +53,6 @@ export const HeaderWidget = () => {
       <div className={styles.container}>
         <div className={styles.brand}>
           <h1 className={styles.logo}>GradeMaster</h1>
-          {/* <div
-            className={styles.betaWrapper}
-            ref={tooltipRef}
-            onMouseEnter={() => setIsTooltipVisible(true)}
-            onMouseLeave={() => setIsTooltipVisible(false)}
-            onClick={() => setIsTooltipVisible(!isTooltipVisible)}
-          >
-            <span className={styles.betaBadge}>BETA</span>
-            <div
-              className={`${styles.tooltip} ${isTooltipVisible ? styles.visible : ""}`}
-            >
-              {t("header.betaTooltip")}
-              <button 
-                className={styles.contactLink}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTab("settings");
-                  setIsTooltipVisible(false);
-                }}
-              >
-                {t("header.writeUs")}
-              </button>
-            </div>
-          </div> */}
         </div>
 
         <nav className={styles.tabBar}>

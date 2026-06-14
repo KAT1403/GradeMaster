@@ -138,7 +138,6 @@ export const analyzePrediction = (
     }
   }
 
-  // [ЭВРИСТИЧЕСКИЙ РАСЧЁТ ВЕРОЯТНОСТИ "УСИЛИЙ"]
   let score = 0;
   const currentTotal = calculateTotalPercent(params, system);
   const isGoalReached = currentTotal >= targetPercent;

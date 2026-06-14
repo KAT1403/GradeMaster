@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
-import { useUIStore } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
 import { useHistoryManager } from "../../../features/history/model/store";
 import type { HistoryEntry } from "../../../features/history/model/store";
 import { Card } from "../../../shared/ui/card";
@@ -97,7 +97,6 @@ export default function SubjectsPage() {
     return `${Math.round(subject.finalPercent)}% (Оценка: ${grade})`;
   };
 
-  // ASOM Calculations
   const getASOMMetrics = () => {
     if (entries.length === 0) return { quality: 0, success: 0 };
     let excellentAndGoodCount = 0;
@@ -155,7 +154,6 @@ export default function SubjectsPage() {
         </button>
       </div>
 
-      {/* ASOM Monitoring Card */}
       <Card className={styles.asomCard}>
         <h2 className={styles.asomTitle}>
           <BarChart2 size={20} color="var(--accent-primary)" />

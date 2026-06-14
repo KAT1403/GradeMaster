@@ -8,6 +8,7 @@ export const SmartPaste = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [pasteMode, setPasteMode] = useState<'quarter' | 'half_year'>('quarter');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { setFOS, setSORS, setSOCH, resetAll } = useAcademicRecordStore();
@@ -24,26 +25,16 @@ export const SmartPaste = () => {
     
     if (!text) return;
     
-    setInputValue(text);
-    parseAndApplyGrades(text);
-    setIsOpen(false);
+    setInputValue(prev => prev ? `${prev} ${text}` : text);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    const diff = Math.abs(newValue.length - inputValue.length);
-    
-    setInputValue(newValue);
-    
-    if (diff > 4) {
-      parseAndApplyGrades(newValue);
-      setIsOpen(false);
-    }
+    setInputValue(e.target.value);
   };
 
   const handleApply = () => {
     if (!inputValue.trim()) return;
-    parseAndApplyGrades(inputValue);
+    parseAndApplyGrades(inputValue, pasteMode);
     setIsOpen(false);
   };
 
@@ -53,7 +44,7 @@ export const SmartPaste = () => {
     }
   };
 
-  const parseAndApplyGrades = (text: string) => {
+  const parseAndApplyGrades = (text: string, currentMode: 'quarter' | 'half_year') => {
     const words = text.trim().split(/\s+/);
     if (words.length === 0) return;
 
@@ -62,28 +53,62 @@ export const SmartPaste = () => {
     const newFos: number[] = [];
     const parsedSors: {score: number, max: number}[] = [];
     let parsedSoch: {score: number, max: number} | null = null;
-    let seenFraction = false;
 
-    for (const word of words) {
-      if (/^\d+\/\d+$/.test(word)) {
-        seenFraction = true;
-        const [s, m] = word.split('/').map(Number);
-        if (m > 0 && s <= m) {
-          parsedSors.push({ score: s, max: m });
-        }
-      } else if (/^\d+$/.test(word)) {
-        const num = Number(word);
-        if (!seenFraction && num > 0 && num <= 10) {
-          newFos.push(num);
+    if (currentMode === 'half_year') {
+      let state: 'q1_fos' | 'q1_sors' | 'q2_fos' | 'q2_sors' = 'q1_fos';
+
+      for (const word of words) {
+        const isFraction = /^\d+\/\d+$/.test(word);
+        const isInteger = /^\d+$/.test(word);
+
+        if (isFraction) {
+          const [s, m] = word.split('/').map(Number);
+          if (m > 0 && s <= m) {
+            if (state === 'q1_fos') {
+              state = 'q1_sors';
+            } else if (state === 'q2_fos') {
+              state = 'q2_sors';
+            }
+            parsedSors.push({ score: s, max: m });
+          }
+        } else if (isInteger) {
+          const num = Number(word);
+          if (num > 0 && num <= 10) {
+            if (state === 'q1_fos') {
+              newFos.push(num);
+            } else if (state === 'q1_sors') {
+              state = 'q2_fos';
+              newFos.push(num);
+            } else if (state === 'q2_fos') {
+              newFos.push(num);
+            }
+          }
         }
       }
-    }
+    } else {
+      let seenFraction = false;
 
-    if (parsedSors.length > 0) {
-      const last = parsedSors[parsedSors.length - 1];
-      if (last.max >= 20) {
-        parsedSoch = last;
-        parsedSors.pop();
+      for (const word of words) {
+        if (/^\d+\/\d+$/.test(word)) {
+          seenFraction = true;
+          const [s, m] = word.split('/').map(Number);
+          if (m > 0 && s <= m) {
+            parsedSors.push({ score: s, max: m });
+          }
+        } else if (/^\d+$/.test(word)) {
+          const num = Number(word);
+          if (!seenFraction && num > 0 && num <= 10) {
+            newFos.push(num);
+          }
+        }
+      }
+
+      if (parsedSors.length > 0) {
+        const last = parsedSors[parsedSors.length - 1];
+        if (last.max >= 20) {
+          parsedSoch = last;
+          parsedSors.pop();
+        }
       }
     }
 
@@ -100,9 +125,11 @@ export const SmartPaste = () => {
       return { id: crypto.randomUUID(), score: null, max: null };
     });
     setSORS(newSorsArray);
-    
+
     if (parsedSoch) {
       setSOCH({ score: parsedSoch.score, max: parsedSoch.max });
+    } else {
+      setSOCH(null);
     }
   };
 
@@ -141,6 +168,24 @@ export const SmartPaste = () => {
                   <p className={styles.instruction}>
                     {t('smart_paste.instruction')}
                   </p>
+
+                  <div className={styles.modeSelector}>
+                    <button
+                      type="button"
+                      className={`${styles.modeTab} ${pasteMode === 'quarter' ? styles.active : ''}`}
+                      onClick={() => setPasteMode('quarter')}
+                    >
+                      {t('smart_paste.mode_quarter')}
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.modeTab} ${pasteMode === 'half_year' ? styles.active : ''}`}
+                      onClick={() => setPasteMode('half_year')}
+                    >
+                      {t('smart_paste.mode_half_year')}
+                    </button>
+                  </div>
+
                   <input
                     ref={inputRef}
                     type="text"
@@ -161,7 +206,9 @@ export const SmartPaste = () => {
                   <div className={styles.demoBox}>
                     <span>{t('smart_paste.example_label')}</span>
                     <div className={styles.demoText}>
-                      {t('smart_paste.example_text')}
+                      {pasteMode === 'half_year'
+                        ? t('smart_paste.example_text_half_year')
+                        : t('smart_paste.example_text')}
                     </div>
                   </div>
             </div>

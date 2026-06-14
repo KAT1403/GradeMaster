@@ -17,7 +17,7 @@ import type { TrendType } from "../../../shared/lib/analytics";
 import { TrendsChart } from "./TrendsChart";
 import { StabilityChart } from "./StabilityChart";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { useUIStore } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
 import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import styles from "./AnalyticsWidget.module.scss";
 

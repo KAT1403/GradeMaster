@@ -63,7 +63,6 @@ export const calculateTotalPercent = (
   const sochRatio = hasSOCH ? soch.score! / soch.max! : null;
 
   if (system === "kundelik") {
-    // Kundelik: mathematical rounding to hundredths in intermediate and final calculations
     const foPct = foRatio !== null ? Math.round(foRatio * 10000) / 100 : null;
     const sorPct = sorRatio !== null ? Math.round(sorRatio * 10000) / 100 : null;
     const sochPct = sochRatio !== null ? Math.round(sochRatio * 10000) / 100 : null;
@@ -81,11 +80,8 @@ export const calculateTotalPercent = (
     if (sorPct !== null && foPct === null && sochPct !== null) {
       return Math.round(((sorPct * 25 + sochPct * 50) / 75) * 100) / 100;
     }
-    // all three
     return Math.round((foPct! * 0.25 + sorPct! * 0.25 + sochPct! * 0.5) * 100) / 100;
   } else {
-    // bilim_class or gpa (standard)
-    // For BilimClass, final rounding is to the nearest integer
     if (foRatio !== null && sorRatio === null && sochRatio === null) {
       const pct = foRatio * 100;
       return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
@@ -111,7 +107,6 @@ export const calculateTotalPercent = (
       const pct = (sorRatio * 25 + sochRatio * 50) / 0.75;
       return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
     }
-    // all three
     const pct = foRatio! * 25 + sorRatio! * 25 + sochRatio! * 50;
     return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
   }

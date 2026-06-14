@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
-import { useUIStore } from "../../../app/store/uiStore";
+import { useUIStore } from "../../../shared/store/uiStore";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { usePredictorLogic } from "../lib";
 import { TargetSelector } from "./TargetSelector";

@@ -230,3 +230,36 @@
     transform: translateY(0);
   }
 }
+
+.modeSelector {
+  display: flex;
+  gap: 4px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  padding: 4px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.modeTab {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-primary);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+}

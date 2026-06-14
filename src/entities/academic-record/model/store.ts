@@ -112,7 +112,7 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
         }),
     }),
     {
-      name: "academic-record-storage-v3", // upgraded version storage key to prevent collision
+      name: "academic-record-storage-v3",
       version: 3,
       migrate: migrateAcademicRecordState,
       merge: (persistedState, currentState) => ({
