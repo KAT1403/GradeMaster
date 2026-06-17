@@ -576,3 +576,360 @@
     gap: 6px;
   }
 }
+.uniSubModeSelector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  background: var(--bg-tertiary);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+  width: fit-content;
+}
+
+.uniSubModeTab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background: var(--bg-secondary);
+    color: var(--accent-primary);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.uniAlertBadge {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1.5px dashed #ef4444;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.uniPredictorCard {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.uniPredictorTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.uniPredictorList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uniPredictorItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+  font-size: 0.85rem;
+  gap: 8px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.uniPredictorLetter {
+  font-weight: 800;
+}
+
+.uniPredictorDesc {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.uniB2BAlert {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  border-top: 1px solid var(--border-primary);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.uniTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+
+  th {
+    text-align: left;
+    padding: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border-bottom: 1.5px solid var(--border-primary);
+  }
+
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border-primary);
+    vertical-align: middle;
+  }
+
+  @media (max-width: 600px) {
+    display: block;
+    
+    thead {
+      display: none;
+    }
+    
+    tbody, tr, td {
+      display: block;
+      width: 100%;
+    }
+    
+    tr {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-primary);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    td {
+      border: none;
+      padding: 6px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      
+      &:not(:last-child) {
+        margin-bottom: 6px;
+      }
+      
+      &::before {
+        content: attr(data-label);
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+    }
+
+    td:last-child {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: auto;
+      margin: 0;
+      padding: 0;
+      
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+.uniSubjectInput {
+  width: 100%;
+}
+
+.uniSelect {
+  background: var(--bg-tertiary);
+  border: 1.5px solid var(--border-primary);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: var(--accent-primary);
+  }
+}
+
+.uniDeleteBtn {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+}
+
+.uniAddBtn {
+  margin-top: 12px;
+  align-self: flex-start;
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  border: 1.5px dashed var(--accent-primary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--accent-secondary);
+    transform: translateY(-1px);
+  }
+}
+
+.uniExplanation {
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--bg-tertiary);
+  border-radius: 10px;
+  border: 1px solid var(--border-primary);
+  
+  h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+}
+
+.uniPredictorExpandBtn {
+  background: transparent;
+  border: none;
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 6px 12px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.uniInputsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.uniFormGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.uniField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.uniLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: opacity 0.2s ease;
+}
+
+.uniLabelDisabled {
+  opacity: 0.5;
+  color: var(--text-muted);
+}
+
+.uniStatsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.uniStatChip {
+  font-size: 0.78rem;
+  font-weight: 750;
+  color: var(--accent-primary);
+  background: var(--accent-secondary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(47, 96, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.uniStatChipDanger {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.uniStatChipSuccess {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+

@@ -20,6 +20,9 @@ export default function SubjectsPage() {
     setYearlyGrade,
     setExamGrade,
     setActiveRecord,
+    setUniMidterm1,
+    setUniMidterm2,
+    setUniExam,
   } = useAcademicRecordStore();
   const setActiveTab = useUIStore((state) => state.setActiveTab);
 
@@ -42,6 +45,9 @@ export default function SubjectsPage() {
     setSelectedSystem(entry.data.selectedSystem || "bilim_class");
     setYearlyGrade(entry.data.yearlyGrade !== undefined ? entry.data.yearlyGrade : null);
     setExamGrade(entry.data.examGrade !== undefined ? entry.data.examGrade : null);
+    setUniMidterm1(entry.data.uniMidterm1 !== undefined ? entry.data.uniMidterm1 : null);
+    setUniMidterm2(entry.data.uniMidterm2 !== undefined ? entry.data.uniMidterm2 : null);
+    setUniExam(entry.data.uniExam !== undefined ? entry.data.uniExam : null);
     setActiveRecord(entry.id, entry.title);
     setActiveTab("workspace");
   };
@@ -69,8 +75,8 @@ export default function SubjectsPage() {
         return "BilimClass";
       case "kundelik":
         return t("workspace.system_kundelik");
-      case "gpa":
-        return t("workspace.system_gpa");
+      case "university":
+        return t("workspace.system_university");
       case "final":
         return t("workspace.system_final");
       default:
@@ -80,9 +86,9 @@ export default function SubjectsPage() {
 
   const renderGradeInfo = (subject: HistoryEntry) => {
     const system = subject.data?.selectedSystem || "bilim_class";
-    if (system === "gpa") {
+    if (system === "university") {
       const gpaInfo = calculateIntlGPA(subject.finalPercent);
-      return `${gpaInfo.score.toFixed(2)} (Оценка: ${gpaInfo.letter})`;
+      return `${gpaInfo.score.toFixed(2)} (${gpaInfo.letter}) - ${subject.finalPercent.toFixed(1)}%`;
     }
     if (system === "final") {
       const val = subject.finalPercent / 20;

@@ -3,6 +3,9 @@ export interface CalculateParams {
   sors: { score: number | null; max: number | null }[];
   soch: { score: number | null; max: number | null } | null;
   weights?: { fo: number; sor: number; soch: number };
+  uniMidterm1?: number | null;
+  uniMidterm2?: number | null;
+  uniExam?: number | null;
 }
 
 export const isScoreOverMax = (
@@ -35,14 +38,35 @@ export const getNextGradeInfo = (percent: number) => {
 };
 
 export const calculateTotalPercent = (
-  {
-    fos,
-    sors,
-    soch,
-  }: CalculateParams,
-  system: "bilim_class" | "kundelik" | "gpa" | "final" = "bilim_class",
+  params: CalculateParams,
+  system: "bilim_class" | "kundelik" | "university" | "final" = "bilim_class",
 ): number => {
   if (system === "final") return 0;
+
+  if (system === "university") {
+    const m1 = params.uniMidterm1;
+    const m2 = params.uniMidterm2;
+    const exam = params.uniExam;
+
+    if (m1 === null && m2 === null && (exam === null || exam === undefined)) return 0;
+
+    const admissionRating = (m1 !== null || m2 !== null)
+      ? ((m1 ?? 0) + (m2 ?? 0)) / ((m1 !== null ? 1 : 0) + (m2 !== null ? 1 : 0))
+      : 0;
+
+    if (admissionRating < 50) {
+      return admissionRating * 0.6;
+    }
+
+    if (exam === null || exam === undefined) {
+      return admissionRating;
+    }
+
+    return admissionRating * 0.6 + exam * 0.4;
+  }
+
+  const { fos, sors, soch } = params;
+
 
   const hasFO = fos.length > 0;
   const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));

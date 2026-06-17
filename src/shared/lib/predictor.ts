@@ -43,7 +43,7 @@ export const analyzePrediction = (
   params: CalculateParams,
   targetGrade: 3 | 4 | 5,
   sochMaxScore: number = 20,
-  system: "bilim_class" | "kundelik" | "gpa" = "bilim_class",
+  system: "bilim_class" | "kundelik" | "university" = "bilim_class",
 ): PredictorData => {
   const { fos, sors } = params;
   const targetPercent =

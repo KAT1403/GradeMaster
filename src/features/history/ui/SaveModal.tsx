@@ -44,6 +44,9 @@ const SaveModalContent = ({
     activeRecordId,
     activeRecordTitle,
     setActiveRecord,
+    uniMidterm1,
+    uniMidterm2,
+    uniExam,
   } = useAcademicRecordStore();
   const { saveEntry } = useHistoryManager();
 
@@ -59,7 +62,10 @@ const SaveModalContent = ({
         : (yearlyGrade ?? 0);
       finalPercent = finalGrade * 20;
     } else {
-      finalPercent = calculateTotalPercent({ fos, sors, soch }, selectedSystem);
+      finalPercent = calculateTotalPercent(
+        { fos, sors, soch, uniMidterm1, uniMidterm2, uniExam },
+        selectedSystem
+      );
     }
 
     const data = {
@@ -69,6 +75,9 @@ const SaveModalContent = ({
       selectedSystem,
       yearlyGrade,
       examGrade,
+      uniMidterm1,
+      uniMidterm2,
+      uniExam,
     };
 
     let idToSave = Date.now().toString();

@@ -8,15 +8,19 @@ import {
   normalizeTimestamp,
   normalizeSystem,
   normalizeGradeValue,
+  normalizeUniGrade,
 } from "../../../shared/lib/storageMigrations";
 
 export interface HistoryEntryData {
-  selectedSystem?: "bilim_class" | "kundelik" | "final" | "gpa";
+  selectedSystem?: "bilim_class" | "kundelik" | "final" | "university";
   yearlyGrade?: number | null;
   examGrade?: number | null;
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
+  uniMidterm1?: number | null;
+  uniMidterm2?: number | null;
+  uniExam?: number | null;
 }
 
 export interface HistoryEntry {
@@ -65,11 +69,15 @@ const normalizeHistoryEntry = (value: unknown): HistoryEntry | null => {
       fos: normalizeFos(value.data.fos),
       sors: normalizeSors(value.data.sors),
       soch: normalizeSoch(value.data.soch),
+      uniMidterm1: normalizeUniGrade(value.data.uniMidterm1),
+      uniMidterm2: normalizeUniGrade(value.data.uniMidterm2),
+      uniExam: normalizeUniGrade(value.data.uniExam),
     },
     isPinned: value.isPinned === true,
     finalPercent,
   };
 };
+
 
 const migrateHistoryState = (persistedState: unknown): Partial<HistoryState> => {
   if (!isRecord(persistedState) || !Array.isArray(persistedState.entries)) {

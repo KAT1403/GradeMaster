@@ -73,14 +73,17 @@ export const normalizeTimestamp = (value: unknown): number =>
 
 export const normalizeSystem = (
   value: unknown,
-): "bilim_class" | "kundelik" | "final" | "gpa" => {
+): "bilim_class" | "kundelik" | "final" | "university" => {
   if (
     value === "bilim_class" ||
     value === "kundelik" ||
     value === "final" ||
-    value === "gpa"
+    value === "university"
   ) {
     return value;
+  }
+  if (value === "gpa") {
+    return "university";
   }
   if (value === "25/25/50") {
     return "bilim_class";
@@ -93,3 +96,10 @@ export const normalizeGradeValue = (value: unknown): number | null => {
   if (num === null) return null;
   return num >= 2 && num <= 5 ? num : null;
 };
+
+export const normalizeUniGrade = (value: unknown): number | null => {
+  const num = toNumberOrNull(value);
+  if (num === null) return null;
+  return num >= 0 && num <= 100 ? num : null;
+};
+

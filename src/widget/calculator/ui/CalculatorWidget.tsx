@@ -20,10 +20,10 @@ import { Card } from "../../../shared/ui/card";
 import { DigitalNumpad } from "../../../shared/ui/digital-numpad";
 import { Input } from "../../../shared/ui/input/ui/Input";
 import { ProgressBar } from "../../../shared/ui/ProgressBar";
-import { calculateIntlGPA } from "../../../shared/lib/converters";
+import { calculateIntlGPA, KAZ_UNIVERSITY_SCALE } from "../../../shared/lib/converters";
 import { PredictorWidget } from "../../predictor";
 import { AnalyticsWidget } from "../../analytics";
-import { CloudOff, HelpCircle, Save, RotateCcw } from "lucide-react";
+import { CloudOff, HelpCircle, Save, RotateCcw, Trash2 } from "lucide-react";
 import styles from "./CalculatorWidget.module.scss";
 
 export const CalculatorWidget = () => {
@@ -45,6 +45,18 @@ export const CalculatorWidget = () => {
     updateSOR,
     setSOCH,
     resetAll,
+    uniSubMode,
+    uniMidterm1,
+    uniMidterm2,
+    uniExam,
+    semesterSubjects,
+    setUniSubMode,
+    setUniMidterm1,
+    setUniMidterm2,
+    setUniExam,
+    addSemesterSubject,
+    removeSemesterSubject,
+    updateSemesterSubject,
   } = useAcademicRecordStore();
   const { entries } = useHistoryManager();
 
@@ -54,23 +66,26 @@ export const CalculatorWidget = () => {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [resetAfterSave, setResetAfterSave] = useState(false);
   const [subTab, setSubTab] = useState<"input" | "predictor" | "analytics">("input");
+  const [isPredictorExpanded, setIsPredictorExpanded] = useState(false);
 
   const systems = [
     { id: "bilim_class", label: "BilimClass" },
     { id: "kundelik", label: t("workspace.system_kundelik") },
-    { id: "gpa", label: t("workspace.system_gpa") },
+    { id: "university", label: t("workspace.system_university") },
     { id: "final", label: t("workspace.system_final") }
   ] as const;
 
-  const handleSystemChange = (sysId: "bilim_class" | "kundelik" | "gpa" | "final") => {
+  const handleSystemChange = (sysId: "bilim_class" | "kundelik" | "university" | "final") => {
     setSelectedSystem(sysId);
-    if (sysId === "final") {
+    if (sysId === "final" || sysId === "university") {
       setSubTab("input");
     }
   };
 
   const isFormEmpty = selectedSystem === "final"
     ? yearlyGrade === null && examGrade === null
+    : selectedSystem === "university"
+    ? uniMidterm1 === null && uniMidterm2 === null && uniExam === null
     : fos.length === 0 &&
       sors.every((s) => s.score === null && s.max === null) &&
       (!soch || (soch.score === null && soch.max === null));
@@ -86,6 +101,9 @@ export const CalculatorWidget = () => {
         selectedSystem,
         yearlyGrade,
         examGrade,
+        uniMidterm1,
+        uniMidterm2,
+        uniExam,
       };
       const savedData = {
         fos: activeEntry.data.fos,
@@ -102,6 +120,9 @@ export const CalculatorWidget = () => {
         selectedSystem: activeEntry.data.selectedSystem || "bilim_class",
         yearlyGrade: activeEntry.data.yearlyGrade !== undefined ? activeEntry.data.yearlyGrade : null,
         examGrade: activeEntry.data.examGrade !== undefined ? activeEntry.data.examGrade : null,
+        uniMidterm1: activeEntry.data.uniMidterm1 !== undefined ? activeEntry.data.uniMidterm1 : null,
+        uniMidterm2: activeEntry.data.uniMidterm2 !== undefined ? activeEntry.data.uniMidterm2 : null,
+        uniExam: activeEntry.data.uniExam !== undefined ? activeEntry.data.uniExam : null,
       };
       hasUnsavedChanges =
         JSON.stringify(currentData) !== JSON.stringify(savedData);
@@ -186,7 +207,10 @@ export const CalculatorWidget = () => {
 
   const currentPercent = selectedSystem === "final"
     ? finalGradeScore * 20
-    : calculateTotalPercent({ fos, sors, soch }, selectedSystem);
+    : calculateTotalPercent(
+        { fos, sors, soch, uniMidterm1, uniMidterm2, uniExam },
+        selectedSystem
+      );
 
   const currentGrade = selectedSystem === "final"
     ? (yearlyGrade !== null ? Math.round(finalGradeScore) : 0)
@@ -273,8 +297,54 @@ export const CalculatorWidget = () => {
     }
   };
 
-  const currentGradeColors = getGradeColors(currentGrade);
   const intlGPA = calculateIntlGPA(currentPercent);
+
+  const ECTS_VALUES: Record<string, number> = {
+    "A": 4.00, "A-": 3.67, "B+": 3.33, "B": 3.00, "B-": 2.67,
+    "C+": 2.33, "C": 2.00, "C-": 1.67, "D+": 1.33, "D": 1.00,
+    "FX": 0.50, "F": 0.00
+  };
+
+  const getUniGradeColors = (letter: string) => {
+    if (["A", "A-", "B+", "B", "B-"].includes(letter)) {
+      return { bg: "#3b8f21", text: "#ffffff", border: "#3b8f21", solid: "#3b8f21" };
+    }
+    if (["C+", "C", "C-", "D+", "D"].includes(letter)) {
+      return { bg: "#ff8e12", text: "#ffffff", border: "#ff8e12", solid: "#ff8e12" };
+    }
+    return { bg: "#d13142", text: "#ffffff", border: "#d13142", solid: "#d13142" };
+  };
+
+  const currentGradeColors = selectedSystem === "university"
+    ? getUniGradeColors(intlGPA.letter)
+    : getGradeColors(currentGrade);
+
+  const rd = (uniMidterm1 !== null || uniMidterm2 !== null)
+    ? ((uniMidterm1 ?? 0) + (uniMidterm2 ?? 0)) / ((uniMidterm1 !== null ? 1 : 0) + (uniMidterm2 !== null ? 1 : 0))
+    : 0;
+  const isAllowed = rd >= 50;
+
+  const totalPoints = semesterSubjects.reduce((sum, sub) => sum + (ECTS_VALUES[sub.letter] || 0) * sub.credits, 0);
+  const totalCredits = semesterSubjects.reduce((sum, sub) => sum + sub.credits, 0);
+  const semesterGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+
+  const getLetterFromGPA = (gpaVal: number): string => {
+    if (gpaVal >= 4.00) return "A";
+    if (gpaVal >= 3.67) return "A-";
+    if (gpaVal >= 3.33) return "B+";
+    if (gpaVal >= 3.00) return "B";
+    if (gpaVal >= 2.67) return "B-";
+    if (gpaVal >= 2.33) return "C+";
+    if (gpaVal >= 2.00) return "C";
+    if (gpaVal >= 1.67) return "C-";
+    if (gpaVal >= 1.33) return "D+";
+    if (gpaVal >= 1.00) return "D";
+    if (gpaVal >= 0.50) return "FX";
+    return "F";
+  };
+
+  const semesterGPALetter = totalCredits > 0 ? getLetterFromGPA(semesterGPA) : "-";
+  const semesterGPAColor = totalCredits > 0 ? getUniGradeColors(semesterGPALetter) : { solid: "var(--accent-primary)" };
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
@@ -302,69 +372,107 @@ export const CalculatorWidget = () => {
           </button>
         ))}
       </div>
-      <Card className={styles.resultCard}>
-        <div className={styles.resultHeader}>
-          <span className={styles.resultTitle}>
-            {selectedSystem === "gpa"
-              ? "GPA Оценка"
-              : selectedSystem === "final"
-              ? "Итоговая оценка"
-              : t("calculator.total_percent")}
-          </span>
-          <div
-            className={styles.gradeBadge}
-            style={{ backgroundColor: currentGradeColors.solid }}
-          >
-            {selectedSystem === "gpa"
-              ? (currentPercent > 0 ? intlGPA.letter : "-")
-              : (currentGrade || "-")}
+
+      {selectedSystem === "university" && uniSubMode === "semester" ? (
+        <Card className={styles.resultCard}>
+          <div className={styles.resultHeader}>
+            <span className={styles.resultTitle}>
+              {t("calculator.uni_gpa_forecast")}
+            </span>
+            <div
+              className={styles.gradeBadge}
+              style={{ backgroundColor: semesterGPAColor.solid }}
+            >
+              {semesterGPALetter}
+            </div>
           </div>
-        </div>
 
-        <div className={styles.percentDisplay}>
-          {selectedSystem === "gpa"
-            ? `${intlGPA.score.toFixed(2)}`
-            : selectedSystem === "final"
-            ? yearlyGrade !== null ? `${finalGradeScore.toFixed(2)}` : "0.00"
-            : `${currentPercent.toFixed(selectedSystem === "kundelik" ? 2 : 1)}%`}
-        </div>
+          <div className={styles.percentDisplay}>
+            {semesterGPA.toFixed(2)}
+          </div>
 
-        <div className={styles.gpaSimple}>
-          {selectedSystem === "gpa"
-            ? `Процент: ${currentPercent.toFixed(1)}%`
-            : selectedSystem === "final"
-            ? `Годовая: ${yearlyGrade || "-"} | Экзамен: ${examGrade || "-"}`
-            : `${t("calculator.gpa")}: ${intlGPA.score.toFixed(2)} (${intlGPA.letter})`}
-        </div>
+          <div className={styles.uniStatsGrid}>
+            <div className={styles.uniStatChip}>
+              {t("calculator.uni_credits")}: {totalCredits}
+            </div>
+          </div>
+        </Card>
+      ) : (
+        <Card className={styles.resultCard}>
+          <div className={styles.resultHeader}>
+            <span className={styles.resultTitle}>
+              {selectedSystem === "university"
+                ? "ВУЗ Оценка"
+                : selectedSystem === "final"
+                ? "Итоговая оценка"
+                : t("calculator.total_percent")}
+            </span>
+            <div
+              className={styles.gradeBadge}
+              style={{ backgroundColor: currentGradeColors.solid }}
+            >
+              {selectedSystem === "university"
+                ? (uniMidterm1 !== null || uniMidterm2 !== null ? intlGPA.letter : "-")
+                : (currentGrade || "-")}
+            </div>
+          </div>
 
-        {selectedSystem !== "final" && (
-          <div className={styles.progressSection}>
-            <ProgressBar
-              value={currentPercent}
-              variant={currentGrade > 0 ? "high" : "low"}
-            />
-            {currentGrade > 0 ? (
-              nextGradeInfo.nextGrade ? (
-                <span className={styles.progressText}>
-                  {t("calculator.to_next_grade")} {nextGradeInfo.nextGrade}:{" "}
-                  {nextGradeInfo.remaining.toFixed(1)}%
-                </span>
+          <div className={styles.percentDisplay}>
+            {selectedSystem === "university"
+              ? `${(uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null) ? currentPercent.toFixed(1) : "0.0"}%`
+              : selectedSystem === "final"
+              ? yearlyGrade !== null ? `${finalGradeScore.toFixed(2)}` : "0.00"
+              : `${currentPercent.toFixed(selectedSystem === "kundelik" ? 2 : 1)}%`}
+          </div>
+
+          {selectedSystem === "university" ? (
+            <div className={styles.uniStatsGrid}>
+              <div className={styles.uniStatChip}>
+                GPA: {intlGPA.score.toFixed(2)}
+              </div>
+              {(uniMidterm1 !== null || uniMidterm2 !== null) && (!isAllowed || uniExam === null) && (
+                <div className={`${styles.uniStatChip} ${isAllowed ? styles.uniStatChipSuccess : styles.uniStatChipDanger}`}>
+                  {isAllowed ? t("calculator.uni_status_allowed") : t("calculator.uni_status_not_allowed")}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className={styles.gpaSimple}>
+              {selectedSystem === "final"
+                ? `Годовая: ${yearlyGrade || "-"} | Экзамен: ${examGrade || "-"}`
+                : `GPA: ${intlGPA.score.toFixed(2)} (${intlGPA.letter})`}
+            </div>
+          )}
+
+          {selectedSystem !== "final" && selectedSystem !== "university" && (
+            <div className={styles.progressSection}>
+              <ProgressBar
+                value={currentPercent}
+                variant={currentGrade > 0 ? "high" : "low"}
+              />
+              {currentGrade > 0 ? (
+                nextGradeInfo.nextGrade ? (
+                  <span className={styles.progressText}>
+                    {t("calculator.to_next_grade")} {nextGradeInfo.nextGrade}:{" "}
+                    {nextGradeInfo.remaining.toFixed(1)}%
+                  </span>
+                ) : (
+                  <span className={styles.progressText}>
+                    {currentPercent >= 100
+                      ? t("calculator.max_points_reached")
+                      : t("calculator.grade_5_reached")}
+                  </span>
+                )
               ) : (
                 <span className={styles.progressText}>
-                  {currentPercent >= 100
-                    ? t("calculator.max_points_reached")
-                    : t("calculator.grade_5_reached")}
+                  {t("calculator.add_at_least_one")}
                 </span>
-              )
-            ) : (
-              <span className={styles.progressText}>
-                {t("calculator.add_at_least_one")}
-              </span>
-            )}
-          </div>
-        )}
-      </Card>
-      {selectedSystem !== "final" && (
+              )}
+            </div>
+          )}
+        </Card>
+      )}
+      {selectedSystem !== "final" && selectedSystem !== "university" && (
         <div className={styles.subTabsContainer}>
           <button
             className={`${styles.subTab} ${subTab === "input" ? styles.active : ""}`}
@@ -436,6 +544,220 @@ export const CalculatorWidget = () => {
                   </button>
                 </div>
               </Card>
+            </div>
+          ) : selectedSystem === "university" ? (
+            <div className={styles.inputsGrid}>
+              <div className={styles.uniSubModeSelector}>
+                <button
+                  type="button"
+                  className={`${styles.uniSubModeTab} ${uniSubMode === "subject" ? styles.active : ""}`}
+                  onClick={() => setUniSubMode("subject")}
+                >
+                  {t("calculator.uni_tab_subject")}
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.uniSubModeTab} ${uniSubMode === "semester" ? styles.active : ""}`}
+                  onClick={() => setUniSubMode("semester")}
+                >
+                  {t("calculator.uni_tab_semester")}
+                </button>
+              </div>
+
+              {uniSubMode === "subject" ? (
+                <div className={styles.uniInputsContainer}>
+                  <Card className={styles.sectionCard}>
+                    <h3 className={styles.sectionTitle}>{t("calculator.uni_tab_subject")}</h3>
+                    <div className={styles.uniFormGrid}>
+                      <div className={styles.uniField}>
+                        <label className={styles.uniLabel}>
+                          {t("calculator.uni_rating1")} (0-100)
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          placeholder="0-100"
+                          value={uniMidterm1 ?? ""}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const val = e.target.value === "" ? null : Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+                            setUniMidterm1(val);
+                          }}
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
+
+                      <div className={styles.uniField}>
+                        <label className={styles.uniLabel}>
+                          {t("calculator.uni_rating2")} (0-100)
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          placeholder="0-100"
+                          value={uniMidterm2 ?? ""}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const val = e.target.value === "" ? null : Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+                            setUniMidterm2(val);
+                          }}
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
+
+                      <div className={styles.uniField}>
+                        <label className={`${styles.uniLabel} ${!isAllowed ? styles.uniLabelDisabled : ""}`}>
+                          {t("calculator.uni_exam")} (0-100)
+                        </label>
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          placeholder={isAllowed ? "0-100" : "Блокировано (РД < 50)"}
+                          value={uniExam ?? ""}
+                          disabled={!isAllowed}
+                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            const val = e.target.value === "" ? null : Math.max(0, Math.min(100, parseFloat(e.target.value) || 0));
+                            setUniExam(val);
+                          }}
+                          onKeyDown={handleKeyDown}
+                        />
+                      </div>
+
+                      {!isAllowed && (uniMidterm1 !== null || uniMidterm2 !== null) && (
+                        <div className={styles.uniAlertBadge}>
+                          {t("calculator.uni_status_not_allowed")}
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+
+                  {uniExam === null && isAllowed && (uniMidterm1 !== null || uniMidterm2 !== null) && (
+                    <Card className={styles.uniPredictorCard}>
+                      <h4 className={styles.uniPredictorTitle}>{t("predictor.title")}</h4>
+                      <div className={styles.uniPredictorList}>
+                        {(() => {
+                          const targetScales = KAZ_UNIVERSITY_SCALE.filter(item => item.letter !== "FX" && item.letter !== "F");
+                          const visibleScales = isPredictorExpanded ? targetScales : targetScales.slice(0, 3);
+                          return visibleScales.map((item) => {
+                            const targetMin = item.min;
+                            const neededExamScore = Math.ceil((targetMin - rd * 0.6) / 0.4);
+                            let desc = "";
+                            if (neededExamScore > 100) {
+                              desc = t("calculator.uni_predictor_impossible", { grade: item.letter });
+                            } else if (neededExamScore <= 0) {
+                              desc = t("calculator.uni_predictor_achieved");
+                            } else {
+                              desc = t("calculator.uni_predictor_needed", { grade: item.letter, score: neededExamScore });
+                            }
+                            return (
+                              <div key={item.letter} className={styles.uniPredictorItem}>
+                                <span className={styles.uniPredictorLetter} style={{ color: getUniGradeColors(item.letter).solid }}>
+                                  {item.letter} (GPA: {item.gpa.toFixed(2)})
+                                </span>
+                                <span className={styles.uniPredictorDesc}>{desc}</span>
+                              </div>
+                            );
+                          });
+                        })()}
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.uniPredictorExpandBtn}
+                        onClick={() => setIsPredictorExpanded(!isPredictorExpanded)}
+                      >
+                        {isPredictorExpanded ? "Свернуть" : "Показать все цели"}
+                      </button>
+                      <div className={styles.uniB2BAlert}>
+                        {t("calculator.uni_b2b_alert")}
+                      </div>
+                    </Card>
+                  )}
+                </div>
+              ) : (
+                <div className={styles.uniInputsContainer}>
+                  <Card className={styles.sectionCard}>
+                    <h3 className={styles.sectionTitle}>{t("calculator.uni_tab_semester")}</h3>
+                    <div style={{ overflowX: "auto" }}>
+                      <table className={styles.uniTable}>
+                        <thead>
+                          <tr>
+                            <th>{t("calculator.uni_subject_placeholder")}</th>
+                            <th>{t("calculator.uni_credits")}</th>
+                            <th>{t("calculator.uni_grade_header")}</th>
+                            <th style={{ textAlign: "center" }}>{t("calculator.uni_action_header")}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {semesterSubjects.map((sub) => (
+                            <tr key={sub.id}>
+                              <td data-label={t("calculator.uni_subject_placeholder")}>
+                                <Input
+                                  type="text"
+                                  value={sub.title}
+                                  onChange={(e: ChangeEvent<HTMLInputElement>) => updateSemesterSubject(sub.id, "title", e.target.value)}
+                                  className={styles.uniSubjectInput}
+                                  placeholder={t("calculator.uni_subject_placeholder")}
+                                />
+                              </td>
+                              <td data-label={t("calculator.uni_credits")}>
+                                <select
+                                  value={sub.credits}
+                                  onChange={(e) => updateSemesterSubject(sub.id, "credits", parseInt(e.target.value) || 3)}
+                                  className={styles.uniSelect}
+                                >
+                                  {[1, 2, 3, 4, 5, 6, 7, 8].map((c) => (
+                                    <option key={c} value={c}>
+                                      {c}
+                                    </option>
+                                  ))}
+                                </select>
+                              </td>
+                              <td data-label={t("calculator.uni_grade_header")}>
+                                <select
+                                  value={sub.letter}
+                                  onChange={(e) => updateSemesterSubject(sub.id, "letter", e.target.value)}
+                                  className={styles.uniSelect}
+                                >
+                                  {Object.keys(ECTS_VALUES).map((letter) => (
+                                    <option key={letter} value={letter}>
+                                      {letter} ({ECTS_VALUES[letter].toFixed(2)})
+                                    </option>
+                                  ))}
+                                </select>
+                              </td>
+                              <td>
+                                <button
+                                  type="button"
+                                  onClick={() => removeSemesterSubject(sub.id)}
+                                  className={styles.uniDeleteBtn}
+                                  aria-label="Remove subject"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <button type="button" onClick={addSemesterSubject} className={styles.uniAddBtn}>
+                      {t("calculator.uni_add_subject")}
+                    </button>
+
+                    <div className={styles.uniExplanation}>
+                      <h4>Математика расчета GPA</h4>
+                      <p>
+                        {t("calculator.uni_gpa_explanation", {
+                          points: totalPoints.toFixed(2),
+                          credits: totalCredits,
+                          gpa: semesterGPA.toFixed(2)
+                        })}
+                      </p>
+                    </div>
+                  </Card>
+                </div>
+              )}
             </div>
           ) : (
             <>
@@ -621,14 +943,16 @@ export const CalculatorWidget = () => {
             </>
           )}
           <div className={styles.bottomButtons}>
-            <button
-              className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
-              onClick={() => setIsSaveModalOpen(true)}
-              disabled={!hasUnsavedChanges}
-            >
-              <Save size={16} />
-              <span>{t("history.save_btn")}</span>
-            </button>
+            {!(selectedSystem === "university" && uniSubMode === "semester") && (
+              <button
+                className={`${styles.saveBtn} ${!hasUnsavedChanges ? styles.disabled : ""}`}
+                onClick={() => setIsSaveModalOpen(true)}
+                disabled={!hasUnsavedChanges}
+              >
+                <Save size={16} />
+                <span>{t("history.save_btn")}</span>
+              </button>
+            )}
             <button className={styles.resetBtn} onClick={handleResetClick}>
               <RotateCcw size={16} />
               <span>{t("calculator.reset")}</span>
