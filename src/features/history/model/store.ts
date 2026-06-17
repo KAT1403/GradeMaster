@@ -13,8 +13,11 @@ import {
 
 export interface HistoryEntryData {
   selectedSystem?: "bilim_class" | "kundelik" | "final" | "university";
-  yearlyGrade?: number | null;
-  examGrade?: number | null;
+  finalQ1?: number | null;
+  finalQ2?: number | null;
+  finalQ3?: number | null;
+  finalQ4?: number | null;
+  finalExam?: number | null;
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
@@ -64,8 +67,11 @@ const normalizeHistoryEntry = (value: unknown): HistoryEntry | null => {
     lastModified: normalizeTimestamp(value.lastModified),
     data: {
       selectedSystem: normalizeSystem(value.data.selectedSystem),
-      yearlyGrade: normalizeGradeValue(value.data.yearlyGrade),
-      examGrade: normalizeGradeValue(value.data.examGrade),
+      finalQ1: normalizeGradeValue(value.data.finalQ1 !== undefined ? value.data.finalQ1 : (value.data as Record<string, unknown>).yearlyGrade),
+      finalQ2: normalizeGradeValue(value.data.finalQ2 !== undefined ? value.data.finalQ2 : (value.data as Record<string, unknown>).yearlyGrade),
+      finalQ3: normalizeGradeValue(value.data.finalQ3 !== undefined ? value.data.finalQ3 : (value.data as Record<string, unknown>).yearlyGrade),
+      finalQ4: normalizeGradeValue(value.data.finalQ4 !== undefined ? value.data.finalQ4 : (value.data as Record<string, unknown>).yearlyGrade),
+      finalExam: normalizeGradeValue(value.data.finalExam !== undefined ? value.data.finalExam : (value.data as Record<string, unknown>).examGrade),
       fos: normalizeFos(value.data.fos),
       sors: normalizeSors(value.data.sors),
       soch: normalizeSoch(value.data.soch),

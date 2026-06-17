@@ -39,8 +39,11 @@ const SaveModalContent = ({
     sors,
     soch,
     selectedSystem,
-    yearlyGrade,
-    examGrade,
+    finalQ1,
+    finalQ2,
+    finalQ3,
+    finalQ4,
+    finalExam,
     activeRecordId,
     activeRecordTitle,
     setActiveRecord,
@@ -57,9 +60,11 @@ const SaveModalContent = ({
     
     let finalPercent = 0;
     if (selectedSystem === "final") {
-      const finalGrade = examGrade !== null
-        ? (yearlyGrade ?? 0) * 0.7 + examGrade * 0.3
-        : (yearlyGrade ?? 0);
+      const quarters = [finalQ1, finalQ2, finalQ3, finalQ4].filter((q): q is number => q !== null);
+      const avgQuarters = quarters.length > 0 ? quarters.reduce((sum, val) => sum + val, 0) / quarters.length : 0;
+      const finalGrade = finalExam !== null
+        ? avgQuarters * 0.7 + finalExam * 0.3
+        : avgQuarters;
       finalPercent = finalGrade * 20;
     } else {
       finalPercent = calculateTotalPercent(
@@ -73,8 +78,11 @@ const SaveModalContent = ({
       sors,
       soch,
       selectedSystem,
-      yearlyGrade,
-      examGrade,
+      finalQ1,
+      finalQ2,
+      finalQ3,
+      finalQ4,
+      finalExam,
       uniMidterm1,
       uniMidterm2,
       uniExam,

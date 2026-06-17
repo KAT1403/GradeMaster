@@ -23,8 +23,11 @@ export interface AcademicRecordState {
   activeRecordId: string | null;
   activeRecordTitle: string | null;
   selectedSystem: "bilim_class" | "kundelik" | "final" | "university";
-  yearlyGrade: number | null;
-  examGrade: number | null;
+  finalQ1: number | null;
+  finalQ2: number | null;
+  finalQ3: number | null;
+  finalQ4: number | null;
+  finalExam: number | null;
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
@@ -36,8 +39,11 @@ export interface AcademicRecordState {
 
   setActiveRecord: (id: string | null, title: string | null) => void;
   setSelectedSystem: (system: "bilim_class" | "kundelik" | "final" | "university") => void;
-  setYearlyGrade: (grade: number | null) => void;
-  setExamGrade: (grade: number | null) => void;
+  setFinalQ1: (grade: number | null) => void;
+  setFinalQ2: (grade: number | null) => void;
+  setFinalQ3: (grade: number | null) => void;
+  setFinalQ4: (grade: number | null) => void;
+  setFinalExam: (grade: number | null) => void;
   addFO: (fo: number) => void;
   removeFO: (index: number) => void;
   setFOS: (fos: number[]) => void;
@@ -84,12 +90,17 @@ const migrateAcademicRecordState = (
       })
     : initialSemesterSubjects();
 
+  const oldState = state as Record<string, unknown>;
+
   return {
     activeRecordId: normalizeTextOrNull(state.activeRecordId),
     activeRecordTitle: normalizeTextOrNull(state.activeRecordTitle),
     selectedSystem: normalizeSystem(state.selectedSystem),
-    yearlyGrade: normalizeGradeValue(state.yearlyGrade),
-    examGrade: normalizeGradeValue(state.examGrade),
+    finalQ1: normalizeGradeValue(state.finalQ1 ?? oldState.yearlyGrade),
+    finalQ2: normalizeGradeValue(state.finalQ2 ?? oldState.yearlyGrade),
+    finalQ3: normalizeGradeValue(state.finalQ3 ?? oldState.yearlyGrade),
+    finalQ4: normalizeGradeValue(state.finalQ4 ?? oldState.yearlyGrade),
+    finalExam: normalizeGradeValue(state.finalExam ?? oldState.examGrade),
     fos: normalizeFos(state.fos),
     sors: normalizeSors(state.sors),
     soch: normalizeSoch(state.soch),
@@ -107,8 +118,11 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
       activeRecordId: null as string | null,
       activeRecordTitle: null as string | null,
       selectedSystem: "bilim_class" as "bilim_class" | "kundelik" | "final" | "university",
-      yearlyGrade: null as number | null,
-      examGrade: null as number | null,
+      finalQ1: null as number | null,
+      finalQ2: null as number | null,
+      finalQ3: null as number | null,
+      finalQ4: null as number | null,
+      finalExam: null as number | null,
       fos: [] as number[],
       sors: initialSors(),
       soch: null as SOCH | null,
@@ -117,38 +131,41 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
       uniMidterm2: null as number | null,
       uniExam: null as number | null,
       semesterSubjects: initialSemesterSubjects(),
-
+ 
       setActiveRecord: (id, title) =>
           set({ activeRecordId: id, activeRecordTitle: title }),
-
+ 
       setSelectedSystem: (selectedSystem) => set({ selectedSystem }),
-      setYearlyGrade: (yearlyGrade) => set({ yearlyGrade }),
-      setExamGrade: (examGrade) => set({ examGrade }),
-
+      setFinalQ1: (finalQ1) => set({ finalQ1 }),
+      setFinalQ2: (finalQ2) => set({ finalQ2 }),
+      setFinalQ3: (finalQ3) => set({ finalQ3 }),
+      setFinalQ4: (finalQ4) => set({ finalQ4 }),
+      setFinalExam: (finalExam) => set({ finalExam }),
+ 
       addFO: (fo) =>
         set((state) => {
           if (state.fos.length >= 50) return state;
           return { fos: [...state.fos, fo] };
         }),
-
+ 
       removeFO: (index) =>
         set((state) => ({
           fos: state.fos.filter((_, i) => i !== index),
         })),
-
+ 
       setFOS: (newFos) => set({ fos: newFos }),
-
+ 
       setSORS: (newSors) => set({ sors: newSors }),
-
+ 
       updateSOR: (id, newSor) =>
         set((state) => ({
           sors: state.sors.map((sor) =>
             sor.id === id ? { ...sor, ...newSor } : sor,
           ),
         })),
-
+ 
       setSOCH: (soch) => set({ soch }),
-
+ 
       setUniSubMode: (uniSubMode) => set({ uniSubMode }),
       setUniMidterm1: (uniMidterm1) => set({ uniMidterm1 }),
       setUniMidterm2: (uniMidterm2) => set({ uniMidterm2 }),
@@ -162,26 +179,29 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
             { id: crypto.randomUUID(), title: "", credits: 3, letter: "A" },
           ],
         })),
-
+ 
       removeSemesterSubject: (id) =>
         set((state) => ({
           semesterSubjects: state.semesterSubjects.filter((sub) => sub.id !== id),
         })),
-
+ 
       updateSemesterSubject: (id, field, value) =>
         set((state) => ({
           semesterSubjects: state.semesterSubjects.map((sub) =>
             sub.id === id ? { ...sub, [field]: value } : sub,
           ),
         })),
-
+ 
       resetAll: () =>
         set({
           activeRecordId: null,
           activeRecordTitle: null,
           selectedSystem: "bilim_class",
-          yearlyGrade: null,
-          examGrade: null,
+          finalQ1: null,
+          finalQ2: null,
+          finalQ3: null,
+          finalQ4: null,
+          finalExam: null,
           fos: [],
           sors: initialSors(),
           soch: null,

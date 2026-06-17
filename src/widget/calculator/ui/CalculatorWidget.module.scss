@@ -506,6 +506,10 @@
   margin-bottom: 8px;
 }
 
+.examCard {
+  grid-column: span 2;
+}
+
 .finalGradeSelector {
   display: flex;
   flex-wrap: wrap;
@@ -543,10 +547,11 @@
   font-weight: 600;
 
   &.activeClear {
-    border-color: var(--border-primary);
-    background: var(--bg-secondary);
-    color: var(--text-muted);
+    border-color: var(--accent-primary);
+    background: var(--accent-primary);
+    color: #ffffff;
     cursor: default;
+    box-shadow: 0 4px 12px rgba(47, 96, 255, 0.25);
   }
 }
 
@@ -554,6 +559,9 @@
   .finalGradesContainer {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  .examCard {
+    grid-column: span 1;
   }
   .sorList {
     grid-template-columns: repeat(2, 1fr);

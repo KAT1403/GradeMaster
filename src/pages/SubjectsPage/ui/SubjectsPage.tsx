@@ -17,8 +17,11 @@ export default function SubjectsPage() {
     setSORS,
     setSOCH,
     setSelectedSystem,
-    setYearlyGrade,
-    setExamGrade,
+    setFinalQ1,
+    setFinalQ2,
+    setFinalQ3,
+    setFinalQ4,
+    setFinalExam,
     setActiveRecord,
     setUniMidterm1,
     setUniMidterm2,
@@ -43,8 +46,11 @@ export default function SubjectsPage() {
     setSORS(entry.data.sors);
     setSOCH(entry.data.soch);
     setSelectedSystem(entry.data.selectedSystem || "bilim_class");
-    setYearlyGrade(entry.data.yearlyGrade !== undefined ? entry.data.yearlyGrade : null);
-    setExamGrade(entry.data.examGrade !== undefined ? entry.data.examGrade : null);
+    setFinalQ1(entry.data.finalQ1 !== undefined ? entry.data.finalQ1 : null);
+    setFinalQ2(entry.data.finalQ2 !== undefined ? entry.data.finalQ2 : null);
+    setFinalQ3(entry.data.finalQ3 !== undefined ? entry.data.finalQ3 : null);
+    setFinalQ4(entry.data.finalQ4 !== undefined ? entry.data.finalQ4 : null);
+    setFinalExam(entry.data.finalExam !== undefined ? entry.data.finalExam : null);
     setUniMidterm1(entry.data.uniMidterm1 !== undefined ? entry.data.uniMidterm1 : null);
     setUniMidterm2(entry.data.uniMidterm2 !== undefined ? entry.data.uniMidterm2 : null);
     setUniExam(entry.data.uniExam !== undefined ? entry.data.uniExam : null);

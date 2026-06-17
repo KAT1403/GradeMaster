@@ -34,10 +34,16 @@ export const CalculatorWidget = () => {
     soch,
     selectedSystem,
     setSelectedSystem,
-    yearlyGrade,
-    examGrade,
-    setYearlyGrade,
-    setExamGrade,
+    finalQ1,
+    finalQ2,
+    finalQ3,
+    finalQ4,
+    finalExam,
+    setFinalQ1,
+    setFinalQ2,
+    setFinalQ3,
+    setFinalQ4,
+    setFinalExam,
     activeRecordId,
     activeRecordTitle,
     addFO,
@@ -83,7 +89,7 @@ export const CalculatorWidget = () => {
   };
 
   const isFormEmpty = selectedSystem === "final"
-    ? yearlyGrade === null && examGrade === null
+    ? finalQ1 === null && finalQ2 === null && finalQ3 === null && finalQ4 === null && finalExam === null
     : selectedSystem === "university"
     ? uniMidterm1 === null && uniMidterm2 === null && uniExam === null
     : fos.length === 0 &&
@@ -99,8 +105,11 @@ export const CalculatorWidget = () => {
         sors: sors.map((s) => ({ score: s.score, max: s.max })),
         soch: soch ? { score: soch.score, max: soch.max } : null,
         selectedSystem,
-        yearlyGrade,
-        examGrade,
+        finalQ1,
+        finalQ2,
+        finalQ3,
+        finalQ4,
+        finalExam,
         uniMidterm1,
         uniMidterm2,
         uniExam,
@@ -118,8 +127,11 @@ export const CalculatorWidget = () => {
             }
           : null,
         selectedSystem: activeEntry.data.selectedSystem || "bilim_class",
-        yearlyGrade: activeEntry.data.yearlyGrade !== undefined ? activeEntry.data.yearlyGrade : null,
-        examGrade: activeEntry.data.examGrade !== undefined ? activeEntry.data.examGrade : null,
+        finalQ1: activeEntry.data.finalQ1 !== undefined ? activeEntry.data.finalQ1 : null,
+        finalQ2: activeEntry.data.finalQ2 !== undefined ? activeEntry.data.finalQ2 : null,
+        finalQ3: activeEntry.data.finalQ3 !== undefined ? activeEntry.data.finalQ3 : null,
+        finalQ4: activeEntry.data.finalQ4 !== undefined ? activeEntry.data.finalQ4 : null,
+        finalExam: activeEntry.data.finalExam !== undefined ? activeEntry.data.finalExam : null,
         uniMidterm1: activeEntry.data.uniMidterm1 !== undefined ? activeEntry.data.uniMidterm1 : null,
         uniMidterm2: activeEntry.data.uniMidterm2 !== undefined ? activeEntry.data.uniMidterm2 : null,
         uniExam: activeEntry.data.uniExam !== undefined ? activeEntry.data.uniExam : null,
@@ -201,8 +213,10 @@ export const CalculatorWidget = () => {
     }
   };
 
-  const finalGradeScore = yearlyGrade !== null
-    ? (examGrade !== null ? yearlyGrade * 0.7 + examGrade * 0.3 : yearlyGrade)
+  const quarters = [finalQ1, finalQ2, finalQ3, finalQ4].filter((q): q is number => q !== null);
+  const avgQuarters = quarters.length > 0 ? quarters.reduce((sum, val) => sum + val, 0) / quarters.length : 0;
+  const finalGradeScore = quarters.length > 0
+    ? (finalExam !== null ? avgQuarters * 0.7 + finalExam * 0.3 : avgQuarters)
     : 0;
 
   const currentPercent = selectedSystem === "final"
@@ -213,7 +227,7 @@ export const CalculatorWidget = () => {
       );
 
   const currentGrade = selectedSystem === "final"
-    ? (yearlyGrade !== null ? Math.round(finalGradeScore) : 0)
+    ? (quarters.length > 0 ? Math.round(finalGradeScore) : 0)
     : (currentPercent === 0 &&
        fos.length === 0 &&
        sors.filter((s) => s.max !== null && s.max > 0).length === 0 &&
@@ -421,7 +435,7 @@ export const CalculatorWidget = () => {
             {selectedSystem === "university"
               ? `${(uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null) ? currentPercent.toFixed(1) : "0.0"}%`
               : selectedSystem === "final"
-              ? yearlyGrade !== null ? `${finalGradeScore.toFixed(2)}` : "0.00"
+              ? quarters.length > 0 ? `${finalGradeScore.toFixed(2)}` : "0.00"
               : `${currentPercent.toFixed(selectedSystem === "kundelik" ? 2 : 1)}%`}
           </div>
 
@@ -439,7 +453,7 @@ export const CalculatorWidget = () => {
           ) : (
             <div className={styles.gpaSimple}>
               {selectedSystem === "final"
-                ? `Годовая: ${yearlyGrade || "-"} | Экзамен: ${examGrade || "-"}`
+                ? `GPA: ${intlGPA.score.toFixed(2)} (${intlGPA.letter}) | Четверти: ${finalQ1 || "-"}/${finalQ2 || "-"}/${finalQ3 || "-"}/${finalQ4 || "-"} | Экзамен: ${finalExam || "-"}`
                 : `GPA: ${intlGPA.score.toFixed(2)} (${intlGPA.letter})`}
             </div>
           )}
@@ -499,46 +513,53 @@ export const CalculatorWidget = () => {
         <div className={styles.inputTabContent}>
           {selectedSystem === "final" ? (
             <div className={styles.finalGradesContainer}>
-              <Card className={styles.sectionCard}>
-                <h3 className={styles.sectionTitle}>Годовая оценка</h3>
-                <div className={styles.finalGradeSelector}>
-                  {[2, 3, 4, 5].map((grade) => {
-                    const active = yearlyGrade === grade;
-                    const colors = getGradeColors(grade);
-                    return (
-                      <button
-                        key={grade}
-                        className={`${styles.finalGradeBtn} ${active ? styles.active : ""}`}
-                        style={active ? { backgroundColor: colors.solid, borderColor: colors.solid, color: "#ffffff" } : {}}
-                        onClick={() => setYearlyGrade(grade)}
-                      >
-                        {grade}
-                      </button>
-                    );
-                  })}
-                </div>
-              </Card>
+              {[
+                { label: "1-я четверть", val: finalQ1, setter: setFinalQ1 },
+                { label: "2-я четверть", val: finalQ2, setter: setFinalQ2 },
+                { label: "3-я четверть", val: finalQ3, setter: setFinalQ3 },
+                { label: "4-я четверть", val: finalQ4, setter: setFinalQ4 },
+              ].map((quarter, idx) => (
+                <Card key={idx} className={styles.sectionCard}>
+                  <h3 className={styles.sectionTitle}>{quarter.label}</h3>
+                  <div className={styles.finalGradeSelector}>
+                    {[2, 3, 4, 5].map((grade) => {
+                      const active = quarter.val === grade;
+                      const colors = getGradeColors(grade);
+                      return (
+                        <button
+                          key={grade}
+                          className={`${styles.finalGradeBtn} ${active ? styles.active : ""}`}
+                          style={active ? { backgroundColor: colors.solid, borderColor: colors.solid, color: "#ffffff" } : {}}
+                          onClick={() => quarter.setter(quarter.val === grade ? null : grade)}
+                        >
+                          {grade}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Card>
+              ))}
 
-              <Card className={styles.sectionCard}>
-                <h3 className={styles.sectionTitle}>Оценка за экзамен (необязательно)</h3>
+              <Card className={`${styles.sectionCard} ${styles.examCard}`}>
+                <h3 className={styles.sectionTitle}>Экзамен (необязательно)</h3>
                 <div className={styles.finalGradeSelector}>
                   {[2, 3, 4, 5].map((grade) => {
-                    const active = examGrade === grade;
+                    const active = finalExam === grade;
                     const colors = getGradeColors(grade);
                     return (
                       <button
                         key={grade}
                         className={`${styles.finalGradeBtn} ${active ? styles.active : ""}`}
                         style={active ? { backgroundColor: colors.solid, borderColor: colors.solid, color: "#ffffff" } : {}}
-                        onClick={() => setExamGrade(grade)}
+                        onClick={() => setFinalExam(finalExam === grade ? null : grade)}
                       >
                         {grade}
                       </button>
                     );
                   })}
                   <button
-                    className={`${styles.finalGradeBtn} ${styles.clearBtn} ${examGrade === null ? styles.activeClear : ""}`}
-                    onClick={() => setExamGrade(null)}
+                    className={`${styles.finalGradeBtn} ${styles.clearBtn} ${finalExam === null ? styles.activeClear : ""}`}
+                    onClick={() => setFinalExam(null)}
                   >
                     Без экзамена
                   </button>
