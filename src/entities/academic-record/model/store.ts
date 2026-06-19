@@ -223,4 +223,3 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     },
   ),
 );
-

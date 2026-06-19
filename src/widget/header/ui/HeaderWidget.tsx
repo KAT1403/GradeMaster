@@ -48,10 +48,13 @@ export const HeaderWidget = () => {
     { id: "settings", label: t("tabs.settings"), icon: <Settings size={18} /> },
   ];
 
+  const logoSrc = theme === "dark" ? "/img/Logo2.png" : "/img/Logo1.png";
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.brand}>
+          <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
           <h1 className={styles.logo}>GradeMaster</h1>
         </div>
 

@@ -114,7 +114,22 @@
     "uni_predictor_achieved": "Мақсатқа қол жеткізілді!",
     "uni_predictor_impossible": "{{grade}} бағасын алу математикалық тұрғыдан мүмкін емес.",
     "uni_predictor_needed": "{{grade}} бағасын алу үшін емтиханда {{score}} балл жинау керек.",
-    "uni_predictor_needed_short": "{{grade}} үшін {{score}} жинау керек."
+    "uni_predictor_needed_short": "{{grade}} үшін {{score}} жинау керек.",
+    "quarter_1": "1-тоқсан",
+    "quarter_2": "2-тоқсан",
+    "quarter_3": "3-тоқсан",
+    "quarter_4": "4-тоқсан",
+    "exam_optional": "Емтихан (міндетті емес)",
+    "no_exam": "Емтихансыз",
+    "uni_exam_blocked": "Блокталды (РД < 50)",
+    "collapse": "Жию",
+    "show_all_targets": "Барлығын көрсету",
+    "uni_gpa_math": "GPA есептеу математикасы",
+    "uni_remove_subject": "Пәнді өшіру",
+    "uni_grade_title": "ЖОО Бағасы",
+    "final_grade_title": "Қорытынды баға",
+    "final_gpa_details": "GPA: {{gpa}} ({{letter}}) | Тоқсандар: {{q1}}/{{q2}}/{{q3}}/{{q4}} | Емтихан: {{exam}}",
+    "simple_gpa_details": "GPA: {{gpa}} ({{letter}})"
   },
   "predictor": {
     "title": "Баға болжамы",
@@ -234,6 +249,7 @@
     "system_final": "Мектеп қорытынды",
     "system_university": "ЖОО / Университет",
     "system_kundelik": "Күнделік",
+    "system_bilim_class": "BilimClass",
     "explanation_title": "Формула қалай есептеледі (25/25/50)?",
     "explanation_body": "Тоқсандық баға үш компоненттің салмағына қарай есептеледі:\n\n1. ФО (Қалыптастырушы бағалау) — салмағы 25%\n2. БЖБ (Бөлім бойынша жиынтық бағалау) — салмағы 25%\n3. ТЖБ (Тоқсандық жиынтық бағалау) — салмағы 50%\n\nФормула:\nҚорытынды (%) = (Орташа ФО / 10) * 25 + (БЖБ жиынтығы / Максималды БЖБ жиынтығы) * 25 + (ТЖБ / Максималды ТЖБ) * 50\n\nАлынған пайыздық көрсеткіш дөңгеленіп, 2, 3, 4 немесе 5 бағасына аударылады."
   },

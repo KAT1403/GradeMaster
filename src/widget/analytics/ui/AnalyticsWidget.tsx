@@ -17,7 +17,6 @@ import type { TrendType } from "../../../shared/lib/analytics";
 import { TrendsChart } from "./TrendsChart";
 import { StabilityChart } from "./StabilityChart";
 import { EmptyState } from "../../../shared/ui/EmptyState";
-import { useUIStore } from "../../../shared/store/uiStore";
 import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import styles from "./AnalyticsWidget.module.scss";
 
@@ -31,15 +30,18 @@ const COLORS = {
   volHigh: "#d13142",
 };
 
-export const AnalyticsWidget = () => {
+interface AnalyticsWidgetProps {
+  onNavigateToInput?: () => void;
+}
+
+export const AnalyticsWidget = ({ onNavigateToInput }: AnalyticsWidgetProps) => {
   const { t } = useTranslation();
   const { fos, sors, soch } = useAcademicRecordStore();
-  const setActiveTab = useUIStore((state) => state.setActiveTab);
 
   if (fos.length === 0) {
     return (
       <div className={styles.container}>
-        <EmptyState onNavigate={() => setActiveTab("workspace")} />
+        <EmptyState onNavigate={onNavigateToInput ?? (() => {})} />
       </div>
     );
   }
@@ -84,7 +86,10 @@ export const AnalyticsWidget = () => {
               <TrendingUp size={20} color={COLORS.stable} />
             </div>
             <div>
-              <h3 className={styles.cardTitle} style={{ display: 'flex', alignItems: 'center' }}>
+              <h3
+                className={styles.cardTitle}
+                style={{ display: "flex", alignItems: "center" }}
+              >
                 {t("analytics.trend")}
                 <InfoTooltip content={t("analytics.trend_tooltip")} />
               </h3>
@@ -119,7 +124,10 @@ export const AnalyticsWidget = () => {
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
             <Activity size={16} color={COLORS.neutral} />
-            <span className={styles.rectLabel} style={{ display: 'flex', alignItems: 'center' }}>
+            <span
+              className={styles.rectLabel}
+              style={{ display: "flex", alignItems: "center" }}
+            >
               {t("analytics.volatility")}
               <InfoTooltip content={t("analytics.volatility_tooltip")} />
             </span>
@@ -144,7 +152,10 @@ export const AnalyticsWidget = () => {
         <Card className={styles.rectCard}>
           <div className={styles.rectHeader}>
             <HelpCircle size={16} color={COLORS.neutral} />
-            <span className={styles.rectLabel} style={{ display: 'flex', alignItems: 'center' }}>
+            <span
+              className={styles.rectLabel}
+              style={{ display: "flex", alignItems: "center" }}
+            >
               {t("analytics.mean")}
               <InfoTooltip content={t("analytics.mean_tooltip")} />
             </span>

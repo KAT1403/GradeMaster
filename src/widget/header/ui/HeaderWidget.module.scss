@@ -34,6 +34,12 @@
   gap: 8px;
 }
 
+.logoImg {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
 .logo {
   font-weight: 800;
   font-size: 1.4rem;
@@ -90,7 +96,7 @@
 
   &.active {
     color: #ffffff;
-    background-color: #3b82f6;
+    background-color: var(--accent-primary);
 
     .tabIcon {
       color: #ffffff;

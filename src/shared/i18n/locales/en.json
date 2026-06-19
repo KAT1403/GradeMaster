@@ -116,7 +116,22 @@
     "uni_predictor_achieved": "Goal achieved!",
     "uni_predictor_impossible": "Mathematically impossible to get a {{grade}}.",
     "uni_predictor_needed": "To get a {{grade}}, you must score {{score}} points on the exam.",
-    "uni_predictor_needed_short": "Need {{score}} for {{grade}}."
+    "uni_predictor_needed_short": "Need {{score}} for {{grade}}.",
+    "quarter_1": "1st Quarter",
+    "quarter_2": "2nd Quarter",
+    "quarter_3": "3rd Quarter",
+    "quarter_4": "4th Quarter",
+    "exam_optional": "Exam (optional)",
+    "no_exam": "Without Exam",
+    "uni_exam_blocked": "Blocked (Rating < 50)",
+    "collapse": "Collapse",
+    "show_all_targets": "Show all",
+    "uni_gpa_math": "GPA Calculation Math",
+    "uni_remove_subject": "Remove subject",
+    "uni_grade_title": "University Grade",
+    "final_grade_title": "Final Grade",
+    "final_gpa_details": "GPA: {{gpa}} ({{letter}}) | Quarters: {{q1}}/{{q2}}/{{q3}}/{{q4}} | Exam: {{exam}}",
+    "simple_gpa_details": "GPA: {{gpa}} ({{letter}})"
   },
   "predictor": {
     "title": "Grade Predictor",
@@ -236,6 +251,7 @@
     "system_final": "School Finals",
     "system_university": "University",
     "system_kundelik": "Kundelik",
+    "system_bilim_class": "BilimClass",
     "explanation_title": "How does the (25/25/50) formula work?",
     "explanation_body": "The final term grade is calculated based on three components with corresponding weights:\n\n1. FA (Formative Assessment) - weights 25%\n2. SA (Summative Assessment for unit) - weights 25%\n3. SOCH (Summative Assessment for term) - weights 50%\n\nFormula:\nResult (%) = (Avg FA / 10) * 25 + (Sum SA / Sum Max SA) * 25 + (SOCH / Max SOCH) * 50\n\nThe resulting percentage is rounded and converted to the standard grade: 2, 3, 4, or 5."
   },

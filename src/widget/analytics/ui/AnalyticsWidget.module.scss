@@ -1,10 +1,10 @@
 .container {
   padding: 24px;
-  
+
   @media (max-width: 768px) {
     padding: 16px;
   }
-  
+
   @media (max-width: 480px) {
     padding: 12px;
   }
@@ -12,7 +12,7 @@
 
 .header {
   margin-bottom: 24px;
-  
+
   @media (max-width: 768px) {
     margin-bottom: 16px;
   }
@@ -23,7 +23,7 @@
   font-weight: 800;
   color: var(--text-primary);
   margin: 0;
-  
+
   @media (max-width: 480px) {
     font-size: 20px;
   }
@@ -38,7 +38,7 @@
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
-  
+
   @media (max-width: 768px) {
     gap: 16px;
   }
@@ -55,13 +55,13 @@
   flex-direction: column;
   overflow: hidden;
   transition: all 0.3s ease;
-  
+
   @media (max-width: 768px) {
     padding: 20px;
     border-radius: 20px;
     min-height: 340px;
   }
-  
+
   @media (max-width: 480px) {
     padding: 16px;
     min-height: 320px;
@@ -83,10 +83,16 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  
-  &.stability { background: var(--accent-secondary); color: var(--accent-primary); }
-  &.trend { background: var(--accent-secondary); color: var(--accent-primary); }
-  
+
+  &.stability {
+    background: var(--accent-secondary);
+    color: var(--accent-primary);
+  }
+  &.trend {
+    background: var(--accent-secondary);
+    color: var(--accent-primary);
+  }
+
   @media (max-width: 480px) {
     width: 36px;
     height: 36px;
@@ -99,7 +105,7 @@
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
-  
+
   @media (max-width: 480px) {
     font-size: 14px;
   }
@@ -109,7 +115,7 @@
   font-size: 13px;
   color: var(--text-secondary);
   margin: 4px 0 0 0;
-  
+
   @media (max-width: 480px) {
     font-size: 11px;
   }
@@ -142,7 +148,7 @@
   border: 1px solid var(--border-primary);
   box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
-  
+
   @media (max-width: 480px) {
     padding: 16px;
   }
@@ -176,7 +182,7 @@
   font-size: 14px;
   font-weight: 700;
   color: white;
-  
+
   @media (max-width: 480px) {
     font-size: 12px;
     padding: 4px 12px;
@@ -187,7 +193,7 @@
   font-size: 12px;
   color: var(--text-muted);
   margin: 0;
-  
+
   @media (max-width: 480px) {
     font-size: 11px;
   }
@@ -203,7 +209,9 @@
 
 .volatilityFill {
   height: 100%;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.5s ease;
+  transition:
+    width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.5s ease;
 }
 
 .volatilityMeta {
@@ -219,7 +227,7 @@
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
-  
+
   @media (max-width: 480px) {
     font-size: 28px;
   }

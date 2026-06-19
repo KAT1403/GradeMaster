@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
-import { useUIStore } from "../../../shared/store/uiStore";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { usePredictorLogic } from "../lib";
 import { TargetSelector } from "./TargetSelector";
@@ -9,9 +8,12 @@ import { SafetyNetSection } from "./SafetyNetSection";
 import { MetricsSection } from "./MetricsSection";
 import styles from "./PredictorWidget.module.scss";
 
-export const PredictorWidget = () => {
+interface PredictorWidgetProps {
+  onNavigateToInput?: () => void;
+}
+
+export const PredictorWidget = ({ onNavigateToInput }: PredictorWidgetProps) => {
   const state = useAcademicRecordStore();
-  const setActiveTab = useUIStore((state) => state.setActiveTab);
   const [targetGrade, setTargetGrade] = useState<3 | 4 | 5>(5);
   const [badScoreMode, setBadScoreMode] = useState<number>(4);
   const [sochMaxScore, setSochMaxScore] = useState<number>(20);
@@ -26,7 +28,7 @@ export const PredictorWidget = () => {
   if (predictorLogic.predictions.currentTotalBeforeSoch === 0) {
     return (
       <div className={styles.container}>
-        <EmptyState onNavigate={() => setActiveTab("workspace")} />
+        <EmptyState onNavigate={onNavigateToInput ?? (() => {})} />
       </div>
     );
   }

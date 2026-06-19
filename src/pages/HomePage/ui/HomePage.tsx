@@ -11,7 +11,10 @@ import styles from "./HomePage.module.scss";
 export default function HomePage() {
   const { t } = useTranslation();
   const activeTab = useUIStore((state) => state.activeTab);
+  const theme = useUIStore((state) => state.theme);
   const setActiveTab = useUIStore((state) => state.setActiveTab);
+
+  const logoSrc = theme === "dark" ? "/img/Logo2.png" : "/img/Logo1.png";
 
   const navigationItems: {
     id: TabType;
@@ -32,6 +35,7 @@ export default function HomePage() {
     <div className={styles.appShell}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarBrand}>
+          <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
           <span className={styles.brandTitle}>GradeMaster</span>
           <span className={styles.brandVersion}>v2.0</span>
         </div>

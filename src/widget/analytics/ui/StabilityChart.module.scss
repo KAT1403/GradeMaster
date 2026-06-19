@@ -3,11 +3,11 @@
   height: 250px;
   margin-top: 20px;
   position: relative;
-  
+
   @media (max-width: 768px) {
     height: 220px;
   }
-  
+
   @media (max-width: 480px) {
     height: 200px;
     margin-top: 12px;

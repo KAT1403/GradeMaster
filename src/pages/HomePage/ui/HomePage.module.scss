@@ -22,14 +22,20 @@
 
 .sidebarBrand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 6px;
   margin-bottom: 40px;
-  padding-left: 8px;
+  padding-left: 0;
+}
+
+.logoImg {
+  height: 26px;
+  width: auto;
+  object-fit: contain;
 }
 
 .brandTitle {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -40,12 +46,13 @@
 }
 
 .brandVersion {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--accent-primary);
   background: var(--accent-secondary);
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 4px;
+  white-space: nowrap;
 }
 
 .sidebarNav {

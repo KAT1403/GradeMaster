@@ -88,9 +88,7 @@ export const StabilityChart = ({ fos, sors, soch }: StabilityChartProps) => {
         soch && !isScoreOverMax(soch.score, soch.max)
           ? getVal(soch.score ?? 0, soch.max ?? 0)
           : 0,
-      hasData: !!(
-        soch && isCompleteScore(soch.score, soch.max)
-      ),
+      hasData: !!(soch && isCompleteScore(soch.score, soch.max)),
       type: "soch",
     },
   ];

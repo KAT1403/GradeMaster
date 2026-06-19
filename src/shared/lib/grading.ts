@@ -67,7 +67,6 @@ export const calculateTotalPercent = (
 
   const { fos, sors, soch } = params;
 
-
   const hasFO = fos.length > 0;
   const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
   const hasSOR = validSors.length > 0;
