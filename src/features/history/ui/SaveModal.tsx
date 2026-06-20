@@ -51,9 +51,13 @@ const SaveModalContent = ({
     uniMidterm2,
     uniExam,
   } = useAcademicRecordStore();
-  const { saveEntry } = useHistoryManager();
+  const { saveEntry, entries } = useHistoryManager();
 
-  const [title, setTitle] = useState(activeRecordTitle || "");
+  const activeEntry = activeRecordId ? entries.find((e) => e.id === activeRecordId) : null;
+  const savedSystem = activeEntry?.data.selectedSystem || "bilim_class";
+  const isSamePlatform = !activeRecordId || selectedSystem === savedSystem;
+
+  const [title, setTitle] = useState(isSamePlatform ? (activeRecordTitle || "") : "");
 
   const handleSave = (asNew: boolean = false) => {
     if (!title.trim()) return;
@@ -122,7 +126,7 @@ const SaveModalContent = ({
           </button>
         </div>
 
-        {activeRecordId ? (
+        {activeRecordId && isSamePlatform ? (
           <div className={styles.updateFlow}>
             <p className={styles.desc}>
               {t("history.subject_name")}: <strong>{activeRecordTitle}</strong>
@@ -163,7 +167,7 @@ const SaveModalContent = ({
               onChange={(e) => setTitle(e.target.value)}
               maxLength={50}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleSave(false);
+                if (e.key === "Enter") handleSave(true);
               }}
               placeholder={t("history.save_modal_desc")}
               autoFocus
@@ -174,7 +178,7 @@ const SaveModalContent = ({
               </button>
               <button
                 className={styles.btnPrimary}
-                onClick={() => handleSave(false)}
+                onClick={() => handleSave(true)}
                 disabled={!title.trim()}
               >
                 {t("history.save_btn")}
@@ -186,3 +190,4 @@ const SaveModalContent = ({
     </div>
   );
 };
+

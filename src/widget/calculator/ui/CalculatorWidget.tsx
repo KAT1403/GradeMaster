@@ -101,37 +101,52 @@ export const CalculatorWidget = () => {
   if (activeRecordId) {
     const activeEntry = entries.find((e) => e.id === activeRecordId);
     if (activeEntry) {
-      const currentData = {
-        fos,
-        sors: sors.map((s) => ({ score: s.score, max: s.max })),
-        soch: soch ? { score: soch.score, max: soch.max } : null,
-        selectedSystem,
-        finalQ1,
-        finalQ2,
-        finalQ3,
-        finalQ4,
-        finalExam,
-        uniMidterm1,
-        uniMidterm2,
-        uniExam,
-      };
-      const savedData = {
-        fos: activeEntry.data.fos,
-        sors: activeEntry.data.sors.map((s) => ({ score: s.score, max: s.max })),
-        soch: activeEntry.data.soch
-          ? { score: activeEntry.data.soch.score, max: activeEntry.data.soch.max }
-          : null,
-        selectedSystem: activeEntry.data.selectedSystem || "bilim_class",
-        finalQ1:   activeEntry.data.finalQ1   ?? null,
-        finalQ2:   activeEntry.data.finalQ2   ?? null,
-        finalQ3:   activeEntry.data.finalQ3   ?? null,
-        finalQ4:   activeEntry.data.finalQ4   ?? null,
-        finalExam: activeEntry.data.finalExam ?? null,
-        uniMidterm1: activeEntry.data.uniMidterm1 ?? null,
-        uniMidterm2: activeEntry.data.uniMidterm2 ?? null,
-        uniExam:     activeEntry.data.uniExam     ?? null,
-      };
-      hasUnsavedChanges = JSON.stringify(currentData) !== JSON.stringify(savedData);
+      const savedSystem = activeEntry.data.selectedSystem || "bilim_class";
+
+      if (selectedSystem !== savedSystem) {
+        // Switched to a different platform — treat as independent work, only
+        // flag changes if the current platform's form has actual data.
+        hasUnsavedChanges = !isFormEmpty;
+      } else {
+        // Same platform — compare only the fields relevant to this platform.
+        let currentData: unknown;
+        let savedData: unknown;
+
+        if (selectedSystem === "final") {
+          currentData = { finalQ1, finalQ2, finalQ3, finalQ4, finalExam };
+          savedData = {
+            finalQ1:   activeEntry.data.finalQ1   ?? null,
+            finalQ2:   activeEntry.data.finalQ2   ?? null,
+            finalQ3:   activeEntry.data.finalQ3   ?? null,
+            finalQ4:   activeEntry.data.finalQ4   ?? null,
+            finalExam: activeEntry.data.finalExam ?? null,
+          };
+        } else if (selectedSystem === "university") {
+          currentData = { uniMidterm1, uniMidterm2, uniExam };
+          savedData = {
+            uniMidterm1: activeEntry.data.uniMidterm1 ?? null,
+            uniMidterm2: activeEntry.data.uniMidterm2 ?? null,
+            uniExam:     activeEntry.data.uniExam     ?? null,
+          };
+        } else {
+          currentData = {
+            selectedSystem,
+            fos,
+            sors: sors.map((s) => ({ score: s.score, max: s.max })),
+            soch: soch ? { score: soch.score, max: soch.max } : null,
+          };
+          savedData = {
+            selectedSystem: savedSystem,
+            fos: activeEntry.data.fos,
+            sors: activeEntry.data.sors.map((s) => ({ score: s.score, max: s.max })),
+            soch: activeEntry.data.soch
+              ? { score: activeEntry.data.soch.score, max: activeEntry.data.soch.max }
+              : null,
+          };
+        }
+
+        hasUnsavedChanges = JSON.stringify(currentData) !== JSON.stringify(savedData);
+      }
     } else {
       hasUnsavedChanges = !isFormEmpty;
     }
