@@ -256,13 +256,17 @@
     "explanation_body": "The final term grade is calculated based on three components with corresponding weights:\n\n1. FA (Formative Assessment) - weights 25%\n2. SA (Summative Assessment for unit) - weights 25%\n3. SOCH (Summative Assessment for term) - weights 50%\n\nFormula:\nResult (%) = (Avg FA / 10) * 25 + (Sum SA / Sum Max SA) * 25 + (SOCH / Max SOCH) * 50\n\nThe resulting percentage is rounded and converted to the standard grade: 2, 3, 4, or 5."
   },
   "subjects": {
-    "title": "Academic Subjects",
+    "title": "Control Panel",
     "empty": "The subjects list is empty. Add grades in the calculator and save the subject to history to make it appear here.",
     "load_grades": "Load into Calculator",
     "add_subject": "Add Subject",
     "pinned": "Pinned",
     "all": "All Subjects",
-    "average": "Average score"
+    "average": "Average score",
+    "asom_title": "ASOM Monitoring",
+    "total_subjects": "Total Subjects",
+    "quality_of_knowledge": "Quality of Knowledge",
+    "best_subject": "Best Subject"
   },
   "profile": {
     "title": "Personal Area",

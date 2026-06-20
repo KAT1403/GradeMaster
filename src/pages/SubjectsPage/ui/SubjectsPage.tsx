@@ -110,27 +110,31 @@ export default function SubjectsPage() {
   };
 
   const getASOMMetrics = () => {
-    if (entries.length === 0) return { quality: 0, success: 0 };
+    if (entries.length === 0) return { quality: 0 };
     let excellentAndGoodCount = 0;
-    let passingCount = 0;
 
     entries.forEach((subject) => {
       const grade = getSubjectGrade(subject);
       if (grade === 4 || grade === 5) {
         excellentAndGoodCount++;
       }
-      if (grade >= 3 && grade <= 5) {
-        passingCount++;
-      }
     });
 
     const quality = (excellentAndGoodCount / entries.length) * 100;
-    const success = (passingCount / entries.length) * 100;
 
-    return { quality, success };
+    return { quality };
   };
 
-  const { quality, success } = getASOMMetrics();
+  const { quality } = getASOMMetrics();
+
+  const getBestSubject = () => {
+    if (entries.length === 0) return null;
+    return entries.reduce((best, current) => {
+      return current.finalPercent > best.finalPercent ? current : best;
+    }, entries[0]);
+  };
+
+  const bestSubject = getBestSubject();
 
   if (entries.length === 0) {
     return (
@@ -169,15 +173,15 @@ export default function SubjectsPage() {
       <Card className={styles.asomCard}>
         <h2 className={styles.asomTitle}>
           <BarChart2 size={20} color="var(--accent-primary)" />
-          <span>Мониторинг АСОМ (Успеваемость и Качество)</span>
+          <span>{t("subjects.asom_title")}</span>
         </h2>
         <div className={styles.asomGrid}>
           <div className={styles.asomItem}>
-            <span className={styles.asomLabel}>Всего предметов</span>
+            <span className={styles.asomLabel}>{t("subjects.total_subjects")}</span>
             <span className={styles.asomValue}>{entries.length}</span>
           </div>
           <div className={styles.asomItem}>
-            <span className={styles.asomLabel}>Качество знаний (4 и 5)</span>
+            <span className={styles.asomLabel}>{t("subjects.quality_of_knowledge")}</span>
             <span className={styles.asomValue}>{quality.toFixed(1)}%</span>
             <div className={styles.asomProgress}>
               <div 
@@ -186,16 +190,23 @@ export default function SubjectsPage() {
               />
             </div>
           </div>
-          <div className={styles.asomItem}>
-            <span className={styles.asomLabel}>Успеваемость (3, 4 и 5)</span>
-            <span className={styles.asomValue}>{success.toFixed(1)}%</span>
-            <div className={styles.asomProgress}>
-              <div 
-                className={styles.asomProgressBar} 
-                style={{ width: `${success}%`, backgroundColor: "#3b8f21" }} 
-              />
+          {bestSubject && (
+            <div className={styles.asomItem}>
+              <span className={styles.asomLabel}>{t("subjects.best_subject")}</span>
+              <span className={styles.bestSubjectName} title={`${bestSubject.title} (${renderGradeInfo(bestSubject)})`}>
+                {bestSubject.title}
+              </span>
+              <span className={styles.bestSubjectValue}>
+                {renderGradeInfo(bestSubject)}
+              </span>
+              <div className={styles.asomProgress}>
+                <div 
+                  className={styles.asomProgressBar} 
+                  style={{ width: `${bestSubject.finalPercent}%`, backgroundColor: "var(--accent-primary)" }} 
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </Card>
 
