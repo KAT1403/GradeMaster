@@ -2,11 +2,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
-  z-index: 1000;
+  z-index: 10000;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -19,7 +19,7 @@
   height: 100vh;
   background: var(--bg-secondary);
   box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+  z-index: 10001;
   transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;

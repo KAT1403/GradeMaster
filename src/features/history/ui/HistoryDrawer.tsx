@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Pin, PinOff } from "lucide-react";
 import { useHistoryManager, type HistoryEntry } from "../model/store";
@@ -70,7 +71,7 @@ export const HistoryDrawer = ({ isOpen, onClose }: HistoryDrawerProps) => {
       b.lastModified - a.lastModified,
   );
 
-  return (
+  return createPortal(
     <>
       {isOpen && <div className={styles.overlay} onClick={onClose} />}
       <div className={`${styles.drawer} ${isOpen ? styles.open : ""}`}>
@@ -130,6 +131,7 @@ export const HistoryDrawer = ({ isOpen, onClose }: HistoryDrawerProps) => {
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 };

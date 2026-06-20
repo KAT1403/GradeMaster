@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
 import { useHistoryManager } from "../model/store";
@@ -20,12 +21,13 @@ export const SaveModal = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <SaveModalContent
       key={`${activeRecordId ?? "new"}:${activeRecordTitle ?? ""}`}
       onClose={onClose}
       onSaveComplete={onSaveComplete}
-    />
+    />,
+    document.body
   );
 };
 
