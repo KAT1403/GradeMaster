@@ -91,6 +91,13 @@
   gap: 4px;
 }
 
+.syncTitleContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .syncTitle {
   font-size: 1.25rem;
   font-weight: 700;

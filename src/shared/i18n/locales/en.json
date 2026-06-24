@@ -271,14 +271,14 @@
   "profile": {
     "title": "Personal Area",
     "guest": "User: Guest",
-    "sync_title": "Synchronize your grades",
-    "sync_desc": "Create a cloud account to avoid losing data when changing devices.",
+    "sync_title": "Cloud Synchronization",
+    "sync_desc": "Login and cloud backups will be available in future updates. Currently, all data is stored locally.",
     "sync_btn": "Log in / Create account",
     "friends": "Friends",
     "achievements": "Achievements",
     "soon": "Coming soon in v2.1",
-    "modal_title": "Supabase Sync",
-    "modal_desc": "Login and cloud backups will be available in the next release with Supabase database integration.",
+    "modal_title": "Cloud Synchronization",
+    "modal_desc": "Login and cloud backups will be available in the next release (v2.1). Currently, GradeMaster operates fully client-side without servers or databases.",
     "modal_close": "Understood"
   },
   "settings": {

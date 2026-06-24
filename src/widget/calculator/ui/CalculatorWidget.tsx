@@ -20,7 +20,7 @@ import {
 } from "../../../shared/lib/converters";
 import { PredictorWidget } from "../../predictor";
 import { AnalyticsWidget } from "../../analytics";
-import { CloudOff, HelpCircle, Save, RotateCcw } from "lucide-react";
+import { HelpCircle, Save, RotateCcw } from "lucide-react";
 import styles from "./CalculatorWidget.module.scss";
 import { ResultCard } from "./components/ResultCard";
 import { StandardSchoolInputs } from "./components/StandardSchoolInputs";
@@ -295,10 +295,6 @@ export const CalculatorWidget = () => {
           <span className={styles.brandSub}>
             {activeRecordTitle ? activeRecordTitle : t("workspace.subtitle")}
           </span>
-        </div>
-        <div className={styles.syncStatus}>
-          <CloudOff size={14} className={styles.syncIcon} />
-          <span>{t("workspace.status")}</span>
         </div>
       </div>
 

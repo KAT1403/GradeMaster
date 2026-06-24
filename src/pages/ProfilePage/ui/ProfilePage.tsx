@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "../../../shared/ui/card";
-import { User, CloudLightning, Shield, Users, Award, Lock, X } from "lucide-react";
+import { User, CloudLightning, Users, Award, Lock, X } from "lucide-react";
 import styles from "./ProfilePage.module.scss";
 
 export default function ProfilePage() {
@@ -26,12 +26,15 @@ export default function ProfilePage() {
             <CloudLightning size={28} className={styles.syncIcon} />
           </div>
           <div className={styles.syncText}>
-            <h2 className={styles.syncTitle}>{t("profile.sync_title")}</h2>
+            <div className={styles.syncTitleContainer}>
+              <h2 className={styles.syncTitle}>{t("profile.sync_title")}</h2>
+              <span className={styles.comingSoonBadge}>{t("profile.soon")}</span>
+            </div>
             <p className={styles.syncDesc}>{t("profile.sync_desc")}</p>
           </div>
         </div>
         <button className={styles.syncBtn} onClick={() => setIsModalOpen(true)}>
-          <Shield size={16} />
+          <Lock size={16} />
           <span>{t("profile.sync_btn")}</span>
         </button>
       </Card>
