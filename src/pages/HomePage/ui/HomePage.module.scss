@@ -94,7 +94,8 @@
 }
 .mainWrapper {
   flex: 1;
-  margin-left: 240px; 
+  min-width: 0;
+  margin-left: 240px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -102,6 +103,7 @@
 
 .mainContent {
   flex: 1;
+  min-width: 0;
   width: 100%;
   padding-bottom: 40px;
   animation: pageFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
