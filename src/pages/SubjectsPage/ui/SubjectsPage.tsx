@@ -4,7 +4,9 @@ import { useUIStore } from "../../../shared/store/uiStore";
 import { useHistoryManager } from "../../../features/history/model/store";
 import type { HistoryEntry } from "../../../features/history/model/store";
 import { Card } from "../../../shared/ui/card";
-import { Pin, BookOpen, ChevronRight, Play, Trash2, Plus, BarChart2 } from "lucide-react";
+import { useState } from "react";
+import { Pin, BookOpen, ChevronRight, Play, Trash2, Plus, BarChart2, Search } from "lucide-react";
+import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import { getGradeFromPercent } from "../../../shared/lib/grading";
 import { calculateIntlGPA } from "../../../shared/lib/converters";
 import styles from "./SubjectsPage.module.scss";
@@ -58,8 +60,8 @@ export default function SubjectsPage() {
     setActiveTab("workspace");
   };
 
-  const pinnedSubjects = entries.filter((e) => e.isPinned);
-  const otherSubjects = entries.filter((e) => !e.isPinned);
+  const [search, setSearch] = useState("");
+  const [gradeFilter, setGradeFilter] = useState<number | null>(null);
 
   const getSubjectGrade = (subject: HistoryEntry) => {
     if (subject.data?.selectedSystem === "final") {
@@ -74,6 +76,15 @@ export default function SubjectsPage() {
     if (grade >= 3) return styles.warningGrade;
     return styles.dangerGrade;
   };
+
+  const matchesFilters = (subject: HistoryEntry) => {
+    if (search && !subject.title.toLowerCase().includes(search.toLowerCase())) return false;
+    if (gradeFilter !== null && getSubjectGrade(subject) !== gradeFilter) return false;
+    return true;
+  };
+
+  const pinnedSubjects = entries.filter((e) => e.isPinned && matchesFilters(e));
+  const otherSubjects = entries.filter((e) => !e.isPinned && matchesFilters(e));
 
   const getSystemLabel = (system?: string) => {
     switch (system) {
@@ -103,7 +114,7 @@ export default function SubjectsPage() {
     }
     if (system === "kundelik") {
       const grade = getGradeFromPercent(subject.finalPercent);
-      return `${subject.finalPercent.toFixed(2)}% (Оценка: ${grade})`;
+      return `${Math.round(subject.finalPercent)}% (Оценка: ${grade})`;
     }
     const grade = getGradeFromPercent(subject.finalPercent);
     return `${Math.round(subject.finalPercent)}% (Оценка: ${grade})`;
@@ -170,6 +181,31 @@ export default function SubjectsPage() {
         </button>
       </div>
 
+      <div className={styles.controls}>
+        <div className={styles.searchWrapper}>
+          <Search size={16} className={styles.searchIcon} />
+          <input
+            className={styles.searchInput}
+            placeholder={t("subjects.search_placeholder")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className={styles.filterGroup}>
+          {([null, 5, 4, 3, 2] as (number | null)[]).map((g) => (
+            <button
+              key={String(g)}
+              className={`${styles.filterChip} ${gradeFilter === g ? styles.filterChipActive : ""} ${
+                g === 5 ? styles.chip5 : g === 4 ? styles.chip4 : g === 3 ? styles.chip3 : g === 2 ? styles.chip2 : ""
+              }`}
+              onClick={() => setGradeFilter(g)}
+            >
+              {g === null ? t("subjects.filter_all") : t(`subjects.filter_${g}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <Card className={styles.asomCard}>
         <h2 className={styles.asomTitle}>
           <BarChart2 size={20} color="var(--accent-primary)" />
@@ -181,7 +217,10 @@ export default function SubjectsPage() {
             <span className={styles.asomValue}>{entries.length}</span>
           </div>
           <div className={styles.asomItem}>
-            <span className={styles.asomLabel}>{t("subjects.quality_of_knowledge")}</span>
+            <span className={styles.asomLabel}>
+              {t("subjects.quality_of_knowledge")}
+              <InfoTooltip content={t("subjects.quality_of_knowledge_tooltip")} />
+            </span>
             <span className={styles.asomValue}>{quality.toFixed(1)}%</span>
             <div className={styles.asomProgress}>
               <div 

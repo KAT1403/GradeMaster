@@ -263,10 +263,17 @@
     "pinned": "Pinned",
     "all": "All Subjects",
     "average": "Average score",
-    "asom_title": "ASOM Monitoring",
+    "asom_title": "Performance Monitoring",
     "total_subjects": "Total Subjects",
     "quality_of_knowledge": "Quality of Knowledge",
-    "best_subject": "Best Subject"
+    "quality_of_knowledge_tooltip": "Share of subjects with a grade of 4 or 5 among all saved subjects.",
+    "best_subject": "Best Subject",
+    "search_placeholder": "Search by name...",
+    "filter_all": "All",
+    "filter_5": "Grade 5",
+    "filter_4": "Grade 4",
+    "filter_3": "Grade 3",
+    "filter_2": "Grade 2"
   },
   "profile": {
     "title": "Personal Area",

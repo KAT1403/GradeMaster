@@ -86,24 +86,24 @@ export const calculateTotalPercent = (
   const sochRatio = hasSOCH ? soch.score! / soch.max! : null;
 
   if (system === "kundelik") {
-    const foPct = foRatio !== null ? Math.round(foRatio * 10000) / 100 : null;
-    const sorPct = sorRatio !== null ? Math.round(sorRatio * 10000) / 100 : null;
-    const sochPct = sochRatio !== null ? Math.round(sochRatio * 10000) / 100 : null;
+    const foPct = foRatio !== null ? Math.round(foRatio * 1000) / 10 : null;
+    const sorPct = sorRatio !== null ? Math.round(sorRatio * 1000) / 10 : null;
+    const sochPct = sochRatio !== null ? Math.round(sochRatio * 1000) / 10 : null;
 
     if (foPct !== null && sorPct === null && sochPct === null) return foPct;
     if (sorPct !== null && foPct === null && sochPct === null) return sorPct;
     if (sochPct !== null && foPct === null && sorPct === null) return sochPct;
 
     if (foPct !== null && sorPct !== null && sochPct === null) {
-      return Math.round((foPct * 0.5 + sorPct * 0.5) * 100) / 100;
+      return Math.round((foPct * 0.5 + sorPct * 0.5) * 10) / 10;
     }
     if (foPct !== null && sorPct === null && sochPct !== null) {
-      return Math.round(((foPct * 25 + sochPct * 50) / 75) * 100) / 100;
+      return Math.round(((foPct * 25 + sochPct * 50) / 75) * 10) / 10;
     }
     if (sorPct !== null && foPct === null && sochPct !== null) {
-      return Math.round(((sorPct * 25 + sochPct * 50) / 75) * 100) / 100;
+      return Math.round(((sorPct * 25 + sochPct * 50) / 75) * 10) / 10;
     }
-    return Math.round((foPct! * 0.25 + sorPct! * 0.25 + sochPct! * 0.5) * 100) / 100;
+    return Math.round((foPct! * 0.25 + sorPct! * 0.25 + sochPct! * 0.5) * 10) / 10;
   } else {
     if (foRatio !== null && sorRatio === null && sochRatio === null) {
       const pct = foRatio * 100;

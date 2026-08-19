@@ -129,12 +129,12 @@ export const ResultCard = ({
 
       <div className={styles.percentDisplay}>
         {selectedSystem === "university"
-          ? `${uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null ? currentPercent.toFixed(1) : "0.0"}%`
+          ? `${uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null ? currentPercent.toFixed(1) : "0"}%`
           : selectedSystem === "final"
             ? quartersLength > 0
               ? `${finalGradeScore.toFixed(2)}`
-              : "0.00"
-            : `${currentPercent.toFixed(selectedSystem === "kundelik" ? 2 : 1)}%`}
+              : "0"
+            : `${Math.round(currentPercent)}%`}
       </div>
 
       {selectedSystem === "university" ? (

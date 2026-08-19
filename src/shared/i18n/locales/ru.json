@@ -263,10 +263,17 @@
     "pinned": "Закрепленные",
     "all": "Все предметы",
     "average": "Средний балл",
-    "asom_title": "Мониторинг АСОМ",
+    "asom_title": "Мониторинг успеваемости",
     "total_subjects": "Всего предметов",
     "quality_of_knowledge": "Качество знаний",
-    "best_subject": "Лучший предмет"
+    "quality_of_knowledge_tooltip": "Доля предметов с оценкой 4 или 5 среди всех сохранённых предметов.",
+    "best_subject": "Лучший предмет",
+    "search_placeholder": "Поиск по названию...",
+    "filter_all": "Все",
+    "filter_5": "Оценка 5",
+    "filter_4": "Оценка 4",
+    "filter_3": "Оценка 3",
+    "filter_2": "Оценка 2"
   },
   "profile": {
     "title": "Личный кабинет",

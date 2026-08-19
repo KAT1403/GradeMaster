@@ -261,10 +261,17 @@
     "pinned": "Бекітілгендер",
     "all": "Барлық пәндер",
     "average": "Орташа балл",
-    "asom_title": "ӘСОМ мониторингі",
+    "asom_title": "Үлгерім мониторингі",
     "total_subjects": "Барлық пәндер",
     "quality_of_knowledge": "Білім сапасы",
-    "best_subject": "Үздік пән"
+    "quality_of_knowledge_tooltip": "Сақталған пәндер ішінде 4 немесе 5 бағасы бар пәндердің үлесі.",
+    "best_subject": "Үздік пән",
+    "search_placeholder": "Атауы бойынша іздеу...",
+    "filter_all": "Барлығы",
+    "filter_5": "5 баға",
+    "filter_4": "4 баға",
+    "filter_3": "3 баға",
+    "filter_2": "2 баға"
   },
   "profile": {
     "title": "Жеке кабинет",
