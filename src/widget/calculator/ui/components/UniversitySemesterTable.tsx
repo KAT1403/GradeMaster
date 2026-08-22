@@ -4,6 +4,7 @@ import { useAcademicRecordStore } from "../../../../entities/academic-record/mod
 import { Card } from "../../../../shared/ui/card";
 import { Input } from "../../../../shared/ui/input/ui/Input";
 import { ECTS_VALUES } from "../../../../shared/lib/converters";
+import { calculateSemesterSummary } from "../../../../shared/lib/grading";
 import { Trash2 } from "lucide-react";
 import styles from "../CalculatorWidget.module.scss";
 
@@ -16,15 +17,8 @@ export const UniversitySemesterTable = () => {
     updateSemesterSubject,
   } = useAcademicRecordStore();
 
-  const totalPoints = semesterSubjects.reduce(
-    (sum, sub) => sum + (ECTS_VALUES[sub.letter] || 0) * sub.credits,
-    0,
-  );
-  const totalCredits = semesterSubjects.reduce(
-    (sum, sub) => sum + sub.credits,
-    0,
-  );
-  const semesterGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+  const { totalPoints, totalCredits, semesterGPA } =
+    calculateSemesterSummary(semesterSubjects);
 
   return (
     <div className={styles.uniInputsContainer}>

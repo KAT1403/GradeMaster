@@ -1,4 +1,10 @@
-import type { SOCH, SOR } from "../types/academic";
+import type {
+  AcademicSystem,
+  SemesterSubject,
+  SOCH,
+  SOR,
+  UniSubMode,
+} from "../types/academic";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -71,9 +77,7 @@ export const normalizeTextOrNull = (value: unknown): string | null =>
 export const normalizeTimestamp = (value: unknown): number =>
   typeof value === "number" && Number.isFinite(value) ? value : Date.now();
 
-export const normalizeSystem = (
-  value: unknown,
-): "bilim_class" | "kundelik" | "final" | "university" => {
+export const normalizeSystem = (value: unknown): AcademicSystem => {
   if (
     value === "bilim_class" ||
     value === "kundelik" ||
@@ -103,3 +107,21 @@ export const normalizeUniGrade = (value: unknown): number | null => {
   return num >= 0 && num <= 100 ? num : null;
 };
 
+
+export const normalizeUniSubMode = (value: unknown): UniSubMode =>
+  value === "semester" ? "semester" : "subject";
+
+export const normalizeSemesterSubject = (value: unknown): SemesterSubject => {
+  const item = isRecord(value) ? value : {};
+  const credits = toNumberOrNull(item.credits);
+
+  return {
+    id: typeof item.id === "string" && item.id ? item.id : crypto.randomUUID(),
+    title: typeof item.title === "string" ? item.title : "",
+    credits: credits !== null ? Math.min(30, Math.max(0, credits)) : 3,
+    letter: typeof item.letter === "string" ? item.letter : "A",
+  };
+};
+
+export const normalizeSemesterSubjects = (value: unknown): SemesterSubject[] =>
+  Array.isArray(value) ? value.map(normalizeSemesterSubject) : [];

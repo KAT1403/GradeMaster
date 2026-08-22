@@ -1,35 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
+import { useState } from "react";
+import { Pin, BookOpen, ChevronRight, Play, Trash2, Plus, BarChart2, Search } from "lucide-react";
 import { useUIStore } from "../../../shared/store/uiStore";
 import { useHistoryManager } from "../../../features/history/model/store";
 import type { HistoryEntry } from "../../../features/history/model/store";
+import {
+  getEntryGrade,
+  getEntryPercent,
+  getEntrySemesterSummary,
+  isSemesterEntry,
+} from "../../../features/history/lib/entry";
+import { useLoadRecord } from "../../../features/history/lib/useRecordActions";
 import { Card } from "../../../shared/ui/card";
-import { useState } from "react";
-import { Pin, BookOpen, ChevronRight, Play, Trash2, Plus, BarChart2, Search } from "lucide-react";
 import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
-import { getGradeFromPercent } from "../../../shared/lib/grading";
+import { FINAL_SCORE_TO_PERCENT } from "../../../shared/lib/grading";
 import { calculateIntlGPA } from "../../../shared/lib/converters";
 import styles from "./SubjectsPage.module.scss";
 
 export default function SubjectsPage() {
   const { t } = useTranslation();
   const { entries, togglePin, deleteEntry } = useHistoryManager();
-  const {
-    setFOS,
-    setSORS,
-    setSOCH,
-    setSelectedSystem,
-    setFinalQ1,
-    setFinalQ2,
-    setFinalQ3,
-    setFinalQ4,
-    setFinalExam,
-    setActiveRecord,
-    setUniMidterm1,
-    setUniMidterm2,
-    setUniExam,
-  } = useAcademicRecordStore();
+  const loadRecord = useLoadRecord();
   const setActiveTab = useUIStore((state) => state.setActiveTab);
+
+  const [search, setSearch] = useState("");
+  const [gradeFilter, setGradeFilter] = useState<number | null>(null);
 
   const handleTogglePin = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,34 +39,12 @@ export default function SubjectsPage() {
   };
 
   const handleLoadSubject = (entry: HistoryEntry) => {
-    setFOS(entry.data.fos);
-    setSORS(entry.data.sors);
-    setSOCH(entry.data.soch);
-    setSelectedSystem(entry.data.selectedSystem || "bilim_class");
-    setFinalQ1(entry.data.finalQ1 !== undefined ? entry.data.finalQ1 : null);
-    setFinalQ2(entry.data.finalQ2 !== undefined ? entry.data.finalQ2 : null);
-    setFinalQ3(entry.data.finalQ3 !== undefined ? entry.data.finalQ3 : null);
-    setFinalQ4(entry.data.finalQ4 !== undefined ? entry.data.finalQ4 : null);
-    setFinalExam(entry.data.finalExam !== undefined ? entry.data.finalExam : null);
-    setUniMidterm1(entry.data.uniMidterm1 !== undefined ? entry.data.uniMidterm1 : null);
-    setUniMidterm2(entry.data.uniMidterm2 !== undefined ? entry.data.uniMidterm2 : null);
-    setUniExam(entry.data.uniExam !== undefined ? entry.data.uniExam : null);
-    setActiveRecord(entry.id, entry.title);
+    loadRecord(entry);
     setActiveTab("workspace");
   };
 
-  const [search, setSearch] = useState("");
-  const [gradeFilter, setGradeFilter] = useState<number | null>(null);
-
-  const getSubjectGrade = (subject: HistoryEntry) => {
-    if (subject.data?.selectedSystem === "final") {
-      return Math.round(subject.finalPercent / 20);
-    }
-    return getGradeFromPercent(subject.finalPercent);
-  };
-
   const getCardColorClass = (subject: HistoryEntry) => {
-    const grade = getSubjectGrade(subject);
+    const grade = getEntryGrade(subject);
     if (grade >= 4) return styles.successGrade;
     if (grade >= 3) return styles.warningGrade;
     return styles.dangerGrade;
@@ -79,17 +52,18 @@ export default function SubjectsPage() {
 
   const matchesFilters = (subject: HistoryEntry) => {
     if (search && !subject.title.toLowerCase().includes(search.toLowerCase())) return false;
-    if (gradeFilter !== null && getSubjectGrade(subject) !== gradeFilter) return false;
+    if (gradeFilter !== null && getEntryGrade(subject) !== gradeFilter) return false;
     return true;
   };
 
   const pinnedSubjects = entries.filter((e) => e.isPinned && matchesFilters(e));
   const otherSubjects = entries.filter((e) => !e.isPinned && matchesFilters(e));
 
-  const getSystemLabel = (system?: string) => {
-    switch (system) {
-      case "bilim_class":
-        return "BilimClass";
+  const getSystemLabel = (subject: HistoryEntry) => {
+    if (isSemesterEntry(subject)) {
+      return t("calculator.uni_tab_semester");
+    }
+    switch (subject.data.selectedSystem) {
       case "kundelik":
         return t("workspace.system_kundelik");
       case "university":
@@ -102,50 +76,42 @@ export default function SubjectsPage() {
   };
 
   const renderGradeInfo = (subject: HistoryEntry) => {
-    const system = subject.data?.selectedSystem || "bilim_class";
-    if (system === "university") {
-      const gpaInfo = calculateIntlGPA(subject.finalPercent);
-      return `${gpaInfo.score.toFixed(2)} (${gpaInfo.letter}) - ${subject.finalPercent.toFixed(1)}%`;
+    const percent = getEntryPercent(subject);
+
+    if (isSemesterEntry(subject)) {
+      const { semesterGPA, semesterGPALetter, totalCredits } =
+        getEntrySemesterSummary(subject);
+      return `GPA ${semesterGPA.toFixed(2)} (${semesterGPALetter}) - ${t("calculator.uni_credits")}: ${totalCredits}`;
     }
-    if (system === "final") {
-      const val = subject.finalPercent / 20;
-      const rec = Math.round(val);
-      return `${val.toFixed(2)} (Оценка: ${rec})`;
+
+    if (subject.data.selectedSystem === "university") {
+      const gpaInfo = calculateIntlGPA(percent);
+      return `${gpaInfo.score.toFixed(2)} (${gpaInfo.letter}) - ${percent.toFixed(1)}%`;
     }
-    if (system === "kundelik") {
-      const grade = getGradeFromPercent(subject.finalPercent);
-      return `${Math.round(subject.finalPercent)}% (Оценка: ${grade})`;
+
+    if (subject.data.selectedSystem === "final") {
+      const score = percent / FINAL_SCORE_TO_PERCENT;
+      return `${score.toFixed(2)} (${t("calculator.grade")}: ${getEntryGrade(subject)})`;
     }
-    const grade = getGradeFromPercent(subject.finalPercent);
-    return `${Math.round(subject.finalPercent)}% (Оценка: ${grade})`;
+
+    return `${Math.round(percent)}% (${t("calculator.grade")}: ${getEntryGrade(subject)})`;
   };
 
-  const getASOMMetrics = () => {
-    if (entries.length === 0) return { quality: 0 };
-    let excellentAndGoodCount = 0;
+  const quality =
+    entries.length > 0
+      ? (entries.filter((entry) => getEntryGrade(entry) >= 4).length /
+          entries.length) *
+        100
+      : 0;
 
-    entries.forEach((subject) => {
-      const grade = getSubjectGrade(subject);
-      if (grade === 4 || grade === 5) {
-        excellentAndGoodCount++;
-      }
-    });
-
-    const quality = (excellentAndGoodCount / entries.length) * 100;
-
-    return { quality };
-  };
-
-  const { quality } = getASOMMetrics();
-
-  const getBestSubject = () => {
-    if (entries.length === 0) return null;
-    return entries.reduce((best, current) => {
-      return current.finalPercent > best.finalPercent ? current : best;
-    }, entries[0]);
-  };
-
-  const bestSubject = getBestSubject();
+  const bestSubject =
+    entries.length > 0
+      ? entries.reduce(
+          (best, current) =>
+            getEntryPercent(current) > getEntryPercent(best) ? current : best,
+          entries[0],
+        )
+      : null;
 
   if (entries.length === 0) {
     return (
@@ -241,7 +207,7 @@ export default function SubjectsPage() {
               <div className={styles.asomProgress}>
                 <div 
                   className={styles.asomProgressBar} 
-                  style={{ width: `${bestSubject.finalPercent}%`, backgroundColor: "var(--accent-primary)" }} 
+                  style={{ width: `${getEntryPercent(bestSubject)}%`, backgroundColor: "var(--accent-primary)" }} 
                 />
               </div>
             </div>
@@ -257,7 +223,7 @@ export default function SubjectsPage() {
               return (
                 <Card key={subject.id} className={`${styles.bentoCard} ${styles.pinnedCard}`}>
                   <div className={styles.cardHeader}>
-                    <span className={styles.systemBadge}>{getSystemLabel(subject.data?.selectedSystem)}</span>
+                    <span className={styles.systemBadge}>{getSystemLabel(subject)}</span>
                     <div className={styles.headerActions}>
                       <button
                         className={`${styles.pinBtn} ${styles.pinned}`}
@@ -308,7 +274,7 @@ export default function SubjectsPage() {
               return (
                 <Card key={subject.id} className={styles.bentoCard}>
                   <div className={styles.cardHeader}>
-                    <span className={styles.systemBadge}>{getSystemLabel(subject.data?.selectedSystem)}</span>
+                    <span className={styles.systemBadge}>{getSystemLabel(subject)}</span>
                     <div className={styles.headerActions}>
                       <button
                         className={styles.pinBtn}

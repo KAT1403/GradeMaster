@@ -1,7 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type TabType = "workspace" | "subjects" | "profile" | "settings";
+export type TabType =
+  | "workspace"
+  | "subjects"
+  | "info"
+  | "profile"
+  | "settings";
 export type ThemeType = "light" | "dark";
 
 interface UIState {
@@ -11,7 +16,13 @@ interface UIState {
   toggleTheme: () => void;
 }
 
-const tabs: TabType[] = ["workspace", "subjects", "profile", "settings"];
+const tabs: TabType[] = [
+  "workspace",
+  "subjects",
+  "info",
+  "profile",
+  "settings",
+];
 const themes: ThemeType[] = ["light", "dark"];
 
 const migrateUIState = (persistedState: unknown): Partial<UIState> => {

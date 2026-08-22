@@ -1,20 +1,22 @@
-import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 import styles from "./FooterWidget.module.scss";
 
-export const FooterWidget: React.FC = () => {
+export const FooterWidget = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={`${styles.item} ${styles.copyright}`}>
-          © 2026 GradeMaster. All rights reserved.
+          {t("footer.copyright", { year: 2026 })}
         </div>
 
         <div className={`${styles.item} ${styles.license}`}>
-          Released under the MIT License
+          {t("footer.license")}
         </div>
 
         <div className={`${styles.item} ${styles.privacy}`}>
-          Data remains on your device. <strong>Privacy-first.</strong>
+          <Trans i18nKey="footer.privacy" components={{ strong: <strong /> }} />
         </div>
       </div>
     </footer>

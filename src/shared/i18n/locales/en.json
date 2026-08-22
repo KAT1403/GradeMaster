@@ -3,7 +3,13 @@
     "workspace": "Calculator",
     "subjects": "Subjects",
     "profile": "Profile",
+    "info": "Info",
     "settings": "Settings"
+  },
+  "footer": {
+    "copyright": "© {{year}} GradeMaster. All rights reserved.",
+    "license": "Released under the MIT License",
+    "privacy": "Data remains on your device. <strong>Privacy-first.</strong>"
   },
   "info": {
     "title": "Information",
@@ -16,9 +22,13 @@
           "title": "Official:",
           "text": "successfully implemented and supported by the administration of LLP 'Economic Lyceum'."
         },
-        "scale": {
-          "title": "Scale:",
-          "text": "over 1000 active users and 1500+ sessions."
+        "press": {
+          "title": "In the press:",
+          "text": "DigitalBusiness, The Tech, Er10, and Bluescreen wrote about the project."
+        },
+        "users": {
+          "title": "Audience:",
+          "text": "Over 1,500 users and 2,200+ sessions."
         },
         "reliability": {
           "title": "Reliability:",
@@ -27,6 +37,10 @@
         "privacy": {
           "title": "Privacy:",
           "text": "calculations run locally in your browser."
+        },
+        "openSource": {
+          "title": "Open Source:",
+          "text": "source code is publicly available on GitHub under the MIT license."
         }
       }
     },

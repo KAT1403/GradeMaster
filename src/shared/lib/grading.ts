@@ -1,3 +1,6 @@
+import type { AcademicSystem } from "../types/academic";
+import { ECTS_VALUES, getLetterFromGPA } from "./converters";
+
 export interface CalculateParams {
   fos: number[];
   sors: { score: number | null; max: number | null }[];
@@ -7,6 +10,35 @@ export interface CalculateParams {
   uniMidterm2?: number | null;
   uniExam?: number | null;
 }
+
+export interface SemesterSubjectLike {
+  credits: number;
+  letter: string;
+}
+
+export interface SemesterSummary {
+  totalPoints: number;
+  totalCredits: number;
+  semesterGPA: number;
+  semesterGPALetter: string;
+}
+
+export interface FinalSystemParams {
+  finalQ1: number | null;
+  finalQ2: number | null;
+  finalQ3: number | null;
+  finalQ4: number | null;
+  finalExam: number | null;
+}
+
+export interface FinalSystemScore {
+  score: number;
+  filledQuarters: number;
+}
+
+export const FINAL_SCORE_TO_PERCENT = 20;
+
+export const ADMISSION_THRESHOLD = 50;
 
 export const isScoreOverMax = (
   score: number | null,
@@ -37,28 +69,60 @@ export const getNextGradeInfo = (percent: number) => {
   return { nextGrade: 3, remaining: 39.5 - percent, target: 39.5 };
 };
 
+export const calculateAdmissionRating = (
+  midterm1: number | null,
+  midterm2: number | null,
+): number => {
+  const filled = [midterm1, midterm2].filter((v): v is number => v !== null);
+  if (filled.length === 0) return 0;
+  return filled.reduce((sum, val) => sum + val, 0) / filled.length;
+};
+
+export const isExamAllowed = (admissionRating: number): boolean =>
+  admissionRating >= ADMISSION_THRESHOLD;
+
+export const calculateFinalScore = (
+  params: FinalSystemParams,
+): FinalSystemScore => {
+  const quarters = [
+    params.finalQ1,
+    params.finalQ2,
+    params.finalQ3,
+    params.finalQ4,
+  ].filter((q): q is number => q !== null);
+
+  if (quarters.length === 0) return { score: 0, filledQuarters: 0 };
+
+  const avgQuarters =
+    quarters.reduce((sum, val) => sum + val, 0) / quarters.length;
+  const score =
+    params.finalExam !== null
+      ? avgQuarters * 0.7 + params.finalExam * 0.3
+      : avgQuarters;
+
+  return { score, filledQuarters: quarters.length };
+};
+
 export const calculateTotalPercent = (
   params: CalculateParams,
-  system: "bilim_class" | "kundelik" | "university" | "final" = "bilim_class",
+  system: AcademicSystem = "bilim_class",
 ): number => {
   if (system === "final") return 0;
 
   if (system === "university") {
-    const m1 = params.uniMidterm1;
-    const m2 = params.uniMidterm2;
-    const exam = params.uniExam;
+    const m1 = params.uniMidterm1 ?? null;
+    const m2 = params.uniMidterm2 ?? null;
+    const exam = params.uniExam ?? null;
 
-    if (m1 === null && m2 === null && (exam === null || exam === undefined)) return 0;
+    if (m1 === null && m2 === null && exam === null) return 0;
 
-    const admissionRating = (m1 !== null || m2 !== null)
-      ? ((m1 ?? 0) + (m2 ?? 0)) / ((m1 !== null ? 1 : 0) + (m2 !== null ? 1 : 0))
-      : 0;
+    const admissionRating = calculateAdmissionRating(m1, m2);
 
-    if (admissionRating < 50) {
+    if (!isExamAllowed(admissionRating)) {
       return admissionRating * 0.6;
     }
 
-    if (exam === null || exam === undefined) {
+    if (exam === null) {
       return admissionRating;
     }
 
@@ -135,6 +199,29 @@ export const calculateTotalPercent = (
   }
 };
 
+export const GPA_MAX = 4;
+
+export const gpaToPercentEquivalent = (gpa: number): number =>
+  Math.max(0, Math.min(100, (gpa / GPA_MAX) * 100));
+
+export const calculateSemesterSummary = (
+  subjects: SemesterSubjectLike[],
+): SemesterSummary => {
+  const totalPoints = subjects.reduce(
+    (sum, sub) => sum + (ECTS_VALUES[sub.letter] || 0) * sub.credits,
+    0,
+  );
+  const totalCredits = subjects.reduce((sum, sub) => sum + sub.credits, 0);
+  const semesterGPA = totalCredits > 0 ? totalPoints / totalCredits : 0;
+
+  return {
+    totalPoints,
+    totalCredits,
+    semesterGPA,
+    semesterGPALetter: totalCredits > 0 ? getLetterFromGPA(semesterGPA) : "-",
+  };
+};
+
 export const getGradeColors = (grade: number) => {
   switch (grade) {
     case 5:
@@ -167,6 +254,15 @@ export const getGradeColors = (grade: number) => {
         solid: "#cbd5e1",
       };
   }
+};
+
+const UNI_HIGH_LETTERS = ["A", "A-", "B+", "B", "B-"];
+const UNI_MID_LETTERS = ["C+", "C", "C-", "D+", "D"];
+
+export const getUniGradeColors = (letter: string) => {
+  if (UNI_HIGH_LETTERS.includes(letter)) return getGradeColors(5);
+  if (UNI_MID_LETTERS.includes(letter)) return getGradeColors(3);
+  return getGradeColors(2);
 };
 
 export const getFoColor = (num: number) => {

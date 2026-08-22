@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
-import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
-import { useHistoryManager } from "../model/store";
-import { calculateTotalPercent } from "../../../shared/lib/grading";
+import { useActiveRecord } from "../lib/useActiveRecord";
+import { useSaveRecord } from "../lib/useRecordActions";
 import styles from "./SaveModal.module.scss";
 
 interface SaveModalProps {
@@ -17,16 +16,10 @@ export const SaveModal = ({
   onClose,
   onSaveComplete,
 }: SaveModalProps) => {
-  const { activeRecordId, activeRecordTitle } = useAcademicRecordStore();
-
   if (!isOpen) return null;
 
   return createPortal(
-    <SaveModalContent
-      key={`${activeRecordId ?? "new"}:${activeRecordTitle ?? ""}`}
-      onClose={onClose}
-      onSaveComplete={onSaveComplete}
-    />,
+    <SaveModalContent onClose={onClose} onSaveComplete={onSaveComplete} />,
     document.body
   );
 };
@@ -36,76 +29,22 @@ const SaveModalContent = ({
   onSaveComplete,
 }: Omit<SaveModalProps, "isOpen">) => {
   const { t } = useTranslation();
-  const {
-    fos,
-    sors,
-    soch,
-    selectedSystem,
-    finalQ1,
-    finalQ2,
-    finalQ3,
-    finalQ4,
-    finalExam,
-    activeRecordId,
-    activeRecordTitle,
-    setActiveRecord,
-    uniMidterm1,
-    uniMidterm2,
-    uniExam,
-  } = useAcademicRecordStore();
-  const { saveEntry, entries } = useHistoryManager();
+  const { currentEntry } = useActiveRecord();
+  const saveRecord = useSaveRecord();
 
-  const activeEntry = activeRecordId ? entries.find((e) => e.id === activeRecordId) : null;
-  const savedSystem = activeEntry?.data.selectedSystem || "bilim_class";
-  const isSamePlatform = !activeRecordId || selectedSystem === savedSystem;
-
-  const [title, setTitle] = useState(isSamePlatform ? (activeRecordTitle || "") : "");
+  const canUpdate = currentEntry !== null;
+  const [title, setTitle] = useState(currentEntry?.title ?? "");
 
   const handleSave = (asNew: boolean = false) => {
-    if (!title.trim()) return;
-    
-    let finalPercent = 0;
-    if (selectedSystem === "final") {
-      const quarters = [finalQ1, finalQ2, finalQ3, finalQ4].filter((q): q is number => q !== null);
-      const avgQuarters = quarters.length > 0 ? quarters.reduce((sum, val) => sum + val, 0) / quarters.length : 0;
-      const finalGrade = finalExam !== null
-        ? avgQuarters * 0.7 + finalExam * 0.3
-        : avgQuarters;
-      finalPercent = finalGrade * 20;
-    } else {
-      finalPercent = calculateTotalPercent(
-        { fos, sors, soch, uniMidterm1, uniMidterm2, uniExam },
-        selectedSystem
-      );
-    }
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
 
-    const data = {
-      fos,
-      sors,
-      soch,
-      selectedSystem,
-      finalQ1,
-      finalQ2,
-      finalQ3,
-      finalQ4,
-      finalExam,
-      uniMidterm1,
-      uniMidterm2,
-      uniExam,
-    };
+    const idToSave =
+      !asNew && currentEntry ? currentEntry.id : crypto.randomUUID();
 
-    let idToSave = Date.now().toString();
-
-    if (!asNew && activeRecordId) {
-      idToSave = activeRecordId;
-    }
-
-    saveEntry(idToSave, title.trim(), data, finalPercent);
-    setActiveRecord(idToSave, title.trim());
+    saveRecord(idToSave, trimmedTitle);
     onClose();
-    if (onSaveComplete) {
-      onSaveComplete();
-    }
+    onSaveComplete?.();
   };
 
   return (
@@ -128,10 +67,10 @@ const SaveModalContent = ({
           </button>
         </div>
 
-        {activeRecordId && isSamePlatform ? (
+        {canUpdate ? (
           <div className={styles.updateFlow}>
             <p className={styles.desc}>
-              {t("history.subject_name")}: <strong>{activeRecordTitle}</strong>
+              {t("history.subject_name")}: <strong>{currentEntry?.title}</strong>
             </p>
             <input
               type="text"
@@ -192,4 +131,3 @@ const SaveModalContent = ({
     </div>
   );
 };
-

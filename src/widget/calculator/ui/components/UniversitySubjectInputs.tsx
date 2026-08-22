@@ -5,36 +5,16 @@ import { useAcademicRecordStore } from "../../../../entities/academic-record/mod
 import { Card } from "../../../../shared/ui/card";
 import { Input } from "../../../../shared/ui/input/ui/Input";
 import { KAZ_UNIVERSITY_SCALE } from "../../../../shared/lib/converters";
+import {
+  calculateAdmissionRating,
+  getUniGradeColors,
+  isExamAllowed,
+} from "../../../../shared/lib/grading";
 import styles from "../CalculatorWidget.module.scss";
 
 interface UniversitySubjectInputsProps {
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
-
-const getUniGradeColors = (letter: string) => {
-  if (["A", "A-", "B+", "B", "B-"].includes(letter)) {
-    return {
-      bg: "#3b8f21",
-      text: "#ffffff",
-      border: "#3b8f21",
-      solid: "#3b8f21",
-    };
-  }
-  if (["C+", "C", "C-", "D+", "D"].includes(letter)) {
-    return {
-      bg: "#ff8e12",
-      text: "#ffffff",
-      border: "#ff8e12",
-      solid: "#ff8e12",
-    };
-  }
-  return {
-    bg: "#d13142",
-    text: "#ffffff",
-    border: "#d13142",
-    solid: "#d13142",
-  };
-};
 
 export const UniversitySubjectInputs = ({
   handleKeyDown,
@@ -51,12 +31,8 @@ export const UniversitySubjectInputs = ({
 
   const [isPredictorExpanded, setIsPredictorExpanded] = useState(false);
 
-  const rd =
-    uniMidterm1 !== null || uniMidterm2 !== null
-      ? ((uniMidterm1 ?? 0) + (uniMidterm2 ?? 0)) /
-        ((uniMidterm1 !== null ? 1 : 0) + (uniMidterm2 !== null ? 1 : 0))
-      : 0;
-  const isAllowed = rd >= 50;
+  const admissionRating = calculateAdmissionRating(uniMidterm1, uniMidterm2);
+  const isAllowed = isExamAllowed(admissionRating);
 
   return (
     <div className={styles.uniInputsContainer}>
@@ -164,7 +140,7 @@ export const UniversitySubjectInputs = ({
                 return visibleScales.map((item) => {
                   const targetMin = item.min;
                   const neededExamScore = Math.ceil(
-                    (targetMin - rd * 0.6) / 0.4,
+                    (targetMin - admissionRating * 0.6) / 0.4,
                   );
                   let desc = "";
                   if (neededExamScore > 100) {

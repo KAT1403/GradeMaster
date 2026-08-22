@@ -1,7 +1,25 @@
 import { useTranslation } from "react-i18next";
+import { useAcademicRecordStore } from "../../../../entities/academic-record/model/store";
+import {
+  getRecordPercent,
+  isSemesterRecord,
+} from "../../../../entities/academic-record/lib/record";
 import { Card } from "../../../../shared/ui/card";
 import { ProgressBar } from "../../../../shared/ui/ProgressBar";
-import { KAZ_UNIVERSITY_SCALE } from "../../../../shared/lib/converters";
+import {
+  KAZ_UNIVERSITY_SCALE,
+  calculateIntlGPA,
+} from "../../../../shared/lib/converters";
+import {
+  calculateAdmissionRating,
+  calculateFinalScore,
+  calculateSemesterSummary,
+  getGradeColors,
+  getGradeFromPercent,
+  getNextGradeInfo,
+  getUniGradeColors,
+  isExamAllowed,
+} from "../../../../shared/lib/grading";
 import styles from "../CalculatorWidget.module.scss";
 
 const getNextUniGradeInfo = (percent: number) => {
@@ -19,91 +37,96 @@ const getNextUniGradeInfo = (percent: number) => {
   };
 };
 
-interface ResultCardProps {
-  selectedSystem: "bilim_class" | "kundelik" | "university" | "final";
-  uniSubMode: "subject" | "semester";
-  semesterGPA: number;
-  semesterGPALetter: string;
-  semesterGPAColor: { solid: string };
-  totalCredits: number;
-  currentGradeColors: { solid: string };
-  currentPercent: number;
-  currentGrade: number;
-  nextGradeInfo: { nextGrade: number | null; remaining: number };
-  intlGPA: { score: number; letter: string };
-  isAllowed: boolean;
-  finalGradeScore: number;
-  quartersLength: number;
-  uniMidterm1: number | null;
-  uniMidterm2: number | null;
-  uniExam: number | null;
-  finalQ1: number | null;
-  finalQ2: number | null;
-  finalQ3: number | null;
-  finalQ4: number | null;
-  finalExam: number | null;
-}
-
-export const ResultCard = ({
-  selectedSystem,
-  uniSubMode,
-  semesterGPA,
-  semesterGPALetter,
-  semesterGPAColor,
-  totalCredits,
-  currentGradeColors,
-  currentPercent,
-  currentGrade,
-  nextGradeInfo,
-  intlGPA,
-  isAllowed,
-  finalGradeScore,
-  quartersLength,
-  uniMidterm1,
-  uniMidterm2,
-  uniExam,
-  finalQ1,
-  finalQ2,
-  finalQ3,
-  finalQ4,
-  finalExam,
-}: ResultCardProps) => {
+const SemesterResultCard = () => {
   const { t } = useTranslation();
+  const semesterSubjects = useAcademicRecordStore(
+    (state) => state.semesterSubjects,
+  );
+  const { semesterGPA, semesterGPALetter, totalCredits } =
+    calculateSemesterSummary(semesterSubjects);
+  const badgeColor =
+    totalCredits > 0
+      ? getUniGradeColors(semesterGPALetter).solid
+      : "var(--accent-primary)";
 
-  if (selectedSystem === "university" && uniSubMode === "semester") {
-    return (
-      <Card className={styles.resultCard}>
-        <div className={styles.resultHeader}>
-          <span className={styles.resultTitle}>
-            {t("calculator.uni_gpa_forecast")}
-          </span>
-          <div
-            className={styles.gradeBadge}
-            style={{ backgroundColor: semesterGPAColor.solid }}
-          >
-            {semesterGPALetter}
-          </div>
+  return (
+    <Card className={styles.resultCard}>
+      <div className={styles.resultHeader}>
+        <span className={styles.resultTitle}>
+          {t("calculator.uni_gpa_forecast")}
+        </span>
+        <div
+          className={styles.gradeBadge}
+          style={{ backgroundColor: badgeColor }}
+        >
+          {semesterGPALetter}
         </div>
-        <div className={styles.percentDisplay}>{semesterGPA.toFixed(2)}</div>
-        <div className={styles.progressSection}>
-          <ProgressBar
-            value={semesterGPA}
-            max={4}
-            variant={
-              semesterGPA >= 2.67
-                ? "high"
-                : semesterGPA >= 1.0
-                  ? "medium"
-                  : "low"
-            }
-          />
-          <span className={styles.progressText}>
-            {t("calculator.uni_credits")}: {totalCredits}
-          </span>
-        </div>
-      </Card>
-    );
+      </div>
+      <div className={styles.percentDisplay}>{semesterGPA.toFixed(2)}</div>
+      <div className={styles.progressSection}>
+        <ProgressBar
+          value={semesterGPA}
+          max={4}
+          variant={
+            semesterGPA >= 2.67 ? "high" : semesterGPA >= 1.0 ? "medium" : "low"
+          }
+        />
+        <span className={styles.progressText}>
+          {t("calculator.uni_credits")}: {totalCredits}
+        </span>
+      </div>
+    </Card>
+  );
+};
+
+export const ResultCard = () => {
+  const { t } = useTranslation();
+  const record = useAcademicRecordStore();
+
+  if (isSemesterRecord(record)) {
+    return <SemesterResultCard />;
   }
+
+  const {
+    selectedSystem,
+    finalQ1,
+    finalQ2,
+    finalQ3,
+    finalQ4,
+    finalExam,
+    uniMidterm1,
+    uniMidterm2,
+    uniExam,
+  } = record;
+
+  const currentPercent = getRecordPercent(record);
+  const { score: finalGradeScore, filledQuarters } = calculateFinalScore(record);
+  const hasGradedInput =
+    record.fos.length > 0 ||
+    record.sors.some((sor) => sor.max !== null && sor.max > 0) ||
+    Boolean(record.soch?.max);
+
+  const currentGrade =
+    selectedSystem === "final"
+      ? filledQuarters > 0
+        ? Math.round(finalGradeScore)
+        : 0
+      : currentPercent === 0 && !hasGradedInput
+        ? 0
+        : getGradeFromPercent(currentPercent);
+
+  const nextGradeInfo = getNextGradeInfo(currentPercent);
+  const intlGPA = calculateIntlGPA(currentPercent);
+  const currentGradeColors =
+    selectedSystem === "university"
+      ? getUniGradeColors(intlGPA.letter)
+      : getGradeColors(currentGrade);
+  const isAllowed = isExamAllowed(
+    calculateAdmissionRating(uniMidterm1, uniMidterm2),
+  );
+  const hasUniInputs =
+    uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null;
+  const nextUniInfo = getNextUniGradeInfo(currentPercent);
 
   return (
     <Card className={styles.resultCard}>
@@ -129,9 +152,9 @@ export const ResultCard = ({
 
       <div className={styles.percentDisplay}>
         {selectedSystem === "university"
-          ? `${uniMidterm1 !== null || uniMidterm2 !== null || uniExam !== null ? currentPercent.toFixed(1) : "0"}%`
+          ? `${hasUniInputs ? currentPercent.toFixed(1) : "0"}%`
           : selectedSystem === "final"
-            ? quartersLength > 0
+            ? filledQuarters > 0
               ? `${finalGradeScore.toFixed(2)}`
               : "0"
             : `${Math.round(currentPercent)}%`}
@@ -187,34 +210,13 @@ export const ResultCard = ({
             }
           />
           {selectedSystem === "university" ? (
-            (() => {
-              const hasInputs =
-                uniMidterm1 !== null ||
-                uniMidterm2 !== null ||
-                uniExam !== null;
-              if (!hasInputs) {
-                return (
-                  <span className={styles.progressText}>
-                    {t("calculator.add_at_least_one")}
-                  </span>
-                );
-              }
-              const nextUniInfo = getNextUniGradeInfo(currentPercent);
-              if (nextUniInfo.nextGrade) {
-                return (
-                  <span className={styles.progressText}>
-                    {t("calculator.to_next_grade")} {nextUniInfo.nextGrade}:{" "}
-                    {nextUniInfo.remaining.toFixed(1)}%
-                  </span>
-                );
-              } else {
-                return (
-                  <span className={styles.progressText}>
-                    {t("calculator.max_points_reached")}
-                  </span>
-                );
-              }
-            })()
+            <span className={styles.progressText}>
+              {!hasUniInputs
+                ? t("calculator.add_at_least_one")
+                : nextUniInfo.nextGrade
+                  ? `${t("calculator.to_next_grade")} ${nextUniInfo.nextGrade}: ${nextUniInfo.remaining.toFixed(1)}%`
+                  : t("calculator.max_points_reached")}
+            </span>
           ) : currentGrade > 0 ? (
             nextGradeInfo.nextGrade ? (
               <span className={styles.progressText}>

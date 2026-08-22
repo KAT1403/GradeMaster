@@ -3,9 +3,11 @@ import { useUIStore } from "../../../shared/store/uiStore";
 import type { TabType } from "../../../shared/store/uiStore";
 import { WorkspacePage } from "../../WorkspacePage";
 import { SubjectsPage } from "../../SubjectsPage";
+import { InfoPage } from "../../InfoPage";
 import { ProfilePage } from "../../ProfilePage";
 import { SettingsPage } from "../../SettingsPage";
-import { Calculator, BookOpen, User, Settings } from "lucide-react";
+import { Calculator, BookOpen, Info, User, Settings } from "lucide-react";
+import { FooterWidget } from "../../../widget/footer";
 import styles from "./HomePage.module.scss";
 
 export default function HomePage() {
@@ -27,6 +29,7 @@ export default function HomePage() {
       icon: <Calculator size={20} />,
     },
     { id: "subjects", label: t("tabs.subjects"), icon: <BookOpen size={20} /> },
+    { id: "info", label: t("tabs.info"), icon: <Info size={20} /> },
     { id: "profile", label: t("tabs.profile"), icon: <User size={20} /> },
     { id: "settings", label: t("tabs.settings"), icon: <Settings size={20} /> },
   ];
@@ -56,9 +59,11 @@ export default function HomePage() {
         <main className={styles.mainContent} key={activeTab}>
           {activeTab === "workspace" && <WorkspacePage />}
           {activeTab === "subjects" && <SubjectsPage />}
+          {activeTab === "info" && <InfoPage />}
           {activeTab === "profile" && <ProfilePage />}
           {activeTab === "settings" && <SettingsPage />}
         </main>
+        <FooterWidget />
       </div>
       <nav className={styles.bottomNav}>
         {navigationItems.map((item) => (
