@@ -1,5 +1,7 @@
 import type {
   AcademicSystem,
+  SchoolFinalMode,
+  SchoolFinalSubject,
   SemesterSubject,
   SOCH,
   SOR,
@@ -8,6 +10,8 @@ import type {
 
 export type {
   AcademicSystem,
+  SchoolFinalMode,
+  SchoolFinalSubject,
   SemesterSubject,
   UniSubMode,
 } from "../../../shared/types/academic";
@@ -22,6 +26,8 @@ export interface AcademicRecordSnapshot {
   fos: number[];
   sors: SOR[];
   soch: SOCH | null;
+  schoolFinalMode: SchoolFinalMode;
+  schoolFinalSubjects: SchoolFinalSubject[];
   uniSubMode: UniSubMode;
   uniMidterm1: number | null;
   uniMidterm2: number | null;

@@ -10,6 +10,8 @@ import {
   normalizeGradeValue,
   normalizeUniGrade,
   normalizeUniSubMode,
+  normalizeSchoolFinalMode,
+  normalizeSchoolFinalSubjects,
   normalizeSemesterSubjects,
 } from "../../../shared/lib/storageMigrations";
 
@@ -66,6 +68,8 @@ const normalizeSnapshot = (
     fos: normalizeFos(data.fos),
     sors: normalizeSors(data.sors),
     soch: normalizeSoch(data.soch),
+    schoolFinalMode: normalizeSchoolFinalMode(data.schoolFinalMode),
+    schoolFinalSubjects: normalizeSchoolFinalSubjects(data.schoolFinalSubjects),
     uniSubMode,
     uniMidterm1,
     uniMidterm2,

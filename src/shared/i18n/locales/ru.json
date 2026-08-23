@@ -144,6 +144,13 @@
     "uni_remove_subject": "Удалить предмет",
     "uni_grade_title": "ВУЗ Оценка",
     "final_grade_title": "Итоговая оценка",
+    "final_school_title": "Итоговая школьная",
+    "school_grade_year": "Класс",
+    "school_year_short": "кл.",
+    "school_final_summary_title": "Что это значит",
+    "school_final_summary": "Этот модуль помогает оценить вашу школьную успеваемость за 5–11 классы: рассчитываются средний балл, GPA и итоговая оценка по выбранным предметам. Это помогает для отслеживания результатов и подготовки к поступлению в вуз.",
+    "school_final_empty": "Добавьте предметы и оценки, чтобы увидеть средний балл, GPA и итоговую успеваемость.",
+    "final_school_gpa_details": "Средний балл: {{avg}} | GPA: {{gpa}} ({{letter}}) | Предметов: {{count}}",
     "final_gpa_details": "GPA: {{gpa}} ({{letter}}) | Четверти: {{q1}}/{{q2}}/{{q3}}/{{q4}} | Экзамен: {{exam}}",
     "simple_gpa_details": "GPA: {{gpa}} ({{letter}})"
   },
