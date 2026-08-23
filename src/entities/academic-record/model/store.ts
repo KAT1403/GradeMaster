@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { SOR, SOCH } from "../../../shared/types/academic";
+import type { SOR, SOCH, SchoolFinalSubject } from "../../../shared/types/academic";
 import {
   createEmptySor,
   normalizeFos,
@@ -11,6 +11,8 @@ import {
   normalizeGradeValue,
   normalizeUniGrade,
   normalizeUniSubMode,
+  normalizeSchoolFinalMode,
+  normalizeSchoolFinalSubjects,
   normalizeSemesterSubjects,
 } from "../../../shared/lib/storageMigrations";
 import { getRecordPlatform } from "../lib/record";
@@ -18,6 +20,7 @@ import type {
   AcademicRecordDraft,
   AcademicRecordSnapshot,
   AcademicSystem,
+  SchoolFinalMode,
   SemesterSubject,
   UniSubMode,
 } from "./types";
@@ -42,6 +45,15 @@ export interface AcademicRecordState extends AcademicRecordDraft {
   setSORS: (sors: SOR[]) => void;
   updateSOR: (id: string, sor: Omit<SOR, "id">) => void;
   setSOCH: (soch: SOCH | null) => void;
+  setSchoolFinalMode: (mode: SchoolFinalMode) => void;
+  setSchoolFinalSubjects: (subjects: SchoolFinalSubject[]) => void;
+  addSchoolFinalSubject: () => void;
+  removeSchoolFinalSubject: (id: string) => void;
+  updateSchoolFinalSubject: (
+    id: string,
+    field: "title" | "year" | "grade",
+    value: string | number | null,
+  ) => void;
   setUniSubMode: (mode: UniSubMode) => void;
   setUniMidterm1: (val: number | null) => void;
   setUniMidterm2: (val: number | null) => void;
@@ -59,6 +71,13 @@ export interface AcademicRecordState extends AcademicRecordDraft {
 
 const initialSors = () => Array.from({ length: 4 }, createEmptySor);
 
+const createInitialSchoolFinalSubject = (): SchoolFinalSubject => ({
+  id: crypto.randomUUID(),
+  title: "",
+  year: 11,
+  grade: null,
+});
+
 const createInitialRecord = (): AcademicRecordDraft & {
   activeRecordIds: Record<string, string>;
 } => ({
@@ -72,6 +91,8 @@ const createInitialRecord = (): AcademicRecordDraft & {
   fos: [],
   sors: initialSors(),
   soch: null,
+  schoolFinalMode: "unweighted",
+  schoolFinalSubjects: [],
   uniSubMode: "subject",
   uniMidterm1: null,
   uniMidterm2: null,
@@ -111,6 +132,8 @@ const migrateAcademicRecordState = (
     fos: normalizeFos(state.fos),
     sors: normalizeSors(state.sors),
     soch: normalizeSoch(state.soch),
+    schoolFinalMode: normalizeSchoolFinalMode(state.schoolFinalMode),
+    schoolFinalSubjects: normalizeSchoolFinalSubjects(state.schoolFinalSubjects),
     uniSubMode: normalizeUniSubMode(state.uniSubMode),
     uniMidterm1: normalizeUniGrade(state.uniMidterm1),
     uniMidterm2: normalizeUniGrade(state.uniMidterm2),
@@ -169,6 +192,8 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
           fos: [...snapshot.fos],
           sors: normalizeSors(snapshot.sors),
           soch: snapshot.soch ? { ...snapshot.soch } : null,
+          schoolFinalMode: snapshot.schoolFinalMode,
+          schoolFinalSubjects: snapshot.schoolFinalSubjects.map((sub) => ({ ...sub })),
           uniSubMode: snapshot.uniSubMode,
           uniMidterm1: snapshot.uniMidterm1,
           uniMidterm2: snapshot.uniMidterm2,
@@ -207,6 +232,38 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
 
       setSOCH: (soch) => set({ soch }),
 
+      setSchoolFinalMode: (schoolFinalMode) => set({ schoolFinalMode }),
+      setSchoolFinalSubjects: (schoolFinalSubjects) => set({ schoolFinalSubjects }),
+      addSchoolFinalSubject: () =>
+        set((state) => ({
+          schoolFinalSubjects: [
+            ...state.schoolFinalSubjects,
+            createInitialSchoolFinalSubject(),
+          ],
+        })),
+      removeSchoolFinalSubject: (id) =>
+        set((state) => ({
+          schoolFinalSubjects: state.schoolFinalSubjects.filter(
+            (subject) => subject.id !== id,
+          ),
+        })),
+      updateSchoolFinalSubject: (id, field, value) =>
+        set((state) => ({
+          schoolFinalSubjects: state.schoolFinalSubjects.map((subject) =>
+            subject.id === id
+              ? {
+                  ...subject,
+                  [field]:
+                    field === "title"
+                      ? String(value)
+                      : field === "year"
+                        ? Number(value)
+                        : value,
+                }
+              : subject,
+          ),
+        })),
+
       setUniSubMode: (uniSubMode) => set({ uniSubMode }),
       setUniMidterm1: (uniMidterm1) => set({ uniMidterm1 }),
       setUniMidterm2: (uniMidterm2) => set({ uniMidterm2 }),
@@ -237,7 +294,7 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     }),
     {
       name: "academic-record-storage-v4",
-      version: 5,
+      version: 6,
       migrate: migrateAcademicRecordState,
       merge: (persistedState, currentState) => ({
         ...currentState,

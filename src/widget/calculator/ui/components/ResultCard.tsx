@@ -13,6 +13,7 @@ import {
 import {
   calculateAdmissionRating,
   calculateFinalScore,
+  calculateSchoolFinalSummary,
   calculateSemesterSummary,
   getGradeColors,
   getGradeFromPercent,
@@ -99,6 +100,7 @@ export const ResultCard = () => {
     uniExam,
   } = record;
 
+  const schoolFinalSummary = calculateSchoolFinalSummary(record.schoolFinalSubjects);
   const currentPercent = getRecordPercent(record);
   const { score: finalGradeScore, filledQuarters } = calculateFinalScore(record);
   const hasGradedInput =
@@ -108,9 +110,11 @@ export const ResultCard = () => {
 
   const currentGrade =
     selectedSystem === "final"
-      ? filledQuarters > 0
-        ? Math.round(finalGradeScore)
-        : 0
+      ? schoolFinalSummary.filledSubjects > 0
+        ? schoolFinalSummary.letter
+        : filledQuarters > 0
+          ? Math.round(finalGradeScore)
+          : 0
       : currentPercent === 0 && !hasGradedInput
         ? 0
         : getGradeFromPercent(currentPercent);
@@ -118,9 +122,15 @@ export const ResultCard = () => {
   const nextGradeInfo = getNextGradeInfo(currentPercent);
   const intlGPA = calculateIntlGPA(currentPercent);
   const currentGradeColors =
-    selectedSystem === "university"
-      ? getUniGradeColors(intlGPA.letter)
-      : getGradeColors(currentGrade);
+    selectedSystem === "final"
+      ? schoolFinalSummary.filledSubjects > 0
+        ? getUniGradeColors(schoolFinalSummary.letter)
+        : getGradeColors(typeof currentGrade === "number" ? currentGrade : 0)
+      : selectedSystem === "university"
+        ? getUniGradeColors(intlGPA.letter)
+        : getGradeColors(
+            typeof currentGrade === "number" ? currentGrade : Number(currentGrade) || 0,
+          );
   const isAllowed = isExamAllowed(
     calculateAdmissionRating(uniMidterm1, uniMidterm2),
   );
@@ -146,7 +156,11 @@ export const ResultCard = () => {
             ? uniMidterm1 !== null || uniMidterm2 !== null
               ? intlGPA.letter
               : "-"
-            : currentGrade || "-"}
+            : selectedSystem === "final"
+              ? schoolFinalSummary.filledSubjects > 0
+                ? schoolFinalSummary.letter
+                : currentGrade || "-"
+              : currentGrade || "-"}
         </div>
       </div>
 
@@ -154,9 +168,11 @@ export const ResultCard = () => {
         {selectedSystem === "university"
           ? `${hasUniInputs ? currentPercent.toFixed(1) : "0"}%`
           : selectedSystem === "final"
-            ? filledQuarters > 0
-              ? `${finalGradeScore.toFixed(2)}`
-              : "0"
+            ? schoolFinalSummary.filledSubjects > 0
+              ? `${schoolFinalSummary.gpa.toFixed(2)}`
+              : filledQuarters > 0
+                ? `${finalGradeScore.toFixed(2)}`
+                : "0"
             : `${Math.round(currentPercent)}%`}
       </div>
 
@@ -179,15 +195,22 @@ export const ResultCard = () => {
       ) : (
         <div className={styles.gpaSimple}>
           {selectedSystem === "final"
-            ? t("calculator.final_gpa_details", {
-                gpa: intlGPA.score.toFixed(2),
-                letter: intlGPA.letter,
-                q1: finalQ1 || "-",
-                q2: finalQ2 || "-",
-                q3: finalQ3 || "-",
-                q4: finalQ4 || "-",
-                exam: finalExam || "-",
-              })
+            ? schoolFinalSummary.filledSubjects > 0
+              ? t("calculator.final_school_gpa_details", {
+                  gpa: schoolFinalSummary.gpa.toFixed(2),
+                  letter: schoolFinalSummary.letter,
+                  avg: schoolFinalSummary.averageGrade.toFixed(2),
+                  count: schoolFinalSummary.filledSubjects,
+                })
+              : t("calculator.final_gpa_details", {
+                  gpa: intlGPA.score.toFixed(2),
+                  letter: intlGPA.letter,
+                  q1: finalQ1 || "-",
+                  q2: finalQ2 || "-",
+                  q3: finalQ3 || "-",
+                  q4: finalQ4 || "-",
+                  exam: finalExam || "-",
+                })
             : t("calculator.simple_gpa_details", {
                 gpa: intlGPA.score.toFixed(2),
                 letter: intlGPA.letter,
@@ -204,7 +227,7 @@ export const ResultCard = () => {
                 ? currentPercent >= 50
                   ? "high"
                   : "low"
-                : currentGrade > 0
+                : Number(currentGrade) > 0
                   ? "high"
                   : "low"
             }
@@ -217,7 +240,7 @@ export const ResultCard = () => {
                   ? `${t("calculator.to_next_grade")} ${nextUniInfo.nextGrade}: ${nextUniInfo.remaining.toFixed(1)}%`
                   : t("calculator.max_points_reached")}
             </span>
-          ) : currentGrade > 0 ? (
+          ) : Number(currentGrade) > 0 ? (
             nextGradeInfo.nextGrade ? (
               <span className={styles.progressText}>
                 {t("calculator.to_next_grade")} {nextGradeInfo.nextGrade}:{" "}

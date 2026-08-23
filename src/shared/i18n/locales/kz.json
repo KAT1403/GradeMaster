@@ -142,6 +142,13 @@
     "uni_remove_subject": "Пәнді өшіру",
     "uni_grade_title": "ЖОО Бағасы",
     "final_grade_title": "Қорытынды баға",
+    "final_school_title": "Мектеп қорытындысы",
+    "school_grade_year": "Класс",
+    "school_year_short": "кл.",
+    "school_final_summary_title": "Бұл нені білдіреді",
+    "school_final_summary": "Бұл модуль 5–11 сыныптардағы мектептегі үлгеріміңізді бағалауға көмектеседі: таңдалған пәндер бойынша орташа балл, GPA және қорытынды нәтижелер есептеледі. Бұл нәтижелерді бақылау және жоғары оқу орнына түсуге дайындық үшін ыңғайлы.",
+    "school_final_empty": "Пәндер мен бағаларды қосып, орташа балл, GPA және қорытынды үлгеріміңізді көріңіз.",
+    "final_school_gpa_details": "Орташа балл: {{avg}} | GPA: {{gpa}} ({{letter}}) | Пәндер: {{count}}",
     "final_gpa_details": "GPA: {{gpa}} ({{letter}}) | Тоқсандар: {{q1}}/{{q2}}/{{q3}}/{{q4}} | Емтихан: {{exam}}",
     "simple_gpa_details": "GPA: {{gpa}} ({{letter}})"
   },

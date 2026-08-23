@@ -1,5 +1,7 @@
 import type {
   AcademicSystem,
+  SchoolFinalMode,
+  SchoolFinalSubject,
   SemesterSubject,
   SOCH,
   SOR,
@@ -110,6 +112,41 @@ export const normalizeUniGrade = (value: unknown): number | null => {
 
 export const normalizeUniSubMode = (value: unknown): UniSubMode =>
   value === "semester" ? "semester" : "subject";
+
+export const normalizeSchoolFinalMode = (_value: unknown): SchoolFinalMode =>
+  "unweighted";
+
+export const normalizeSchoolFinalSubject = (
+  value: unknown,
+): SchoolFinalSubject => {
+  const item = isRecord(value) ? value : {};
+  const normalizedYear =
+    item.year === 5 ||
+    item.year === 6 ||
+    item.year === 7 ||
+    item.year === 8 ||
+    item.year === 9 ||
+    item.year === 10 ||
+    item.year === 11
+      ? item.year
+      : 11;
+  const normalizedGrade =
+    item.grade === 2 || item.grade === 3 || item.grade === 4 || item.grade === 5
+      ? item.grade
+      : null;
+
+  return {
+    id: typeof item.id === "string" && item.id ? item.id : crypto.randomUUID(),
+    title: typeof item.title === "string" ? item.title : "",
+    year: normalizedYear,
+    grade: normalizedGrade,
+  };
+};
+
+export const normalizeSchoolFinalSubjects = (
+  value: unknown,
+): SchoolFinalSubject[] =>
+  Array.isArray(value) ? value.map(normalizeSchoolFinalSubject) : [];
 
 export const normalizeSemesterSubject = (value: unknown): SemesterSubject => {
   const item = isRecord(value) ? value : {};

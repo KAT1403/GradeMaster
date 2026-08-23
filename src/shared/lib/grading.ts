@@ -1,4 +1,4 @@
-import type { AcademicSystem } from "../types/academic";
+import type { AcademicSystem, SchoolFinalSubject } from "../types/academic";
 import { ECTS_VALUES, getLetterFromGPA } from "./converters";
 
 export interface CalculateParams {
@@ -200,6 +200,65 @@ export const calculateTotalPercent = (
 };
 
 export const GPA_MAX = 4;
+
+export interface SchoolFinalSummary {
+  averageGrade: number;
+  gpa: number;
+  letter: string;
+  filledSubjects: number;
+  totalSubjects: number;
+  percent: number;
+}
+
+export const gradeToGPA = (grade: 2 | 3 | 4 | 5): number => {
+  const base: Record<2 | 3 | 4 | 5, number> = {
+    2: 1,
+    3: 2,
+    4: 3,
+    5: 4,
+  };
+
+  return base[grade];
+};
+
+export const calculateSchoolFinalSummary = (
+  subjects: SchoolFinalSubject[],
+): SchoolFinalSummary => {
+  const validSubjects = subjects.filter(
+    (subject) => subject.title.trim() && subject.grade !== null,
+  );
+
+  if (validSubjects.length === 0) {
+    return {
+      averageGrade: 0,
+      gpa: 0,
+      letter: "-",
+      filledSubjects: 0,
+      totalSubjects: subjects.length,
+      percent: 0,
+    };
+  }
+
+  const averageGrade =
+    validSubjects.reduce((sum, subject) => sum + (subject.grade ?? 0), 0) /
+    validSubjects.length;
+  const gpa =
+    validSubjects.reduce(
+      (sum, subject) =>
+        sum + (subject.grade !== null ? gradeToGPA(subject.grade) : 0),
+      0,
+    ) / validSubjects.length;
+  const percent = Math.max(0, Math.min(100, (gpa / GPA_MAX) * 100));
+
+  return {
+    averageGrade,
+    gpa,
+    letter: getLetterFromGPA(Math.max(0, Math.min(GPA_MAX, gpa))),
+    filledSubjects: validSubjects.length,
+    totalSubjects: subjects.length,
+    percent,
+  };
+};
 
 export const gpaToPercentEquivalent = (gpa: number): number =>
   Math.max(0, Math.min(100, (gpa / GPA_MAX) * 100));

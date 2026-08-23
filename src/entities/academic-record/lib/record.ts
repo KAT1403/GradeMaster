@@ -1,6 +1,7 @@
 import {
   FINAL_SCORE_TO_PERCENT,
   calculateFinalScore,
+  calculateSchoolFinalSummary,
   calculateSemesterSummary,
   calculateTotalPercent,
   gpaToPercentEquivalent,
@@ -32,6 +33,8 @@ export const createRecordSnapshot = (
     fos: [...record.fos],
     sors: record.sors.map((sor) => ({ ...sor })),
     soch: record.soch ? { ...record.soch } : null,
+    schoolFinalMode: record.schoolFinalMode,
+    schoolFinalSubjects: record.schoolFinalSubjects.map((subject) => ({ ...subject })),
   };
 
   if (isSemesterRecord(record)) {
@@ -75,7 +78,11 @@ export const getRecordPercent = (record: AcademicRecordSnapshot): number => {
   }
 
   if (record.selectedSystem === "final") {
-    return calculateFinalScore(record).score * FINAL_SCORE_TO_PERCENT;
+    const schoolFinalSummary = calculateSchoolFinalSummary(record.schoolFinalSubjects);
+
+    return schoolFinalSummary.filledSubjects > 0
+      ? schoolFinalSummary.percent
+      : calculateFinalScore(record).score * FINAL_SCORE_TO_PERCENT;
   }
 
   return calculateTotalPercent(
@@ -94,6 +101,9 @@ export const getRecordPercent = (record: AcademicRecordSnapshot): number => {
 export const isRecordEmpty = (record: AcademicRecordDraft): boolean => {
   if (record.selectedSystem === "final") {
     return (
+      record.schoolFinalSubjects.every(
+        (subject) => !subject.title.trim() && subject.grade === null,
+      ) &&
       record.finalQ1 === null &&
       record.finalQ2 === null &&
       record.finalQ3 === null &&
@@ -123,6 +133,12 @@ export const getRecordFingerprint = (record: AcademicRecordDraft): string => {
   if (record.selectedSystem === "final") {
     return JSON.stringify({
       platform,
+      mode: record.schoolFinalMode,
+      subjects: record.schoolFinalSubjects.map((subject) => [
+        subject.title,
+        subject.year,
+        subject.grade,
+      ]),
       quarters: [record.finalQ1, record.finalQ2, record.finalQ3, record.finalQ4],
       exam: record.finalExam,
     });

@@ -144,6 +144,13 @@
     "uni_remove_subject": "Remove subject",
     "uni_grade_title": "University Grade",
     "final_grade_title": "Final Grade",
+    "final_school_title": "School Finals",
+    "school_grade_year": "Class",
+    "school_year_short": "yr",
+    "school_final_summary_title": "What this means",
+    "school_final_summary": "This module helps assess your school performance from grades 5–11: it calculates your average score, GPA, and final result across the selected subjects. It helps for tracking academic progress and preparing for university admissions.",
+    "school_final_empty": "Add subjects and grades to see your average score, GPA, and overall academic result.",
+    "final_school_gpa_details": "Average score: {{avg}} | GPA: {{gpa}} ({{letter}}) | Subjects: {{count}}",
     "final_gpa_details": "GPA: {{gpa}} ({{letter}}) | Quarters: {{q1}}/{{q2}}/{{q3}}/{{q4}} | Exam: {{exam}}",
     "simple_gpa_details": "GPA: {{gpa}} ({{letter}})"
   },
