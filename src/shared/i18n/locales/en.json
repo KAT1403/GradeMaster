@@ -236,9 +236,9 @@
     "std_dev": "Deviation",
     "volatility": "Volatility",
     "volatility_tooltip": "The lower the volatility, the more stable your results.",
-    "volatility_desc": "Current grades + simulation",
+    "volatility_desc": "Current grades and a 5-step forecast",
     "trend": "FA Grade Trend",
-    "trend_tooltip": "The solid line shows your actual grades, and the dotted line shows the predicted ones.",
+    "trend_tooltip": "The solid line shows your actual grades. The dashed line forecasts the next five assessments: the model extends your trend and accounts for how stable your grades are. The shaded zone is the range the result is likely to fall into — the wider it is, the less predictable your grades.",
     "low_volatility": "Stable",
     "high_volatility": "Unstable",
     "progress": "Progress",
@@ -254,6 +254,17 @@
     },
     "trend_desc": "FA Dynamics Evaluation",
     "diagnosis_title": "Your Academic Profile",
+    "chart_legend": {
+      "fact": "Your grades",
+      "forecast": "Forecast",
+      "band": "Likely range"
+    },
+    "chart_tooltip": {
+      "badge": "forecast",
+      "grade": "Grade",
+      "expected": "Expected grade",
+      "range": "Likely range"
+    },
     "charts": {
       "history": "Grade",
       "forecast": "Forecast",
