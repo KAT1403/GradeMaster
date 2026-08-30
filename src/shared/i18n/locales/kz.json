@@ -328,5 +328,14 @@
     "wipe_btn": "Локалдық базаны өшіру",
     "wipe_confirm": "Сенімдісіз бе? Барлық сақталған пәндер мен бағалар біржола жойылады.",
     "version": "GradeMaster 2.0"
+  },
+  "install": {
+    "title": "GradeMaster",
+    "hint": "Интернетсіз жұмыс істейді",
+    "action": "Орнату",
+    "dismiss": "Жабу",
+    "ios": {
+      "hint": "Экранға қосу: «Share» → «Add to Home Screen»"
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useAcademicRecordStore } from "../../../entities/academic-record/model/store";
 import { Card } from "../../../shared/ui/card";
@@ -14,11 +15,17 @@ import {
   calculateTextualTrend,
 } from "../../../shared/lib/analytics";
 import type { TrendType } from "../../../shared/lib/analytics";
-import { TrendsChart } from "./TrendsChart";
-import { StabilityChart } from "./StabilityChart";
 import { EmptyState } from "../../../shared/ui/EmptyState";
 import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
+import { ChartSkeleton } from "./ChartSkeleton";
 import styles from "./AnalyticsWidget.module.scss";
+
+const StabilityChart = lazy(() =>
+  import("./StabilityChart").then((m) => ({ default: m.StabilityChart })),
+);
+const TrendsChart = lazy(() =>
+  import("./TrendsChart").then((m) => ({ default: m.TrendsChart })),
+);
 
 const COLORS = {
   progress: "#3b8f21",
@@ -77,7 +84,9 @@ export const AnalyticsWidget = ({ onNavigateToInput }: AnalyticsWidgetProps) => 
               </p>
             </div>
           </div>
-          <StabilityChart fos={fos} sors={sors} soch={soch} />
+          <Suspense fallback={<ChartSkeleton variant="stability" />}>
+            <StabilityChart fos={fos} sors={sors} soch={soch} />
+          </Suspense>
         </Card>
 
         <Card className={styles.chartCard}>
@@ -98,7 +107,9 @@ export const AnalyticsWidget = ({ onNavigateToInput }: AnalyticsWidgetProps) => 
               </p>
             </div>
           </div>
-          <TrendsChart fos={fos} />
+          <Suspense fallback={<ChartSkeleton variant="trends" />}>
+            <TrendsChart fos={fos} />
+          </Suspense>
         </Card>
       </div>
 

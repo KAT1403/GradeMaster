@@ -330,5 +330,14 @@
     "wipe_btn": "Wipe local database",
     "wipe_confirm": "Are you sure? All saved subjects and grades will be permanently deleted.",
     "version": "GradeMaster 2.0"
+  },
+  "install": {
+    "title": "GradeMaster",
+    "hint": "Works offline",
+    "action": "Install",
+    "dismiss": "Close",
+    "ios": {
+      "hint": "Add to screen: «Share» → «Add to Home Screen»"
+    }
   }
 }
