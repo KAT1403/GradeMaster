@@ -145,7 +145,18 @@ export const CalculatorWidget = () => {
     <div className={styles.wrapper} ref={wrapperRef}>
       <div className={styles.brandHeader}>
         <div className={styles.brandTitle}>
-          <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
+          <div className={styles.logoWrapper}>
+            <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
+            <div className={styles.logoTooltip}>
+              <div className={styles.logoTooltipInner}>
+                Logo by{" "}
+                <a href="https://t.me/Avakee1" target="_blank" rel="noreferrer">@Avakee1</a>
+                {" & "}
+                <a href="https://t.me/karynqexe" target="_blank" rel="noreferrer">@karynqexe</a>
+              </div>
+            </div>
+          </div>
+          <img src={logoSrc} className={`${styles.logoImg} ${styles.logoDesktop}`} alt="GradeMaster Logo" />
           <span className={styles.brandMain}>GradeMaster</span>
           <span className={styles.brandSeparator}>//</span>
           <span className={styles.brandSub}>

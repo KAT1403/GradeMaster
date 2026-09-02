@@ -38,7 +38,17 @@ export default function HomePage() {
     <div className={styles.appShell}>
       <aside className={styles.sidebar}>
         <div className={styles.sidebarBrand}>
-          <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
+          <div className={styles.logoWrapper}>
+            <img src={logoSrc} className={styles.logoImg} alt="GradeMaster Logo" />
+            <div className={styles.logoTooltip}>
+              <div className={styles.logoTooltipInner}>
+                Logo by{" "}
+                <a href="https://t.me/Avakee1" target="_blank" rel="noreferrer">@Avakee1</a>
+                {" & "}
+                <a href="https://t.me/karynqexe" target="_blank" rel="noreferrer">@karynqexe</a>
+              </div>
+            </div>
+          </div>
           <span className={styles.brandTitle}>GradeMaster</span>
           <span className={styles.brandVersion}>v2.0</span>
         </div>

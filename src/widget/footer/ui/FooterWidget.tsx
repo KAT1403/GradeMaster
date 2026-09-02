@@ -19,6 +19,12 @@ export const FooterWidget = () => {
           <Trans i18nKey="footer.privacy" components={{ strong: <strong /> }} />
         </div>
       </div>
+      <div className={styles.credits}>
+        Logo by{" "}
+        <a href="https://t.me/Avakee1" target="_blank" rel="noreferrer">@Avakee1</a>
+        {" & "}
+        <a href="https://t.me/karynqexe" target="_blank" rel="noreferrer">@karynqexe</a>
+      </div>
     </footer>
   );
 };
