@@ -30,7 +30,7 @@ The project is designed as a client-side tool: calculations, saved subjects, and
 - **Charts:** `Recharts`
 - **Internationalization:** `i18next`, `react-i18next`
 - **Icons:** `lucide-react`
-- **Deployment/Insights:** `Vercel Analytics`, `Vercel Speed Insights`
+- **Deployment/Insights:** `Google Analytics`, `Vercel Analytics`, `Vercel Speed Insights`
 
 ---
 
