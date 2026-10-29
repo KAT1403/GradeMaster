@@ -60,7 +60,7 @@
     "author": {
       "title": "About the author",
       "name": "Alexey Kim (KAT1403)",
-      "status": "8 'G' Grade Student, Economic Lyceum, Astana",
+      "status": "9 grade, Economic Lyceum, Astana",
       "bio": "I am the sole author of the project. The project was developed to simplify the process of tracking, calculating, and predicting academic results for students in Kazakhstan."
     },
     "contacts": {
@@ -238,7 +238,7 @@
     "volatility_tooltip": "The lower the volatility, the more stable your results.",
     "volatility_desc": "Current grades and a 5-step forecast",
     "trend": "FA Grade Trend",
-    "trend_tooltip": "The solid line shows your actual grades. The dashed line forecasts the next five assessments: the model extends your trend and accounts for how stable your grades are. The shaded zone is the range the result is likely to fall into — the wider it is, the less predictable your grades.",
+    "trend_tooltip": "The solid line shows your actual grades. The dashed line forecasts the next five assessments: the model extends your trend and accounts for how stable your grades are.",
     "low_volatility": "Stable",
     "high_volatility": "Unstable",
     "progress": "Progress",
@@ -256,14 +256,12 @@
     "diagnosis_title": "Your Academic Profile",
     "chart_legend": {
       "fact": "Your grades",
-      "forecast": "Forecast",
-      "band": "Likely range"
+      "forecast": "Forecast"
     },
     "chart_tooltip": {
       "badge": "forecast",
       "grade": "Grade",
-      "expected": "Expected grade",
-      "range": "Likely range"
+      "expected": "Expected grade"
     },
     "charts": {
       "history": "Grade",

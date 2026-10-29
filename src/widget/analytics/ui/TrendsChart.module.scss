@@ -56,14 +56,6 @@
   );
 }
 
-.markerBand {
-  width: 16px;
-  height: 10px;
-  border-radius: 3px;
-  background: var(--accent-primary);
-  opacity: 0.12;
-}
-
 .container {
   display: flex;
   flex: 1;
@@ -175,19 +167,5 @@
 
   @media (max-width: 480px) {
     font-size: 11px;
-  }
-}
-
-.tooltipMuted {
-  margin-top: 3px;
-  font-size: 11px;
-  color: var(--text-muted);
-
-  b {
-    color: var(--text-secondary);
-  }
-
-  @media (max-width: 480px) {
-    font-size: 10px;
   }
 }

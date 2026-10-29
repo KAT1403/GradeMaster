@@ -14,15 +14,29 @@ export const calculateVolatility = (stdDev: number): number => {
 };
 
 export interface GradeForecast {
-  realistic: number;
-  optimistic: number;
-  pessimistic: number;
+  forecast: number;
 }
 
 const TREND_DECAY = 0.75;
 const REVERSION = 0.15;
 const BAND_WIDTH = 0.9;
 const MIN_SPREAD = 0.5;
+
+const getHistorySeed = (history: number[]): number => {
+  let hash = 1779033703 ^ history.length;
+  for (let i = 0; i < history.length; i++) {
+    hash = Math.imul(hash ^ history[i], 3432918353);
+    hash = (hash << 13) | (hash >>> 19);
+  }
+  return hash >>> 0;
+};
+
+const pseudoRandom = (seed: number): number => {
+  let t = (seed += 0x6d2b79f5);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
 
 interface TrendFit {
   slope: number;
@@ -80,9 +94,7 @@ export const predictFutureGrades = (
 ): GradeForecast[] => {
   if (history.length === 0)
     return Array.from({ length: steps }, () => ({
-      realistic: 0,
-      optimistic: 0,
-      pessimistic: 0,
+      forecast: 0,
     }));
 
   const n = history.length;
@@ -91,6 +103,7 @@ export const predictFutureGrades = (
   const slope = fit.slope * fit.correlation * Math.min(1, n / 4);
   const target = recentWeightedAverage(history);
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
+  const baseSeed = getHistorySeed(history);
 
   return Array.from({ length: steps }, (_, index) => {
     const step = index + 1;
@@ -108,10 +121,12 @@ export const predictFutureGrades = (
     const spread =
       Math.max(fit.residual, MIN_SPREAD) * Math.sqrt(step) * BAND_WIDTH;
 
+    const rnd = pseudoRandom(baseSeed + step * 31);
+    const variation = (rnd * 2 - 1) * (spread * 0.5);
+    const simulated = center + variation;
+
     return {
-      realistic: Math.round(center),
-      optimistic: Math.ceil(clamp(center + spread)),
-      pessimistic: Math.floor(clamp(center - spread)),
+      forecast: Math.round(clamp(simulated)),
     };
   });
 };

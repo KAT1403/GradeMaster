@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  Area,
   Line,
   XAxis,
   YAxis,
@@ -20,15 +19,13 @@ interface TrendsChartProps {
 interface TrendItem {
   name: string;
   value?: number;
-  realistic?: number;
-  band?: [number, number];
+  forecast?: number;
 }
 
 interface TooltipLabels {
   badge: string;
   grade: string;
   expected: string;
-  range: string;
 }
 
 interface TooltipPayload {
@@ -60,16 +57,8 @@ const CustomTooltip = ({
       </p>
       <p className={styles.tooltipRow}>
         <span>{isForecast ? labels.expected : labels.grade}</span>
-        <b>{isForecast ? item.realistic : item.value}</b>
+        <b>{isForecast ? item.forecast : item.value}</b>
       </p>
-      {isForecast && item.band && (
-        <p className={`${styles.tooltipRow} ${styles.tooltipMuted}`}>
-          <span>{labels.range}</span>
-          <b>
-            {item.band[0]}–{item.band[1]}
-          </b>
-        </p>
-      )}
     </div>
   );
 };
@@ -82,28 +71,31 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const label = t("calculator.fo_short") || "ФО";
-  const chartData: TrendItem[] = fos.map((v, i) => ({
-    name: `${label} ${i + 1}`,
-    value: v,
-  }));
 
-  if (chartData.length > 0) {
-    const lastIndex = chartData.length - 1;
-    const lastValue = fos[lastIndex];
-    chartData[lastIndex] = {
-      ...chartData[lastIndex],
-      realistic: lastValue,
-      band: [lastValue, lastValue],
-    };
+  const chartData = useMemo(() => {
+    const data: TrendItem[] = fos.map((v, i) => ({
+      name: `${label} ${i + 1}`,
+      value: v,
+    }));
 
-    predictFutureGrades(fos, 5).forEach((p, i) => {
-      chartData.push({
-        name: `${label} ${fos.length + i + 1}`,
-        realistic: p.realistic,
-        band: [p.pessimistic, p.optimistic],
+    if (data.length > 0) {
+      const lastIndex = data.length - 1;
+      const lastValue = fos[lastIndex];
+      data[lastIndex] = {
+        ...data[lastIndex],
+        forecast: lastValue,
+      };
+
+      predictFutureGrades(fos, 5).forEach((p, i) => {
+        data.push({
+          name: `${label} ${fos.length + i + 1}`,
+          forecast: p.forecast,
+        });
       });
-    });
-  }
+    }
+
+    return data;
+  }, [fos, label]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -137,10 +129,6 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
         <span className={styles.legendItem}>
           <i className={styles.markerForecast} />
           {t("analytics.chart_legend.forecast")}
-        </span>
-        <span className={styles.legendItem}>
-          <i className={styles.markerBand} />
-          {t("analytics.chart_legend.band")}
         </span>
       </div>
 
@@ -195,19 +183,9 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
                         badge: t("analytics.chart_tooltip.badge"),
                         grade: t("analytics.chart_tooltip.grade"),
                         expected: t("analytics.chart_tooltip.expected"),
-                        range: t("analytics.chart_tooltip.range"),
                       }}
                     />
                   }
-                />
-                <Area
-                  type="monotone"
-                  dataKey="band"
-                  stroke="none"
-                  fill="var(--accent-primary)"
-                  fillOpacity={0.12}
-                  connectNulls
-                  isAnimationActive={!isDragging}
                 />
                 <Line
                   type="monotone"
@@ -224,7 +202,7 @@ export const TrendsChart = ({ fos }: TrendsChartProps) => {
                 />
                 <Line
                   type="monotone"
-                  dataKey="realistic"
+                  dataKey="forecast"
                   stroke="var(--accent-primary)"
                   strokeOpacity={0.55}
                   strokeWidth={2}
