@@ -14,7 +14,7 @@ export const usePredictorLogic = ({
   sochMaxScore,
 }: PredictorLogicProps): PredictorState => {
   return useMemo(() => {
-    const system = state.selectedSystem === "kundelik" ? "kundelik" : state.selectedSystem === "university" ? "university" : "bilim_class";
+    const system = state.selectedSystem === "university" ? "university" : "school";
     const predictions = analyzePrediction(state, targetGrade, sochMaxScore, system);
     const hasSoch = Boolean(
       state.soch &&

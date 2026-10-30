@@ -1,7 +1,8 @@
 import type { CalculateParams } from "../../../shared/lib/grading";
+import type { AcademicSystem } from "../../../shared/types/academic";
 
 export interface PredictorLogicProps {
-  state: CalculateParams & { selectedSystem?: "bilim_class" | "kundelik" | "final" | "university" };
+  state: CalculateParams & { selectedSystem?: AcademicSystem };
   targetGrade: 3 | 4 | 5;
   badScoreMode: number;
   sochMaxScore: number;

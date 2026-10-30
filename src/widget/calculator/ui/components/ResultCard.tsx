@@ -6,6 +6,7 @@ import {
 } from "../../../../entities/academic-record/lib/record";
 import { Card } from "../../../../shared/ui/card";
 import { ProgressBar } from "../../../../shared/ui/ProgressBar";
+import { normalizeSystem } from "../../../../shared/lib/storageMigrations";
 import {
   KAZ_UNIVERSITY_SCALE,
   calculateIntlGPA,
@@ -100,6 +101,7 @@ export const ResultCard = () => {
     uniExam,
   } = record;
 
+  const sys = normalizeSystem(selectedSystem);
   const schoolFinalSummary = calculateSchoolFinalSummary(record.schoolFinalSubjects);
   const currentPercent = getRecordPercent(record);
   const { score: finalGradeScore, filledQuarters } = calculateFinalScore(record);
@@ -109,7 +111,7 @@ export const ResultCard = () => {
     Boolean(record.soch?.max);
 
   const currentGrade =
-    selectedSystem === "final"
+    sys === "final"
       ? schoolFinalSummary.filledSubjects > 0
         ? schoolFinalSummary.letter
         : filledQuarters > 0
@@ -122,11 +124,11 @@ export const ResultCard = () => {
   const nextGradeInfo = getNextGradeInfo(currentPercent);
   const intlGPA = calculateIntlGPA(currentPercent);
   const currentGradeColors =
-    selectedSystem === "final"
+    sys === "final"
       ? schoolFinalSummary.filledSubjects > 0
         ? getUniGradeColors(schoolFinalSummary.letter)
         : getGradeColors(typeof currentGrade === "number" ? currentGrade : 0)
-      : selectedSystem === "university"
+      : sys === "university"
         ? getUniGradeColors(intlGPA.letter)
         : getGradeColors(
             typeof currentGrade === "number" ? currentGrade : Number(currentGrade) || 0,
@@ -142,9 +144,9 @@ export const ResultCard = () => {
     <Card className={styles.resultCard}>
       <div className={styles.resultHeader}>
         <span className={styles.resultTitle}>
-          {selectedSystem === "university"
+          {sys === "university"
             ? t("calculator.uni_grade_title")
-            : selectedSystem === "final"
+            : sys === "final"
               ? t("calculator.final_grade_title")
               : t("calculator.total_percent")}
         </span>
@@ -152,11 +154,11 @@ export const ResultCard = () => {
           className={styles.gradeBadge}
           style={{ backgroundColor: currentGradeColors.solid }}
         >
-          {selectedSystem === "university"
+          {sys === "university"
             ? uniMidterm1 !== null || uniMidterm2 !== null
               ? intlGPA.letter
               : "-"
-            : selectedSystem === "final"
+            : sys === "final"
               ? schoolFinalSummary.filledSubjects > 0
                 ? schoolFinalSummary.letter
                 : currentGrade || "-"
@@ -165,9 +167,9 @@ export const ResultCard = () => {
       </div>
 
       <div className={styles.percentDisplay}>
-        {selectedSystem === "university"
+        {sys === "university"
           ? `${hasUniInputs ? currentPercent.toFixed(1) : "0"}%`
-          : selectedSystem === "final"
+          : sys === "final"
             ? schoolFinalSummary.filledSubjects > 0
               ? `${schoolFinalSummary.gpa.toFixed(2)}`
               : filledQuarters > 0
@@ -176,7 +178,7 @@ export const ResultCard = () => {
             : `${Math.round(currentPercent)}%`}
       </div>
 
-      {selectedSystem === "university" ? (
+      {sys === "university" ? (
         <div className={styles.uniStatsGrid}>
           <div className={styles.uniStatChip}>
             GPA: {intlGPA.score.toFixed(2)}
@@ -194,7 +196,7 @@ export const ResultCard = () => {
         </div>
       ) : (
         <div className={styles.gpaSimple}>
-          {selectedSystem === "final"
+          {sys === "final"
             ? schoolFinalSummary.filledSubjects > 0
               ? t("calculator.final_school_gpa_details", {
                   gpa: schoolFinalSummary.gpa.toFixed(2),
@@ -218,12 +220,12 @@ export const ResultCard = () => {
         </div>
       )}
 
-      {selectedSystem !== "final" && (
+      {sys !== "final" && (
         <div className={styles.progressSection}>
           <ProgressBar
             value={currentPercent}
             variant={
-              selectedSystem === "university"
+              sys === "university"
                 ? currentPercent >= 50
                   ? "high"
                   : "low"
@@ -232,7 +234,7 @@ export const ResultCard = () => {
                   : "low"
             }
           />
-          {selectedSystem === "university" ? (
+          {sys === "university" ? (
             <span className={styles.progressText}>
               {!hasUniInputs
                 ? t("calculator.add_at_least_one")

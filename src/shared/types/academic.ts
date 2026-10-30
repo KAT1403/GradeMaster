@@ -10,10 +10,11 @@ export interface SOCH {
 }
 
 export type AcademicSystem =
-  | "bilim_class"
-  | "kundelik"
+  | "school"
+  | "university"
   | "final"
-  | "university";
+  | "bilim_class"
+  | "kundelik";
 
 export type UniSubMode = "subject" | "semester";
 export type SchoolFinalMode = "unweighted";

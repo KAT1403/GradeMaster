@@ -82,7 +82,7 @@ const createInitialRecord = (): AcademicRecordDraft & {
   activeRecordIds: Record<string, string>;
 } => ({
   activeRecordIds: {},
-  selectedSystem: "bilim_class",
+  selectedSystem: "school",
   finalQ1: null,
   finalQ2: null,
   finalQ3: null,
@@ -106,11 +106,19 @@ const normalizeActiveRecordIds = (
 ): Record<string, string> => {
   if (typeof value !== "object" || value === null) return fallback;
 
-  return Object.fromEntries(
-    Object.entries(value as Record<string, unknown>).filter(
-      (entry): entry is [string, string] => typeof entry[1] === "string" && !!entry[1],
-    ),
+  const entries = Object.entries(value as Record<string, unknown>).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string" && !!entry[1],
   );
+
+  const result: Record<string, string> = {};
+  for (const [k, v] of entries) {
+    if (k === "bilim_class" || k === "kundelik") {
+      if (!result["school"]) result["school"] = v;
+    } else {
+      result[k] = v;
+    }
+  }
+  return result;
 };
 
 const migrateAcademicRecordState = (
@@ -183,7 +191,7 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
             ...state.activeRecordIds,
             [getRecordPlatform(snapshot)]: id,
           },
-          selectedSystem: snapshot.selectedSystem,
+          selectedSystem: normalizeSystem(snapshot.selectedSystem),
           finalQ1: snapshot.finalQ1,
           finalQ2: snapshot.finalQ2,
           finalQ3: snapshot.finalQ3,
@@ -201,7 +209,8 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
           semesterSubjects: snapshot.semesterSubjects.map((sub) => ({ ...sub })),
         })),
 
-      setSelectedSystem: (selectedSystem) => set({ selectedSystem }),
+      setSelectedSystem: (selectedSystem) =>
+        set({ selectedSystem: normalizeSystem(selectedSystem) }),
       setFinalQ1: (finalQ1) => set({ finalQ1 }),
       setFinalQ2: (finalQ2) => set({ finalQ2 }),
       setFinalQ3: (finalQ3) => set({ finalQ3 }),
@@ -294,7 +303,7 @@ export const useAcademicRecordStore = create<AcademicRecordState>()(
     }),
     {
       name: "academic-record-storage-v4",
-      version: 6,
+      version: 7,
       migrate: migrateAcademicRecordState,
       merge: (persistedState, currentState) => ({
         ...currentState,

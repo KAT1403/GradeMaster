@@ -1,3 +1,4 @@
+import type { AcademicSystem } from "../types/academic";
 import {
   calculateTotalPercent,
   isCompleteScore,
@@ -43,7 +44,7 @@ export const analyzePrediction = (
   params: CalculateParams,
   targetGrade: 3 | 4 | 5,
   sochMaxScore: number = 20,
-  system: "bilim_class" | "kundelik" | "university" = "bilim_class",
+  system: AcademicSystem = "school",
 ): PredictorData => {
   const { fos, sors } = params;
   const targetPercent =
@@ -52,29 +53,19 @@ export const analyzePrediction = (
   let currentCapital = 0;
   const weights = { fo: 0.25, sor: 0.25, soch: 0.5 };
 
-  if (system === "kundelik") {
-    const foRatio = fos.length > 0 ? fos.reduce((sum, val) => sum + val, 0) / (fos.length * 10) : null;
-    const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
-    const sorRatio = validSors.length > 0 ? (validSors.reduce((sum, s) => sum + (s.score ?? 0), 0) / validSors.reduce((sum, s) => sum + (s.max ?? 0), 0)) : null;
-
-    const foContrib = foRatio !== null ? Math.round(foRatio * weights.fo * 10000) / 100 : 0;
-    const sorContrib = sorRatio !== null ? Math.round(sorRatio * weights.sor * 10000) / 100 : 0;
-    currentCapital = foContrib + sorContrib;
-  } else {
-    if (fos.length > 0) {
-      const avgFO = fos.reduce((sum, val) => sum + val, 0) / fos.length;
-      currentCapital += (avgFO / 10) * weights.fo * 100;
-    }
-    const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
-    if (validSors.length > 0) {
-      const totalSorScore = validSors.reduce(
-        (sum, s) => sum + (s.score ?? 0),
-        0,
-      );
-      const totalSorMax = validSors.reduce((sum, s) => sum + (s.max ?? 0), 0);
-      const sorPercent = totalSorScore / totalSorMax;
-      currentCapital += sorPercent * weights.sor * 100;
-    }
+  if (fos.length > 0) {
+    const avgFO = fos.reduce((sum, val) => sum + val, 0) / fos.length;
+    currentCapital += (avgFO / 10) * weights.fo * 100;
+  }
+  const validSors = sors.filter((s) => isCompleteScore(s.score, s.max));
+  if (validSors.length > 0) {
+    const totalSorScore = validSors.reduce(
+      (sum, s) => sum + (s.score ?? 0),
+      0,
+    );
+    const totalSorMax = validSors.reduce((sum, s) => sum + (s.max ?? 0), 0);
+    const sorPercent = totalSorScore / totalSorMax;
+    currentCapital += sorPercent * weights.sor * 100;
   }
 
   const maxPossibleTotal = currentCapital + weights.soch * 100;

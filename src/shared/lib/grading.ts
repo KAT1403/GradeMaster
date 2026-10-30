@@ -105,7 +105,7 @@ export const calculateFinalScore = (
 
 export const calculateTotalPercent = (
   params: CalculateParams,
-  system: AcademicSystem = "bilim_class",
+  system: AcademicSystem = "school",
 ): number => {
   if (system === "final") return 0;
 
@@ -149,54 +149,27 @@ export const calculateTotalPercent = (
 
   const sochRatio = hasSOCH ? soch.score! / soch.max! : null;
 
-  if (system === "kundelik") {
-    const foPct = foRatio !== null ? Math.round(foRatio * 1000) / 10 : null;
-    const sorPct = sorRatio !== null ? Math.round(sorRatio * 1000) / 10 : null;
-    const sochPct = sochRatio !== null ? Math.round(sochRatio * 1000) / 10 : null;
-
-    if (foPct !== null && sorPct === null && sochPct === null) return foPct;
-    if (sorPct !== null && foPct === null && sochPct === null) return sorPct;
-    if (sochPct !== null && foPct === null && sorPct === null) return sochPct;
-
-    if (foPct !== null && sorPct !== null && sochPct === null) {
-      return Math.round((foPct * 0.5 + sorPct * 0.5) * 10) / 10;
-    }
-    if (foPct !== null && sorPct === null && sochPct !== null) {
-      return Math.round(((foPct * 25 + sochPct * 50) / 75) * 10) / 10;
-    }
-    if (sorPct !== null && foPct === null && sochPct !== null) {
-      return Math.round(((sorPct * 25 + sochPct * 50) / 75) * 10) / 10;
-    }
-    return Math.round((foPct! * 0.25 + sorPct! * 0.25 + sochPct! * 0.5) * 10) / 10;
-  } else {
-    if (foRatio !== null && sorRatio === null && sochRatio === null) {
-      const pct = foRatio * 100;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-    if (sorRatio !== null && foRatio === null && sochRatio === null) {
-      const pct = sorRatio * 100;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-    if (sochRatio !== null && foRatio === null && sorRatio === null) {
-      const pct = sochRatio * 100;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-
-    if (foRatio !== null && sorRatio !== null && sochRatio === null) {
-      const pct = foRatio * 50 + sorRatio * 50;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-    if (foRatio !== null && sorRatio === null && sochRatio !== null) {
-      const pct = (foRatio * 25 + sochRatio * 50) / 0.75;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-    if (sorRatio !== null && foRatio === null && sochRatio !== null) {
-      const pct = (sorRatio * 25 + sochRatio * 50) / 0.75;
-      return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
-    }
-    const pct = foRatio! * 25 + sorRatio! * 25 + sochRatio! * 50;
-    return system === "bilim_class" ? Math.round(pct) : Math.round(pct * 10) / 10;
+  if (foRatio !== null && sorRatio === null && sochRatio === null) {
+    return Math.round(foRatio * 100);
   }
+  if (sorRatio !== null && foRatio === null && sochRatio === null) {
+    return Math.round(sorRatio * 100);
+  }
+  if (sochRatio !== null && foRatio === null && sorRatio === null) {
+    return Math.round(sochRatio * 100);
+  }
+
+  if (foRatio !== null && sorRatio !== null && sochRatio === null) {
+    return Math.round(foRatio * 50 + sorRatio * 50);
+  }
+  if (foRatio !== null && sorRatio === null && sochRatio !== null) {
+    return Math.round((foRatio * 25 + sochRatio * 50) / 0.75);
+  }
+  if (sorRatio !== null && foRatio === null && sochRatio !== null) {
+    return Math.round((sorRatio * 25 + sochRatio * 50) / 0.75);
+  }
+
+  return Math.round(foRatio! * 25 + sorRatio! * 25 + sochRatio! * 50);
 };
 
 export const GPA_MAX = 4;

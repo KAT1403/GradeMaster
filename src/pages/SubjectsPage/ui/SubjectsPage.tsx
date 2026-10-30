@@ -15,6 +15,7 @@ import { Card } from "../../../shared/ui/card";
 import { InfoTooltip } from "../../../shared/ui/InfoTooltip";
 import { FINAL_SCORE_TO_PERCENT } from "../../../shared/lib/grading";
 import { calculateIntlGPA } from "../../../shared/lib/converters";
+import { normalizeSystem } from "../../../shared/lib/storageMigrations";
 import styles from "./SubjectsPage.module.scss";
 
 export default function SubjectsPage() {
@@ -63,15 +64,15 @@ export default function SubjectsPage() {
     if (isSemesterEntry(subject)) {
       return t("calculator.uni_tab_semester");
     }
-    switch (subject.data.selectedSystem) {
-      case "kundelik":
-        return t("workspace.system_kundelik");
+    const sys = normalizeSystem(subject.data.selectedSystem);
+    switch (sys) {
       case "university":
         return t("workspace.system_university");
       case "final":
         return t("workspace.system_final");
+      case "school":
       default:
-        return "BilimClass";
+        return t("workspace.system_school");
     }
   };
 

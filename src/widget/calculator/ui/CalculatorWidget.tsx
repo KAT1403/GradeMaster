@@ -5,6 +5,7 @@ import { useAcademicRecordStore } from "../../../entities/academic-record/model/
 import type { AcademicSystem } from "../../../entities/academic-record/model/types";
 import { useActiveRecord } from "../../../features/history/lib/useActiveRecord";
 import { useUIStore } from "../../../shared/store/uiStore";
+import { normalizeSystem } from "../../../shared/lib/storageMigrations";
 import { SaveModal } from "../../../features/history/ui/SaveModal";
 import { ResetConfirmModal } from "../../../features/history/ui/ResetConfirmModal";
 import { Card } from "../../../shared/ui/card";
@@ -43,11 +44,12 @@ export const CalculatorWidget = () => {
   const [resetAfterSave, setResetAfterSave] = useState(false);
   const [subTab, setSubTab] = useState<"input" | "predictor" | "analytics">("input");
 
+  const currentSys = normalizeSystem(selectedSystem);
+
   const systems = [
-    { id: "bilim_class", label: t("workspace.system_bilim_class") },
-    { id: "kundelik",    label: t("workspace.system_kundelik") },
-    { id: "university",  label: t("workspace.system_university") },
-    { id: "final",       label: t("workspace.system_final") },
+    { id: "school",     label: t("workspace.system_school") },
+    { id: "university", label: t("workspace.system_university") },
+    { id: "final",      label: t("workspace.system_final") },
   ] as const;
 
   const handleSystemChange = (sysId: AcademicSystem) => {
@@ -58,7 +60,7 @@ export const CalculatorWidget = () => {
   };
 
   const resetCurrentInputs = () => {
-    if (selectedSystem !== "university") {
+    if (currentSys !== "university") {
       resetAll();
       return;
     }
@@ -169,7 +171,7 @@ export const CalculatorWidget = () => {
         {systems.map((sys) => (
           <button
             key={sys.id}
-            className={`${styles.systemTab} ${selectedSystem === sys.id ? styles.active : ""}`}
+            className={`${styles.systemTab} ${currentSys === sys.id ? styles.active : ""}`}
             onClick={() => handleSystemChange(sys.id)}
           >
             {sys.label}
@@ -179,7 +181,7 @@ export const CalculatorWidget = () => {
 
       <ResultCard />
 
-      {selectedSystem !== "final" && selectedSystem !== "university" && (
+      {currentSys !== "final" && currentSys !== "university" && (
         <div className={styles.subTabsContainer}>
           <button
             className={`${styles.subTab} ${subTab === "input" ? styles.active : ""}`}
@@ -204,9 +206,9 @@ export const CalculatorWidget = () => {
 
       {subTab === "input" && (
         <div className={styles.inputTabContent}>
-          {selectedSystem === "final" ? (
+          {currentSys === "final" ? (
             <SchoolFinalsInputs />
-          ) : selectedSystem === "university" ? (
+          ) : currentSys === "university" ? (
             <div className={styles.inputsGrid}>
               <div className={styles.uniSubModeSelector}>
                 <button

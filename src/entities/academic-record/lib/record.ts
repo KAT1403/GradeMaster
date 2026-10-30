@@ -7,6 +7,7 @@ import {
   gpaToPercentEquivalent,
   type SemesterSummary,
 } from "../../../shared/lib/grading";
+import { normalizeSystem } from "../../../shared/lib/storageMigrations";
 import type {
   AcademicRecordDraft,
   AcademicRecordSnapshot,
@@ -15,16 +16,18 @@ import type {
 export const isSemesterRecord = (record: AcademicRecordDraft): boolean =>
   record.selectedSystem === "university" && record.uniSubMode === "semester";
 
-export const getRecordPlatform = (record: AcademicRecordDraft): string =>
-  record.selectedSystem === "university"
+export const getRecordPlatform = (record: AcademicRecordDraft): string => {
+  const sys = normalizeSystem(record.selectedSystem);
+  return sys === "university"
     ? `university:${record.uniSubMode}`
-    : record.selectedSystem;
+    : sys;
+};
 
 export const createRecordSnapshot = (
   record: AcademicRecordDraft,
 ): AcademicRecordSnapshot => {
   const base = {
-    selectedSystem: record.selectedSystem,
+    selectedSystem: normalizeSystem(record.selectedSystem),
     finalQ1: record.finalQ1,
     finalQ2: record.finalQ2,
     finalQ3: record.finalQ3,
@@ -77,7 +80,9 @@ export const getRecordPercent = (record: AcademicRecordSnapshot): number => {
     return gpaToPercentEquivalent(getRecordSemesterSummary(record).semesterGPA);
   }
 
-  if (record.selectedSystem === "final") {
+  const sys = normalizeSystem(record.selectedSystem);
+
+  if (sys === "final") {
     const schoolFinalSummary = calculateSchoolFinalSummary(record.schoolFinalSubjects);
 
     return schoolFinalSummary.filledSubjects > 0
@@ -94,12 +99,14 @@ export const getRecordPercent = (record: AcademicRecordSnapshot): number => {
       uniMidterm2: record.uniMidterm2,
       uniExam: record.uniExam,
     },
-    record.selectedSystem,
+    sys,
   );
 };
 
 export const isRecordEmpty = (record: AcademicRecordDraft): boolean => {
-  if (record.selectedSystem === "final") {
+  const sys = normalizeSystem(record.selectedSystem);
+
+  if (sys === "final") {
     return (
       record.schoolFinalSubjects.every(
         (subject) => !subject.title.trim() && subject.grade === null,
@@ -112,7 +119,7 @@ export const isRecordEmpty = (record: AcademicRecordDraft): boolean => {
     );
   }
 
-  if (record.selectedSystem === "university") {
+  if (sys === "university") {
     return isSemesterRecord(record)
       ? record.semesterSubjects.length === 0
       : record.uniMidterm1 === null &&
@@ -129,8 +136,9 @@ export const isRecordEmpty = (record: AcademicRecordDraft): boolean => {
 
 export const getRecordFingerprint = (record: AcademicRecordDraft): string => {
   const platform = getRecordPlatform(record);
+  const sys = normalizeSystem(record.selectedSystem);
 
-  if (record.selectedSystem === "final") {
+  if (sys === "final") {
     return JSON.stringify({
       platform,
       mode: record.schoolFinalMode,
@@ -144,7 +152,7 @@ export const getRecordFingerprint = (record: AcademicRecordDraft): string => {
     });
   }
 
-  if (record.selectedSystem === "university") {
+  if (sys === "university") {
     return isSemesterRecord(record)
       ? JSON.stringify({
           platform,
